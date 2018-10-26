@@ -29,7 +29,7 @@ This implementation of the Gherkin tries to follow as closely as possible other 
     - [Steps Definitions](#steps-definitions)
       - [Given](#given)
       - [Then](#then)
-      - [Timeouts](#timeouts)
+      - [Step Timeout](#step-timeout)
       - [Multiline Strings](#multiline-strings)
       - [Data tables](#data-tables)
       - [Well known step parameters](#well-known-step-parameters)
@@ -81,7 +81,7 @@ class TapButtonNTimesStep extends When2WithWorld<String, int, FlutterWorld> {
   @override
   Future<void> executeStep(String input1, int input2) async {
     final locator = find.byValueKey(input1);
-    for (var i = 0; i < 10; i += 1) {
+    for (var i = 0; i < input2; i += 1) {
       await world.driver.tap(locator);
     }
   }
@@ -130,7 +130,6 @@ Given Bob has logged in
 Would be implemented like so:
 
 ```dart
-import 'package:flutter_driver/flutter_driver.dart';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 
 class GivenWellKnownUserIsLoggedIn extends Given1<String> {
@@ -162,7 +161,6 @@ Then I expect 10 apples
 Would be implemented like so:
 
 ```dart
-import 'package:flutter_driver/flutter_driver.dart';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 
 class ThenExpectAppleCount extends Then1<int> {
@@ -180,7 +178,7 @@ class ThenExpectAppleCount extends Then1<int> {
 
 **Caveat**: The `expect` library currently only works within the library's own `test` function blocks; so using it with a `Then` step will cause an error.  Therefore, the `expectMatch` or `expectA` or `this.expect` methods have been added which mimic the underlying functionality of `except` in that they assert that the give is true.  The `Matcher` within Dart's test library still work and can be used as expected.
 
-#### Timeouts
+#### Step Timeout
 
 By default a step will timeout if it exceed the `defaultTimeout` parameter in the configuration file.  In some cases you want have a step that is longer or shorter running and in the case you can optionally proved a custom timeout to that step.  To do this pass in a `Duration` object in the step's call to `super`.
 
