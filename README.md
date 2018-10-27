@@ -6,15 +6,18 @@ This implementation of the Gherkin tries to follow as closely as possible other 
 
 ```dart
   # Comment
-  @tag
-  Feature: Eating too many cucumbers may not be good for you
+  Feature: Addition
 
-    Eating too much of anything may not be good for you.
+    @tag
+    Scenario: 1 + 0
+      Given I start with 1
+      When I add 0
+      Then I end up with 1
 
-    Scenario: Eating a few is no problem
-      Given Alice is hungry
-      When she eats 3 cucumbers
-      Then she will be full
+    Scenario: 1 + 1
+      Given I start with 1
+      When I add 1
+      Then I end up with 2
 ```
 
 ## Table of Contents
@@ -25,6 +28,18 @@ This implementation of the Gherkin tries to follow as closely as possible other 
   - [Table of Contents](#table-of-contents)
   - [Getting Started](#getting-started)
     - [Configuration](#configuration)
+      - [features](#features)
+      - [tagExpression](#tagexpression)
+      - [order](#order)
+      - [stepDefinitions](#stepdefinitions)
+      - [customStepParameterDefinitions](#customstepparameterdefinitions)
+      - [hooks](#hooks)
+      - [reporters](#reporters)
+      - [createWorld](#createworld)
+      - [exitAfterTestRun](#exitaftertestrun)
+    - [Flutter specific configuration options](#flutter-specific-configuration-options)
+      - [restartAppBetweenScenarios](#restartappbetweenscenarios)
+      - [targetAppPath](#targetapppath)
   - [Features Files](#features-files)
     - [Steps Definitions](#steps-definitions)
       - [Given](#given)
@@ -41,7 +56,6 @@ This implementation of the Gherkin tries to follow as closely as possible other 
   - [Hooks](#hooks)
   - [Reporting](#reporting)
   - [Flutter](#flutter)
-    - [Flutter Specific Configuration](#flutter-specific-configuration)
       - [Restarting the app before each test](#restarting-the-app-before-each-test)
       - [Flutter World](#flutter-world)
     - [Pre-defined Steps](#pre-defined-steps)
@@ -120,7 +134,7 @@ When I tap the "increment" button 10 times    // passes 3 parameters "increment"
 When I tap the "increment" icon 2 times       // passes 3 parameters "increment", "icon" & 2
 ```
 
-It is worth noting that this library *does not* rely on mirrors (reflection) for many reasons but most prominently for ease of maintenance and to fall inline with the principles of Flutter not allowing reflection.  All in all this make for a much easier to understand and maintain code base.  The downside is that we have to be slightly more explicit by providing instances of custom code such as step definition, hook, reporters and custom parameters.
+It is worth noting that this library *does not* rely on mirrors (reflection) for many reasons but most prominently for ease of maintenance and to fall inline with the principles of Flutter not allowing reflection.  All in all this make for a much easier to understand and maintain code base as well as much easier debugging for the user.  The downside is that we have to be slightly more explicit by providing instances of custom code such as step definition, hook, reporters and custom parameters.
 
 Now that we have a testable app, a feature file and a custom step definition we need to create a class that will call this library and actually run the tests.  Create a file called `app_test.dart` and put the below code in.
 
@@ -153,6 +167,168 @@ To debug tests see [Debugging](#debugging).
 *Note*: You might need to ensure dart is accessible by adding it to your path variable.
 
 ### Configuration
+
+The configuration is an important piece of the puzzle in this library as it specifies not only what to run but classes to run against in the form of steps, hooks and reporters.  Unlike other implementation this library does not rely on reflection so need to be explicitly told classes to use.
+
+The parameters below can be specified in your configuration file:
+
+#### features
+
+*Required*
+
+An iterable of `Glob` patterns that specify the location(s) of `*.feature` files to run.
+
+#### tagExpression
+
+Defaults to `null`.
+
+An infix boolean expression which defines the features and scenarios to run based of their tags. See [Tags](#tags).
+
+#### order
+
+Defaults to `ExecutionOrder.random`
+
+The order by which scenarios will be run. Running an a random order may highlight any inter-test dependencies that should be fixed.
+
+#### stepDefinitions
+
+Defaults to `Iterable<StepDefinitionBase>`
+
+Place instances of any custom step definition classes `Given`, `Then`, `When`, `And`, `But` that match to any custom steps defined in your feature files.
+
+```dart
+import 'dart:async';
+import 'package:glob/glob.dart';
+import 'package:flutter_gherkin/flutter_gherkin.dart';
+import 'steps/given_I_pick_a_colour_step.dart';
+import 'steps/tap_button_n_times_step.dart';
+
+Future<void> main() {
+  final config = FlutterTestConfiguration()
+    ..features = [Glob(r"test_driver/features/*.feature")]
+    ..reporters = [StdoutReporter()]
+    ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
+    ..restartAppBetweenScenarios = true
+    ..targetAppPath = "test_driver/app.dart"
+    ..exitAfterTestRun = true;
+  return GherkinRunner().execute(config);
+}
+```
+
+#### customStepParameterDefinitions
+
+Defaults to `CustomParameter<dynamic>`.
+
+Place instances of any custom step parameters that you have defined.  These will be matched up to steps when scenarios are run and their result passed to the executable step.  See [Custom Parameters](#custom-parameters).
+
+```dart
+import 'dart:async';
+import 'package:glob/glob.dart';
+import 'package:flutter_gherkin/flutter_gherkin.dart';
+import 'steps/colour_parameter.dart';
+import 'steps/given_I_pick_a_colour_step.dart';
+import 'steps/tap_button_n_times_step.dart';
+
+Future<void> main() {
+  final config = FlutterTestConfiguration()
+    ..features = [Glob(r"test_driver/features/*.feature")]
+    ..reporters = [StdoutReporter()]
+    ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
+    ..customStepParameterDefinitions = [ColourParameter()]
+    ..restartAppBetweenScenarios = true
+    ..targetAppPath = "test_driver/app.dart"
+    ..exitAfterTestRun = true;
+  return GherkinRunner().execute(config);
+}
+```
+
+#### hooks
+
+Hooks are custom bits of code that can be run at certain points with the test run such as before or after a scenario.  Place instances of any custom `Hook` class instance in this collection.  They will then be run at the defined points with the test run. See [Hooks](#hooks).
+
+#### reporters
+
+*Requried*
+
+Reporters are classes that are able to report on the status of the test run.  This could be a simple as merely logging scenerio result to the console.  There are a number of built-in reporter:
+
+- `StdoutReporter` : Logs all messages from the test run to the standard output (console).
+- `ProgressReporter` : Logs the progress of the test run marking each step with a scenario as either passed, skipped or failed.
+
+You should provide at least one reporter in the configuration otherwise it'll be hard to know what is going on.
+
+*Note*: Feel free to PR new reporters!
+
+```dart
+import 'dart:async';
+import 'package:glob/glob.dart';
+import 'package:flutter_gherkin/flutter_gherkin.dart';
+import 'steps/colour_parameter.dart';
+import 'steps/given_I_pick_a_colour_step.dart';
+import 'steps/tap_button_n_times_step.dart';
+
+Future<void> main() {
+  final config = FlutterTestConfiguration()
+    ..features = [Glob(r"test_driver/features/*.feature")]
+    ..reporters = [StdoutReporter()]
+    ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
+    ..customStepParameterDefinitions = [ColourParameter()]
+    ..restartAppBetweenScenarios = true
+    ..targetAppPath = "test_driver/app.dart"
+    ..exitAfterTestRun = true;
+  return GherkinRunner().execute(config);
+}
+```
+
+#### createWorld
+
+Defaults to `null`.
+
+While it is not recommended so share state between steps within the same scenario we all in fact live in the real world and thus at time may need to share certain information such as login credentials etc for future steps to use.  The world context object is created once per scenario and then destroyed at the end of each scenario.  This configuration property allows you to specify a custom `World` class to create which can then be accessed in your step classes.
+
+```dart
+import 'dart:async';
+import 'package:glob/glob.dart';
+import 'package:flutter_gherkin/flutter_gherkin.dart';
+import 'steps/colour_parameter.dart';
+import 'steps/given_I_pick_a_colour_step.dart';
+import 'steps/tap_button_n_times_step.dart';
+
+Future<void> main() {
+  final config = FlutterTestConfiguration()
+    ..features = [Glob(r"test_driver/features/*.feature")]
+    ..reporters = [StdoutReporter()]
+    ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
+    ..customStepParameterDefinitions = [ColourParameter()]
+    ..createWorld = (TestConfiguration config) async => await createMyWorldInstance(config)
+    ..restartAppBetweenScenarios = true
+    ..targetAppPath = "test_driver/app.dart"
+    ..exitAfterTestRun = true;
+  return GherkinRunner().execute(config);
+}
+```
+
+#### exitAfterTestRun
+
+Defaults to `true`
+
+True to exit the program after all tests have run.  You may want to set this to false during debugging.
+
+### Flutter specific configuration options
+
+The `FlutterTestConfiguration` will automatically create some default Flutter options such as well know step definitions, the Flutter world context object which provides access to a Flutter driver instance as well as the ability to restart you application under test between scenarios.  Most of the time you should use this configuation object if you are testing Flutter applications.
+
+#### restartAppBetweenScenarios
+
+Defaults to `true`.
+
+To avoid tests starting on an app changed by a previous test it is suggested that the Flutter application under test be restarted between each scenario.  While this will increase the execution time slightly it will limit tests failing because they run against an app changed by a previous test.  Note in more complex application it may also be necessary to use the `AfterScenario` hook to reset the application to a base state a test can run on.  Logging out for example if restarting an application will present a lock screen etc.
+
+#### targetAppPath
+
+Defaults to `lib/test_driver/app.dart`
+
+This should point to the *testable* application that enables the Flutter driver extensions and thus is able to be automated.  This application wil be started when the test run in started and restarted if the `restartAppBetweenScenarios` configuration property is set to true.
 
 ## Features Files
 
@@ -422,8 +598,6 @@ Also see <https://docs.cucumber.io/cucumber/api/#tags>
 ## Reporting
 
 ## Flutter
-
-### Flutter Specific Configuration
 
 #### Restarting the app before each test
 

@@ -1,9 +1,9 @@
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 
 /// This step expects a multiline string proceeding it
-/// 
-/// For example: 
-/// 
+///
+/// For example:
+///
 /// `Given I add the users`
 ///  | Firstname | Surname | Age | Gender |
 ///  | Woody     | Johnson | 28  | Male   |

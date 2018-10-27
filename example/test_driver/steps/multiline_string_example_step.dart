@@ -1,11 +1,11 @@
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 
 /// This step expects a multiline string proceeding it
-/// 
-/// For example: 
-/// 
+///
+/// For example:
+///
 /// `Given I provide the following "review" comment`
-///  """ 
+///  """
 ///  Some comment
 ///  """
 class GivenIProvideAComment extends Given2<String, String> {

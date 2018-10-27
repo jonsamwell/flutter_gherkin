@@ -16,8 +16,8 @@ class FlutterTestConfiguration extends TestConfiguration {
   bool restartAppBetweenScenarios = true;
 
   /// The target app to run the tests against
-  /// Defaults to "lib/app.dart"
-  String targetAppPath = "lib/app.dart";
+  /// Defaults to "lib/test_driver/app.dart"
+  String targetAppPath = "lib/test_driver/app.dart";
 
   FlutterTestConfiguration() : super() {
     createWorld = (config) async => await createFlutterWorld(config);
