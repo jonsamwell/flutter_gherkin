@@ -53,7 +53,27 @@ This implementation of the Gherkin tries to follow as closely as possible other 
 
 See <https://docs.cucumber.io/gherkin/> for information on the Gherkin syntax and Behaviour Driven Development (BDD).  
 
-To get started with BDD in flutter the first step is to write a feature file and a test scenario within that.
+The first step is to create a version of your app that has flutter driver enabled so that it can be automated.  A good guide how to do this is show [here](flutter.io/cookbook/testing/integration-test-introduction/#4-instrument-the-app).  However in short, create a folder called `test_driver` and within that create a file called `app.dart` and paste in the below code.
+
+```dart
+import '../lib/main.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_driver/driver_extension.dart';
+
+void main() {
+  // This line enables the extension
+  enableFlutterDriverExtension();
+
+  // Call the `main()` function of your app or call `runApp` with any widget you
+  // are interested in testing.
+  runApp(new MyApp());
+}
+
+```
+
+All this code does is enable the Flutter driver extension which is required to be able to automate the app and then runs your application.
+
+To get started with BDD in Flutter the first step is to write a feature file and a test scenario within that.
 
 First create a folder called `test_driver` (this is inline with the current integration test as we will need to use the Flutter driver to automate the app).  Within the folder create a folder called `features`, then create a file called `counter.feature`.
 
@@ -71,7 +91,7 @@ Now we have created a scenario we need to implement the steps within.  Steps are
 
 Granted the example is a little contrived but is serves to illustrate the process.
 
-This library has a couple of built in step definitions for convenience.  The first step uses the built in step, however the second step `When I tap the "increment" button 10 times` is a custom step and has to be implemented.  To implement a step we have to create a simple class.
+This library has a couple of built in step definitions for convenience.  The first step uses the built in step, however the second step `When I tap the "increment" button 10 times` is a custom step and has to be implemented.  To implement a step we have to create a simple step definition class.
 
 ```dart
 import 'package:flutter_driver/flutter_driver.dart';
@@ -100,6 +120,38 @@ When I tap the "increment" button 10 times    // passes 3 parameters "increment"
 When I tap the "increment" icon 2 times       // passes 3 parameters "increment", "icon" & 2
 ```
 
+It is worth noting that this library *does not* rely on mirrors (reflection) for many reasons but most prominently for ease of maintenance and to fall inline with the principles of Flutter not allowing reflection.  All in all this make for a much easier to understand and maintain code base.  The downside is that we have to be slightly more explicit by providing instances of custom code such as step definition, hook, reporters and custom parameters.
+
+Now that we have a testable app, a feature file and a custom step definition we need to create a class that will call this library and actually run the tests.  Create a file called `app_test.dart` and put the below code in.
+
+```dart
+import 'dart:async';
+import 'package:glob/glob.dart';
+import 'package:flutter_gherkin/flutter_gherkin.dart';
+
+Future<void> main() {
+  final config = FlutterTestConfiguration()
+    ..features = [Glob(r"test_driver/features/*.feature")]
+    ..reporters = [StdoutReporter()]
+    ..restartAppBetweenScenarios = true
+    ..targetAppPath = "test_driver/app.dart"
+    ..exitAfterTestRun = true;
+  return GherkinRunner().execute(config);
+}
+```
+
+This code simple creates a configuration object and calls this library which will then promptly parse your feature files and run the tests.  The configuration file is important and explained in further detail below.  However, all that is happening is a `Glob` is provide which specifies the path to one or more feature files, it sets the reporter to the `StdoutReporter` report which mean prints to the standard output (console).  Finally it specifies the path to the testable app created above `test_driver/app.dart`.  This is important as it instructions the library which app to run the tests against.
+
+Finally to actually run the tests run the below on the command line:
+
+```bash
+dart test_driver/app_test.dart
+```
+
+To debug tests see [Debugging](#debugging).
+
+*Note*: You might need to ensure dart is accessible by adding it to your path variable.
+
 ### Configuration
 
 ## Features Files
@@ -110,7 +162,7 @@ Step definitions are the coded representation of a textual step in a feature fil
 
 Note: Step definitions (in this implementation) are allowed up to 5 input parameters.  If you find yourself needing more than this you might want to consider making your step more isolated or using a `Table` parameter.
 
-```
+```dart
 Given there are 6 kangaroos
 Then there are 6 kangaroos
 ```
@@ -123,7 +175,7 @@ However, the domain language you choose will influence what keyword works best i
 
 To implement a `Given` step you can inherit from the ```Given``` class.
 
-```
+```dart
 Given Bob has logged in
 ```
 
@@ -145,7 +197,7 @@ class GivenWellKnownUserIsLoggedIn extends Given1<String> {
 
 If you need to have more than one Given in a block it is often best to use the additional keywords `And` or `But`.
 
-```
+```dart
 Given Bob has logged in
 And opened the dashboard
 ```
@@ -154,7 +206,7 @@ And opened the dashboard
 
 `Then` steps are used to describe an expected outcome, or result.  They would typically have an assertion in which can pass or fail.
 
-```
+```dart
 Then I expect 10 apples
 ```
 
@@ -207,11 +259,11 @@ class TapButtonNTimesStep extends When2WithWorld<String, int, FlutterWorld> {
 
 #### Multiline Strings
 
-Mulitline strings can follow a step and will be give to the step it proceeds as the final argument.  To denote a multiline string the pre and postfix can either be third double or single quotes `""" ... """` or `''' ... '''`.
+Multiline strings can follow a step and will be give to the step it proceeds as the final argument.  To denote a multiline string the pre and postfix can either be third double or single quotes `""" ... """` or `''' ... '''`.
 
 For example:
 
-```
+```dart
 Given I provide the following "review" comment
 """
 Some long review comment.
@@ -249,9 +301,9 @@ class GivenIProvideAComment extends Given2<String, String> {
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 
 /// This step expects a multiline string proceeding it
-/// 
-/// For example: 
-/// 
+///
+/// For example:
+///
 /// `Given I add the users`
 ///  | Firstname | Surname | Age | Gender |
 ///  | Woody     | Johnson | 28  | Male   |
