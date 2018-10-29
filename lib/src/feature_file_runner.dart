@@ -203,6 +203,7 @@ class FeatureFileRunner {
         }
       }
       """;
+      _reporter.message(message, MessageLevel.error);
       throw new GherkinStepNotDefinedException(message);
     }
 

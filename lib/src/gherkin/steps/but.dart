@@ -7,6 +7,16 @@ abstract class But extends StepDefinition<World> {
   But([StepDefinitionConfiguration configuration]) : super(configuration);
 }
 
+abstract class ButWithWorld<TWorld extends World>
+    extends StepDefinition<TWorld> {
+  ButWithWorld([StepDefinitionConfiguration configuration])
+      : super(configuration);
+  @override
+  StepDefinitionCode get code => () async => await executeStep();
+
+  Future<void> executeStep();
+}
+
 abstract class But1WithWorld<TInput1, TWorld extends World>
     extends StepDefinition1<TWorld, TInput1> {
   But1WithWorld([StepDefinitionConfiguration configuration])

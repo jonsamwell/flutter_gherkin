@@ -7,6 +7,16 @@ abstract class And extends StepDefinition<World> {
   And([StepDefinitionConfiguration configuration]) : super(configuration);
 }
 
+abstract class AndWithWorld<TWorld extends World>
+    extends StepDefinition<TWorld> {
+  AndWithWorld([StepDefinitionConfiguration configuration])
+      : super(configuration);
+  @override
+  StepDefinitionCode get code => () async => await executeStep();
+
+  Future<void> executeStep();
+}
+
 abstract class And1WithWorld<TInput1, TWorld extends World>
     extends StepDefinition1<TWorld, TInput1> {
   And1WithWorld([StepDefinitionConfiguration configuration])

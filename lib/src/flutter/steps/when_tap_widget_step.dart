@@ -1,4 +1,5 @@
 import 'package:flutter_gherkin/src/flutter/flutter_world.dart';
+import 'package:flutter_gherkin/src/flutter/utils/driver_utils.dart';
 import 'package:flutter_gherkin/src/gherkin/steps/when.dart';
 import 'package:flutter_driver/flutter_driver.dart';
 
@@ -23,7 +24,7 @@ class WhenTapWidget extends When1WithWorld<String, FlutterWorld> {
 
   @override
   Future<void> executeStep(String key) async {
-    final locator = find.byValueKey(key);
-    await world.driver.tap(locator, timeout: timeout);
+    await FlutterDriverUtils.tap(world.driver, find.byValueKey(key),
+        timeout: timeout);
   }
 }

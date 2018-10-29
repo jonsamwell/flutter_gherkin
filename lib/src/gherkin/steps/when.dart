@@ -7,6 +7,16 @@ abstract class When extends StepDefinition<World> {
   When([StepDefinitionConfiguration configuration]) : super(configuration);
 }
 
+abstract class WhenWithWorld<TWorld extends World>
+    extends StepDefinition<TWorld> {
+  WhenWithWorld([StepDefinitionConfiguration configuration])
+      : super(configuration);
+  @override
+  StepDefinitionCode get code => () async => await executeStep();
+
+  Future<void> executeStep();
+}
+
 abstract class When1WithWorld<TInput1, TWorld extends World>
     extends StepDefinition1<TWorld, TInput1> {
   When1WithWorld([StepDefinitionConfiguration configuration])

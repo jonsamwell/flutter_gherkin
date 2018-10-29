@@ -1,4 +1,5 @@
 import 'package:flutter_gherkin/src/flutter/flutter_world.dart';
+import 'package:flutter_gherkin/src/flutter/utils/driver_utils.dart';
 import 'package:flutter_gherkin/src/gherkin/steps/then.dart';
 import 'package:flutter_gherkin/src/reporters/message_level.dart';
 import 'package:flutter_driver/flutter_driver.dart';
@@ -20,9 +21,8 @@ class ThenExpectElementToHaveValue
 
   @override
   Future<void> executeStep(String key, String value) async {
-    final locator = find.byValueKey(key);
     try {
-      final text = await world.driver.getText(locator, timeout: timeout);
+      final text = await FlutterDriverUtils.getText(world.driver, find.byValueKey(key), timeout: timeout);
       expect(text, value);
     } catch (e) {
       await reporter.message(

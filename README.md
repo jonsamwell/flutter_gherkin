@@ -59,6 +59,7 @@ This implementation of the Gherkin tries to follow as closely as possible other 
     - [Restarting the app before each test](#restarting-the-app-before-each-test)
       - [Flutter World](#flutter-world)
     - [Pre-defined Steps](#pre-defined-steps)
+      - [Flutter Driver Utilities](#flutter-driver-utilities)
     - [Debugging](#debugging)
 
 <!-- /TOC -->
@@ -67,7 +68,7 @@ This implementation of the Gherkin tries to follow as closely as possible other 
 
 See <https://docs.cucumber.io/gherkin/> for information on the Gherkin syntax and Behaviour Driven Development (BDD).  
 
-The first step is to create a version of your app that has flutter driver enabled so that it can be automated.  A good guide how to do this is show [here](flutter.io/cookbook/testing/integration-test-introduction/#4-instrument-the-app).  However in short, create a folder called `test_driver` and within that create a file called `app.dart` and paste in the below code.
+The first step is to create a version of your app that has flutter driver enabled so that it can be automated.  A good guide how to do this is show [here](https://flutter.io/cookbook/testing/integration-test-introduction/#4-instrument-the-app).  However in short, create a folder called `test_driver` and within that create a file called `app.dart` and paste in the below code.
 
 ```dart
 import '../lib/main.dart';
@@ -145,8 +146,8 @@ import 'package:flutter_gherkin/flutter_gherkin.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/*.feature")]
-    ..reporters = [StdoutReporter()]
+    ..features = [Glob(r"test_driver/features/**/*.feature")]
+    ..reporters = [ProgressReporter()]
     ..restartAppBetweenScenarios = true
     ..targetAppPath = "test_driver/app.dart"
     ..exitAfterTestRun = true;
@@ -154,7 +155,7 @@ Future<void> main() {
 }
 ```
 
-This code simple creates a configuration object and calls this library which will then promptly parse your feature files and run the tests.  The configuration file is important and explained in further detail below.  However, all that is happening is a `Glob` is provide which specifies the path to one or more feature files, it sets the reporter to the `StdoutReporter` report which mean prints to the standard output (console).  Finally it specifies the path to the testable app created above `test_driver/app.dart`.  This is important as it instructions the library which app to run the tests against.
+This code simple creates a configuration object and calls this library which will then promptly parse your feature files and run the tests.  The configuration file is important and explained in further detail below.  However, all that is happening is a `Glob` is provide which specifies the path to one or more feature files, it sets the reporter to the `ProgressReporter` report which mean prints to the result of a scenario and step to the standard output (console).  Finally it specifies the path to the testable app created above `test_driver/app.dart`.  This is important as it instructions the library which app to run the tests against.
 
 Finally to actually run the tests run the below on the command line:
 
@@ -205,7 +206,7 @@ import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/*.feature")]
+    ..features = [Glob(r"test_driver/features/**/*.feature")]
     ..reporters = [StdoutReporter()]
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..restartAppBetweenScenarios = true
@@ -231,7 +232,7 @@ import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/*.feature")]
+    ..features = [Glob(r"test_driver/features/**/*.feature")]
     ..reporters = [StdoutReporter()]
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..customStepParameterDefinitions = [ColourParameter()]
@@ -269,7 +270,7 @@ import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/*.feature")]
+    ..features = [Glob(r"test_driver/features/**/*.feature")]
     ..reporters = [StdoutReporter()]
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..customStepParameterDefinitions = [ColourParameter()]
@@ -296,7 +297,7 @@ import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/*.feature")]
+    ..features = [Glob(r"test_driver/features/**/*.feature")]
     ..reporters = [StdoutReporter()]
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..customStepParameterDefinitions = [ColourParameter()]
@@ -528,20 +529,20 @@ While the well know step parameter will be sufficient in most cases there are ti
 The below custom parameter defines a regex that matches the words "red", "green" or "blue". The matches word is passed into the function which is then able to convert the string into a Color object.  The name of the custom parameter is used to identity the parameter within the step text.  In the below example the word "colour" is used.  This is combined with the pre / post prefixes (which default to "{" and "}") to match to the custom parameter.
 
 ```dart
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 
-class ColourParameter extends CustomParameter<Color> {
+enum Colour { red, green, blue }
+
+class ColourParameter extends CustomParameter<Colour> {
   ColourParameter()
-      : super("colour", RegExp(r"(red|green|blue)"), (c) {
+      : super("colour", RegExp(r"red|green|blue", caseSensitive: true), (c) {
           switch (c.toLowerCase()) {
             case "red":
-              return Colors.red;
+              return Colour.red;
             case "green":
-              return Colors.green;
+              return Colour.green;
             case "blue":
-              return Colors.blue;
+              return Colour.blue;
           }
         });
 }
@@ -550,18 +551,17 @@ class ColourParameter extends CustomParameter<Color> {
 The step definition would then use this custom parameter like so:
 
 ```dart
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
+import 'colour_parameter.dart';
 
-class GivenIPickAColour extends Given1<Color> {
+class GivenIPickAColour extends Given1<Colour> {
   @override
-  Future<void> executeStep(Color input1) async {
+  Future<void> executeStep(Colour input1) async {
     // TODO: implement executeStep
   }
 
   @override
-  RegExp get pattern => RegExp(r"I pick the colour {colour}");
+  RegExp get pattern => RegExp(r"I pick a {colour}");
 }
 ```
 
@@ -701,6 +701,21 @@ You might additionally want to do some clean-up of your app after each test by i
 #### Flutter World
 
 ### Pre-defined Steps
+
+For convenience the library defines a number of pre-defined steps so you can get going much quicker without having to implement lots of step classes.  The pre-defined steps are:
+
+| Step Text                                                               | Description                                                                                                     | Examples                                                      |
+| ----------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| I tap the {string} [button\|element\|label\|icon\|field\|text\|\widget] | Taps the element with the provided key ( given by the first input parameter)                                    | `When I tap the "login" button`, `Then I tap the "save" icon` |
+| I fill the {string} field with {string}                                 | Fills the element with the provided key with the given value (given by the second input parameter)              | `When I fill the "email" field with "someone@gmail.com"`      |
+| I expect the {string} to be {string}                                    | Asserts that the element with the given key has the given string value                                          | `Then I expect the "cost" to be "£10.95"`                     |
+| I (open\|close) the drawer                                              | Opens or closes the application default drawer                                                                  | `When I open the drawer`, `And I close the drawer`            |
+| I pause for {int} seconds                                               | Pauses the test execution for the given seconds. Only use in debug scenarios or to inspect the state of the app | `Then I pause for 20 seconds`                                 |
+
+#### Flutter Driver Utilities
+
+For convenience the library provides a static `FlutterDriverUtils` class that abstracts away some common Flutter driver functionality like tapping a button, getting and entering text, checking if an element is present or absent.  See <lib/src/flutter/utils/driver_utils.dart>
+
 
 ### Debugging
 

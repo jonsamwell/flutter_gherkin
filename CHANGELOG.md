@@ -1,3 +1,8 @@
+## [0.0.3] - 29/10/2018
+
+* Added more pre-defined flutter step definitions
+* Added more Flutter driver util methods to abstract common functionality like entering text into a control and tapping a button.
+
 ## [0.0.2] - 29/10/2018
 
 * Fixed up dependencies
