@@ -10,7 +10,7 @@ abstract class Hook {
   /// Run before any scenario in a test run have executed
   Future<void> onBeforeRun(TestConfiguration config) => Future.value(null);
 
-  /// Run after all scenerios in a test run have completed
+  /// Run after all scenarios in a test run have completed
   Future<void> onAfterRun(TestConfiguration config) => Future.value(null);
 
   /// Run before a scenario and it steps are executed

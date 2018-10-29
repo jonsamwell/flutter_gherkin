@@ -24,7 +24,7 @@ This implementation of the Gherkin tries to follow as closely as possible other 
 
 <!-- TOC -->
 
-- [flutter_gherkin](#flutter_gherkin)
+- [flutter_gherkin](#fluttergherkin)
   - [Table of Contents](#table-of-contents)
   - [Getting Started](#getting-started)
     - [Configuration](#configuration)
@@ -56,7 +56,7 @@ This implementation of the Gherkin tries to follow as closely as possible other 
   - [Hooks](#hooks)
   - [Reporting](#reporting)
   - [Flutter](#flutter)
-      - [Restarting the app before each test](#restarting-the-app-before-each-test)
+    - [Restarting the app before each test](#restarting-the-app-before-each-test)
       - [Flutter World](#flutter-world)
     - [Pre-defined Steps](#pre-defined-steps)
     - [Debugging](#debugging)
@@ -595,11 +595,87 @@ Also see <https://docs.cucumber.io/cucumber/api/#tags>
 
 ## Hooks
 
+A hook is a point in the execution that custom code can be run.  Hooks can be run at the below points in the test run.
+
+- Before any tests run
+- After all the tests have run
+- Before each scenario
+- After each scenario
+
+To create a hook is easy.  Just inherit from `Hook` and override the method(s) that signifies the point in the process you want to run code at. Note that not all methods need to be override, just the points at which you want to run custom code.
+
+```dart
+import 'package:flutter_gherkin/flutter_gherkin.dart';
+
+class HookExample extends Hook {
+  /// The priority to assign to this hook.
+  /// Higher priority gets run first so a priority of 10 is run before a priority of 2
+  int get priority => 1;
+
+  @override
+  /// Run before any scenario in a test run have executed
+  Future<void> onBeforeRun(TestConfiguration config) async {
+    print("before run hook");
+  }
+
+  @override
+  /// Run after all scenarios in a test run have completed
+  Future<void> onAfterRun(TestConfiguration config) async {
+    print("after run hook");
+  }
+
+  @override
+  /// Run before a scenario and it steps are executed
+  Future<void> onBeforeScenario(
+      TestConfiguration config, String scenario) async {
+    print("running hook before scenario '$scenario'");
+  }
+
+  @override
+  /// Run after a scenario has executed
+  Future<void> onAfterScenario(
+      TestConfiguration config, String scenario) async {
+    print("running hook after scenario '$scenario'");
+  }
+}
+```
+
+Finally ensure the hook is added to the hook collection in your configuration file.
+
+```dart
+import 'dart:async';
+import 'package:glob/glob.dart';
+import 'package:flutter_gherkin/flutter_gherkin.dart';
+import 'hooks/hook_example.dart';
+import 'steps/colour_parameter.dart';
+import 'steps/given_I_pick_a_colour_step.dart';
+import 'steps/tap_button_n_times_step.dart';
+
+Future<void> main() {
+  final config = FlutterTestConfiguration()
+    ..features = [Glob(r"test_driver/features/*.feature")]
+    ..reporters = [StdoutReporter()]
+    ..hooks = [HookExample()]
+    ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
+    ..customStepParameterDefinitions = [ColourParameter()]
+    ..restartAppBetweenScenarios = true
+    ..targetAppPath = "test_driver/app.dart"
+    ..exitAfterTestRun = true;
+  return GherkinRunner().execute(config);
+}
+```
+
 ## Reporting
+
+A reporter is a class that is able to report on the progress of the test run. In it simplest form it could just print messages to the console or be used to tell a build server such as TeamCity of the progress of the test run.  The library has a number of built in reporters.
+
+- StdOut - prints all messages to the console.
+
+*Note*: PR's of new reporters are *always* welcome.
 
 ## Flutter
 
-#### Restarting the app before each test
+### Restarting the app before each test
 
 By default to ensure your app is in a consistent state at the start of each test the app is shut-down and restarted.  This behaviour can be turned off by setting the `restartAppBetweenScenarios` flag in your configuration object.  Although in more complex scenarios you might want to handle the app reset behaviour yourself; possibly via hooks.
 

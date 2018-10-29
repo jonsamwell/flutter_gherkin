@@ -5,7 +5,7 @@ import 'package:flutter_gherkin/src/gherkin/syntax/regex_matched_syntax.dart';
 
 class TextLineSyntax extends RegExMatchedGherkinSyntax {
   final RegExp pattern =
-      RegExp(r"^\s*(?!#)\w+[\s|\w]*$", multiLine: false, caseSensitive: false);
+      RegExp(r"^\s*(?!#)\w+.*]*$", multiLine: false, caseSensitive: false);
 
   @override
   Runnable toRunnable(String line, RunnableDebugInformation debug) {

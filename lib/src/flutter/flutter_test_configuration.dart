@@ -19,16 +19,6 @@ class FlutterTestConfiguration extends TestConfiguration {
   /// Defaults to "lib/test_driver/app.dart"
   String targetAppPath = "lib/test_driver/app.dart";
 
-  FlutterTestConfiguration() : super() {
-    createWorld = (config) async => await createFlutterWorld(config);
-    stepDefinitions = [
-      ThenExpectElementToHaveValue(),
-      WhenTapWidget(),
-      GivenOpenDrawer()
-    ];
-    hooks = [FlutterAppRunnerHook()];
-  }
-
   void setObservatoryDebuggerUri(String uri) => _observatoryDebuggerUri = uri;
 
   Future<FlutterDriver> createFlutterDriver([String dartVmServiceUrl]) async {
@@ -40,10 +30,29 @@ class FlutterTestConfiguration extends TestConfiguration {
     return driver;
   }
 
-  Future<FlutterWorld> createFlutterWorld(TestConfiguration config) async {
-    final world = new FlutterWorld();
+  Future<FlutterWorld> createFlutterWorld(
+      TestConfiguration config, FlutterWorld world) async {
+    world = world ?? new FlutterWorld();
     final driver = await createFlutterDriver();
     world.setFlutterDriver(driver);
     return world;
+  }
+
+  @override
+  void prepare() {
+    final providedCreateWorld = createWorld;
+    createWorld = (config) async {
+      FlutterWorld world;
+      if (providedCreateWorld != null) {
+        world = await providedCreateWorld(config);
+      }
+
+      return await createFlutterWorld(config, world);
+    };
+
+    hooks = List.from(hooks ?? [])..add(FlutterAppRunnerHook());
+    stepDefinitions = List.from(stepDefinitions ?? [])
+      ..addAll(
+          [ThenExpectElementToHaveValue(), WhenTapWidget(), GivenOpenDrawer()]);
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_gherkin/src/configuration.dart';
 import 'package:flutter_gherkin/src/flutter/flutter_run_process_handler.dart';
 import 'package:flutter_gherkin/src/flutter/flutter_test_configuration.dart';
@@ -39,6 +41,7 @@ class FlutterAppRunnerHook extends Hook {
   Future<void> _runApp(FlutterTestConfiguration config) async {
     _flutterAppProcess = new FlutterRunProcessHandler();
     _flutterAppProcess.setApplicationTargetFile(config.targetAppPath);
+    stdout.writeln("Starting Flutter app under test '${config.targetAppPath}', this might take a few moments");
     await _flutterAppProcess.run();
     final observatoryUri =
         await _flutterAppProcess.waitForObservatoryDebuggerUri();
@@ -47,6 +50,7 @@ class FlutterAppRunnerHook extends Hook {
 
   Future<void> _terminateApp() async {
     if (_flutterAppProcess != null) {
+      stdout.writeln("Terminating Flutter app under test");
       await _flutterAppProcess.terminate();
       _flutterAppProcess = null;
     }

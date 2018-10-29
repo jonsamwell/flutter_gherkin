@@ -28,6 +28,7 @@ class GherkinRunner {
   final List<CustomParameter> _customParameters = new List<CustomParameter>();
 
   Future<void> execute(TestConfiguration config) async {
+    config.prepare();
     _registerReporters(config.reporters);
     _registerHooks(config.hooks);
     _registerCustomParameters(config.customStepParameterDefinitions);

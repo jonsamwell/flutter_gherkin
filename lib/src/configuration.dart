@@ -47,4 +47,7 @@ class TestConfiguration {
 
   /// the program will exit after all the tests have run
   bool exitAfterTestRun = true;
+
+  /// used to allow for custom configuration to ensure framework specific congfiguration is in place
+  void prepare() {}
 }

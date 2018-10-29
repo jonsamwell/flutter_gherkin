@@ -8,6 +8,7 @@ void main() {
     test('matches correctly', () {
       final syntax = new TextLineSyntax();
       expect(syntax.isMatch("Hello Jon"), true);
+      expect(syntax.isMatch("Hello 'Jon'!"), true);
       expect(syntax.isMatch(" Hello Jon"), true);
       expect(syntax.isMatch("  Hello Jon"), true);
       expect(syntax.isMatch("   h "), true);

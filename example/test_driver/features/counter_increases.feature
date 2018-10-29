@@ -1,5 +1,5 @@
 Feature: Counter
-  The counter should be increment when the button is pressed.
+  The counter should be incremented when the button is pressed.
 
   Scenario: Counter increases when the button is pressed
     Given I expect the "counter" to be "0"
