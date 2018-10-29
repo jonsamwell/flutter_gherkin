@@ -1,8 +1,9 @@
 import 'package:flutter_gherkin/flutter_gherkin.dart';
+import 'package:flutter_gherkin/src/gherkin/steps/step_definition_implementations.dart';
 
 typedef Future<void> OnRunCode(Iterable parameters);
 
-class MockStepDefinition extends StepDefinitionGeneric<World> {
+class MockStepDefinition extends StepDefinitionBase<World, Function> {
   bool hasRun = false;
   int runCount = 0;
   final OnRunCode code;

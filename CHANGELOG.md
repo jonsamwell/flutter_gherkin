@@ -1,3 +1,7 @@
+## [0.0.4] - 29/10/2018
+
+* Added more tests around `FlutterTestConfiguration` to ensure pre-defined steps are always added
+
 ## [0.0.3] - 29/10/2018
 
 * Added more pre-defined flutter step definitions

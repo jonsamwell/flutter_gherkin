@@ -4,6 +4,8 @@ import 'package:flutter_gherkin/src/flutter/flutter_world.dart';
 import 'package:flutter_gherkin/src/flutter/hooks/app_runner_hook.dart';
 import 'package:flutter_gherkin/src/flutter/steps/given_i_open_the_drawer_step.dart';
 import 'package:flutter_gherkin/src/flutter/steps/then_expect_element_to_have_value_step.dart';
+import 'package:flutter_gherkin/src/flutter/steps/when_fill_field_step.dart';
+import 'package:flutter_gherkin/src/flutter/steps/when_pause_step.dart';
 import 'package:flutter_gherkin/src/flutter/steps/when_tap_widget_step.dart';
 import 'package:flutter_driver/flutter_driver.dart';
 
@@ -54,7 +56,12 @@ class FlutterTestConfiguration extends TestConfiguration {
 
     hooks = List.from(hooks ?? [])..add(FlutterAppRunnerHook());
     stepDefinitions = List.from(stepDefinitions ?? [])
-      ..addAll(
-          [ThenExpectElementToHaveValue(), WhenTapWidget(), GivenOpenDrawer()]);
+      ..addAll([
+        ThenExpectElementToHaveValue(),
+        WhenTapWidget(),
+        GivenOpenDrawer(),
+        WhenPauseStep(),
+        WhenFillFieldStep()
+      ]);
   }
 }

@@ -716,7 +716,6 @@ For convenience the library defines a number of pre-defined steps so you can get
 
 For convenience the library provides a static `FlutterDriverUtils` class that abstracts away some common Flutter driver functionality like tapping a button, getting and entering text, checking if an element is present or absent.  See [lib/src/flutter/utils/driver_utils.dart](lib/src/flutter/utils/driver_utils.dart).
 
-
 ### Debugging
 
 In VSCode simply add add this block to your launch.json file (if you testable app is called `app_test.dart` and within the `test_driver` folder, if not replace that with the correct file path).  Don't forget to put a break point somewhere!
