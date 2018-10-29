@@ -22,7 +22,9 @@ class ThenExpectElementToHaveValue
   @override
   Future<void> executeStep(String key, String value) async {
     try {
-      final text = await FlutterDriverUtils.getText(world.driver, find.byValueKey(key), timeout: timeout);
+      final text = await FlutterDriverUtils.getText(
+          world.driver, find.byValueKey(key),
+          timeout: timeout);
       expect(text, value);
     } catch (e) {
       await reporter.message(
