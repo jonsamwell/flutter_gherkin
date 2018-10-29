@@ -1,6 +1,6 @@
 # flutter_gherkin
 
-A fully features Gherkin parser and test runner.  Works with Flutter and Dart 2.
+A fully featured Gherkin parser and test runner.  Works with Flutter and Dart 2.
 
 This implementation of the Gherkin tries to follow as closely as possible other implementations of Gherkin and specifically [Cucumber](https://docs.cucumber.io/cucumber/) in it's various forms.
 

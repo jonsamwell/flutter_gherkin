@@ -1,3 +1,7 @@
-## [0.0.1] - TODO: Add release date.
+## [0.0.2] - 29/10/2018
 
-* Initial release
+* Fixed up dependencies
+* 
+## [0.0.1] - 29/10/2018
+
+* Initial working release
