@@ -67,7 +67,7 @@ class GherkinRunner {
         await runner.run(featureFile);
       }
     } finally {
-      await _reporter.onTestRunfinished();
+      await _reporter.onTestRunFinished();
     }
 
     await _hook.onAfterRun(config);

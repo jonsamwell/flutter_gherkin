@@ -1,52 +1,88 @@
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'package:flutter_gherkin/src/gherkin/runnables/debug_information.dart';
+import 'package:flutter_gherkin/src/gherkin/steps/step_run_result.dart';
 import 'package:flutter_gherkin/src/reporters/message_level.dart';
 import 'package:flutter_gherkin/src/reporters/messages.dart';
 
 class ProgressReporter extends StdoutReporter {
-  Future<void> onStepFinished(FinishedMessage message) async {}
+  static const String PASS_COLOR = "\u001b[33;32m"; // green
+
+  @override
+  Future<void> onScenarioStarted(StartedMessage message) async {
+    printMessage(
+        "Running scenario: ${_getNameAndContext(message.name, message.context)}",
+        StdoutReporter.WARN_COLOR);
+  }
+
+  @override
+  Future<void> onScenarioFinished(ScenarioFinishedMessage message) async {
+    printMessage(
+        "${message.passed ? 'PASSED' : 'FAILED'}: Scenario ${_getNameAndContext(message.name, message.context)}",
+        message.passed ? PASS_COLOR : StdoutReporter.FAIL_COLOR);
+  }
+
+  @override
+  Future<void> onStepFinished(StepFinishedMessage message) async {
+    printMessage(
+        [
+          "  ",
+          _getStatePrefixIcon(message.result.result),
+          _getNameAndContext(message.name, message.context),
+          _getExecutionDuration(message.result),
+          _getErrorMessage(message.result)
+        ].join((" ")),
+        _getMessageColour(message.result.result));
+  }
 
   Future<void> message(String message, MessageLevel level) async {
     // ignore messages
   }
 
-  String getStatePrefixIcon() {
-    return "√|×|e!";
+  String _getErrorMessage(StepResult stepResult) {
+    if (stepResult is ErroredStepResult) {
+      return "\n${stepResult.exception}\n${stepResult.stackTrace}";
+    } else {
+      return "";
+    }
   }
 
-  String getContext(RunnableDebugInformation context) {
-    return "# ${context.filePath}:${context.lineNumber}";
+  String _getNameAndContext(String name, RunnableDebugInformation context) {
+    return "$name # ${context.filePath.replaceAll(RegExp(r"\.\\"), "")}:${context.lineNumber}";
+  }
+
+  String _getExecutionDuration(StepResult stepResult) {
+    return "took ${stepResult.elapsedMilliseconds}ms";
+  }
+
+  String _getStatePrefixIcon(StepExecutionResult result) {
+    switch (result) {
+      case StepExecutionResult.pass:
+        return "√";
+      case StepExecutionResult.error:
+      case StepExecutionResult.fail:
+      case StepExecutionResult.timeout:
+        return "×";
+      case StepExecutionResult.skipped:
+        return "-";
+    }
+
+    return "";
+  }
+
+  String _getMessageColour(StepExecutionResult result) {
+    switch (result) {
+      case StepExecutionResult.pass:
+        return PASS_COLOR;
+      case StepExecutionResult.fail:
+        return StdoutReporter.FAIL_COLOR;
+      case StepExecutionResult.error:
+        return StdoutReporter.FAIL_COLOR;
+      case StepExecutionResult.skipped:
+        return StdoutReporter.WARN_COLOR;
+      case StepExecutionResult.timeout:
+        return StdoutReporter.FAIL_COLOR;
+    }
+
+    return StdoutReporter.RESET_COLOR;
   }
 }
-// √ And I click on the "change job" link # src\step-definitions\interactions\click-on-element.step.ts:13
-//    × And I fill the "finish date" field with "1 December 2020" # src\step-definitions\interactions\fill-the-field-with.step.ts:11
-//        WebDriverError: unknown error: cannot focus element
-//          (Session info: chrome=70.0.3538.67)
-//          (Driver info: chromedriver=2.43.600210 (68dcf5eebde37173d4027fa8635e332711d2874a),platform=Windows NT 10.0.16299 x86_64)
-//            at Object.checkLegacyResponse (C:\easilog\webapp-tests\node_modules\selenium-webdriver\lib\error.js:546:15)
-//            at parseHttpResponse (C:\easilog\webapp-tests\node_modules\selenium-webdriver\lib\http.js:509:13)
-//            at doSend.then.response (C:\easilog\webapp-tests\node_modules\selenium-webdriver\lib\http.js:441:30)
-//            at process._tickCallback (internal/process/next_tick.js:68:7)
-//        From: Task: WebElement.sendKeys()
-//            at thenableWebDriverProxy.schedule (C:\easilog\webapp-tests\node_modules\selenium-webdriver\lib\webdriver.js:807:17)
-//            at WebElement.schedule_ (C:\easilog\webapp-tests\node_modules\selenium-webdriver\lib\webdriver.js:2010:25)
-//            at WebElement.sendKeys (C:\easilog\webapp-tests\node_modules\selenium-webdriver\lib\webdriver.js:2174:19)
-//            at actionFn (C:\easilog\webapp-tests\node_modules\protractor\built\element.js:89:44)
-//            at Array.map (<anonymous>)
-//            at actionResults.getWebElements.then (C:\easilog\webapp-tests\node_modules\protractor\built\element.js:461:65)
-//            at ManagedPromise.invokeCallback_ (C:\easilog\webapp-tests\node_modules\selenium-webdriver\lib\promise.js:1376:14)
-//            at TaskQueue.execute_ (C:\easilog\webapp-tests\node_modules\selenium-webdriver\lib\promise.js:3084:14)
-//            at TaskQueue.executeNext_ (C:\easilog\webapp-tests\node_modules\selenium-webdriver\lib\promise.js:3067:27)
-//            at asyncRun (C:\easilog\webapp-tests\node_modules\selenium-webdriver\lib\promise.js:2927:27)
-//            at C:\easilog\webapp-tests\node_modules\selenium-webdriver\lib\promise.js:668:7
-//            at process._tickCallback (internal/process/next_tick.js:68:7)Error
-//            at ElementArrayFinder.applyAction_ (C:\easilog\webapp-tests\node_modules\protractor\built\element.js:459:27)
-//            at ElementArrayFinder.(anonymous function).args [as sendKeys] (C:\easilog\webapp-tests\node_modules\protractor\built\element.js:91:29)
-//            at ElementFinder.(anonymous function).args [as sendKeys] (C:\easilog\webapp-tests\node_modules\protractor\built\element.js:831:22)
-//            at LoginPageObject.<anonymous> (C:\easilog\webapp-tests\src\pages\base.page.ts:101:23)
-//            at step (C:\easilog\webapp-tests\src\pages\base.page.js:42:23)
-//            at Object.next (C:\easilog\webapp-tests\src\pages\base.page.js:23:53)
-//            at fulfilled (C:\easilog\webapp-tests\src\pages\base.page.js:14:58)
-//            at process._tickCallback (internal/process/next_tick.js:68:7)
-//    - And I fill the "started date" field with "1 October 2021" # src\step-definitions\interactions\fill-the-field-with.step.ts:11
-//    - And I fill the "country" field with "United Kingdom" # src\step-definitions\interactions\fill-the-field-with.step.ts:11

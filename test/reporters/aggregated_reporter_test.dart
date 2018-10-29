@@ -46,7 +46,7 @@ void main() {
       expect(reporter1.onStepStartedInvocationCount, 1);
       expect(reporter2.onStepStartedInvocationCount, 1);
 
-      await aggregatedReporter.onTestRunfinished();
+      await aggregatedReporter.onTestRunFinished();
       expect(reporter1.onTestRunfinishedInvocationCount, 1);
       expect(reporter2.onTestRunfinishedInvocationCount, 1);
 

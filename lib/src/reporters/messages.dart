@@ -26,3 +26,11 @@ class StepFinishedMessage extends FinishedMessage {
       String name, RunnableDebugInformation context, this.result)
       : super(Target.step, name, context);
 }
+
+class ScenarioFinishedMessage extends FinishedMessage {
+  final bool passed;
+
+  ScenarioFinishedMessage(
+      String name, RunnableDebugInformation context, this.passed)
+      : super(Target.scenario, name, context);
+}

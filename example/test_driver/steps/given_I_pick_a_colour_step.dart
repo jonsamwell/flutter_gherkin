@@ -1,10 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
+import 'colour_parameter.dart';
 
-class GivenIPickAColour extends Given1<Color> {
+class GivenIPickAColour extends Given1<Colour> {
   @override
-  Future<void> executeStep(Color input1) async {
+  Future<void> executeStep(Colour input1) async {
     // TODO: implement executeStep
   }
 

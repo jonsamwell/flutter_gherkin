@@ -18,8 +18,8 @@ class AggregatedReporter extends Reporter {
   }
 
   @override
-  Future<void> onTestRunfinished() async {
-    await _invokeReporters((r) async => await r.onTestRunfinished());
+  Future<void> onTestRunFinished() async {
+    await _invokeReporters((r) async => await r.onTestRunFinished());
   }
 
   @override

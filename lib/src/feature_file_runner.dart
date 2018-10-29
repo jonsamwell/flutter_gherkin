@@ -115,9 +115,9 @@ class FeatureFileRunner {
 
     world?.dispose();
 
+    await _reporter.onScenarioFinished(
+        ScenarioFinishedMessage(scenario.name, scenario.debug, scenarioPassed));
     await _hook.onAfterScenario(_config, scenario.name);
-    _reporter.onScenarioFinished(
-        FinishedMessage(Target.scenario, scenario.name, scenario.debug));
     return scenarioPassed;
   }
 

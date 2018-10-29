@@ -248,9 +248,9 @@ Hooks are custom bits of code that can be run at certain points with the test ru
 
 #### reporters
 
-*Requried*
+*Required*
 
-Reporters are classes that are able to report on the status of the test run.  This could be a simple as merely logging scenerio result to the console.  There are a number of built-in reporter:
+Reporters are classes that are able to report on the status of the test run.  This could be a simple as merely logging scenario result to the console.  There are a number of built-in reporter:
 
 - `StdoutReporter` : Logs all messages from the test run to the standard output (console).
 - `ProgressReporter` : Logs the progress of the test run marking each step with a scenario as either passed, skipped or failed.
@@ -669,7 +669,24 @@ Future<void> main() {
 
 A reporter is a class that is able to report on the progress of the test run. In it simplest form it could just print messages to the console or be used to tell a build server such as TeamCity of the progress of the test run.  The library has a number of built in reporters.
 
-- StdOut - prints all messages to the console.
+- `StdoutReporter` - prints all messages from the test run to the console.
+- `ProgressReporter` - prints the result of each scenario and step to the console - colours the output.
+
+You can create your own custom reporter by inheriting from the base `Reporter` class and overriding the one or many of the methods to direct the output message.  The `Reporter` defines the following methods that can be overridden.  All methods must return a `Future<void>` and can be async.
+
+- `onTestRunStarted`
+- `onTestRunFinished`
+- `onFeatureStarted`
+- `onFeatureFinished`
+- `onScenarioStarted`
+- `onScenarioFinished`
+- `onStepStarted`
+- `onStepFinished`
+- `onException`
+- `message`
+- `dispose`
+
+Once you have created your custom reporter don't forget to add it to the `reporters` configuration file property.
 
 *Note*: PR's of new reporters are *always* welcome.
 

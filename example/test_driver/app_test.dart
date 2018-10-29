@@ -9,12 +9,12 @@ import 'steps/tap_button_n_times_step.dart';
 Future<void> main() {
   final config = FlutterTestConfiguration()
     ..features = [Glob(r"test_driver/features/*.feature")]
-    ..reporters = [StdoutReporter()]
+    ..reporters = [ProgressReporter()]
     ..hooks = [HookExample()]
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..customStepParameterDefinitions = [ColourParameter()]
     ..restartAppBetweenScenarios = true
     ..targetAppPath = "test_driver/app.dart"
-    ..exitAfterTestRun = false;
+    ..exitAfterTestRun = true;
   return GherkinRunner().execute(config);
 }
