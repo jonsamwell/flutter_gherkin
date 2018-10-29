@@ -41,7 +41,8 @@ class FlutterAppRunnerHook extends Hook {
   Future<void> _runApp(FlutterTestConfiguration config) async {
     _flutterAppProcess = new FlutterRunProcessHandler();
     _flutterAppProcess.setApplicationTargetFile(config.targetAppPath);
-    stdout.writeln("Starting Flutter app under test '${config.targetAppPath}', this might take a few moments");
+    stdout.writeln(
+        "Starting Flutter app under test '${config.targetAppPath}', this might take a few moments");
     await _flutterAppProcess.run();
     final observatoryUri =
         await _flutterAppProcess.waitForObservatoryDebuggerUri();

@@ -1,10 +1,6 @@
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 
-enum Colour {
-  red,
-  green,
-  blue
-}
+enum Colour { red, green, blue }
 
 class ColourParameter extends CustomParameter<Colour> {
   ColourParameter()
