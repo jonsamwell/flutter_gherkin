@@ -148,8 +148,8 @@ import 'package:flutter_gherkin/flutter_gherkin.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/**/*.feature")]
-    ..reporters = [ProgressReporter()]
+    ..features = [Glob(r"test_driver/features/*.feature")]
+    ..reporters = [ProgressReporter(), TestRunSummaryReporter()]
     ..restartAppBetweenScenarios = true
     ..targetAppPath = "test_driver/app.dart"
     ..exitAfterTestRun = true;
@@ -157,7 +157,7 @@ Future<void> main() {
 }
 ```
 
-This code simple creates a configuration object and calls this library which will then promptly parse your feature files and run the tests.  The configuration file is important and explained in further detail below.  However, all that is happening is a `Glob` is provide which specifies the path to one or more feature files, it sets the reporter to the `ProgressReporter` report which mean prints to the result of a scenario and step to the standard output (console).  Finally it specifies the path to the testable app created above `test_driver/app.dart`.  This is important as it instructions the library which app to run the tests against.
+This code simple creates a configuration object and calls this library which will then promptly parse your feature files and run the tests.  The configuration file is important and explained in further detail below.  However, all that is happening is a `Glob` is provide which specifies the path to one or more feature files, it sets the reporters to the `ProgressReporter` report which prints the result of scenarios and steps to the standard output (console).  The `TestRunSummaryReporter` prints a summary of the run once all tests have been executed.  Finally it specifies the path to the testable app created above `test_driver/app.dart`.  This is important as it instructions the library which app to run the tests against.
 
 Finally to actually run the tests run the below on the command line:
 
@@ -179,7 +179,7 @@ The parameters below can be specified in your configuration file:
 
 *Required*
 
-An iterable of `Glob` patterns that specify the location(s) of `*.feature` files to run.
+An iterable of `Glob` patterns that specify the location(s) of `*.feature` files to run.  See <https://pub.dartlang.org/packages/glob>
 
 #### tagExpression
 
@@ -208,7 +208,7 @@ import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/**/*.feature")]
+    ..features = [Glob(r"test_driver/features/*.feature")]
     ..reporters = [StdoutReporter()]
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..restartAppBetweenScenarios = true
@@ -234,7 +234,7 @@ import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/**/*.feature")]
+    ..features = [Glob(r"test_driver/features/*.feature")]
     ..reporters = [StdoutReporter()]
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..customStepParameterDefinitions = [ColourParameter()]
@@ -272,7 +272,7 @@ import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/**/*.feature")]
+    ..features = [Glob(r"test_driver/features/*.feature")]
     ..reporters = [StdoutReporter()]
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..customStepParameterDefinitions = [ColourParameter()]
@@ -299,7 +299,7 @@ import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/**/*.feature")]
+    ..features = [Glob(r"test_driver/features/*.feature")]
     ..reporters = [StdoutReporter()]
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..customStepParameterDefinitions = [ColourParameter()]
@@ -426,7 +426,7 @@ class TapButtonNTimesStep extends When2WithWorld<String, int, FlutterWorld> {
   @override
   Future<void> executeStep(String input1, int input2) async {
     final locator = find.byValueKey(input1);
-    for (var i = 0; i < 10; i += 1) {
+    for (var i = 0; i < input2; i += 1) {
       await world.driver.tap(locator, timeout: timeout);
     }
   }
@@ -673,6 +673,7 @@ A reporter is a class that is able to report on the progress of the test run. In
 
 - `StdoutReporter` - prints all messages from the test run to the console.
 - `ProgressReporter` - prints the result of each scenario and step to the console - colours the output.
+- `TestRunSummaryReporter` - prints the results and duration of the test run once the run has completed - colours the output.
 
 You can create your own custom reporter by inheriting from the base `Reporter` class and overriding the one or many of the methods to direct the output message.  The `Reporter` defines the following methods that can be overridden.  All methods must return a `Future<void>` and can be async.
 

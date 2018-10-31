@@ -1,3 +1,8 @@
+## [0.0.7] - 01/11/2018
+
+* Added a test run summary reporter `TestRunSummaryReporter` that logs an aggregated summary of the test run once all tests have run.
+* Fixed up glob issue in example project
+
 ## [0.0.6] - 31/10/2018
 
 * Added quick start steps in the example app readme

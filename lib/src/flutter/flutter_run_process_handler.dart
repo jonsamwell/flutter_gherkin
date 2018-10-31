@@ -11,6 +11,9 @@ class FlutterRunProcessHandler extends ProcessHandler {
       r"observatory debugger .*[:]? (http[s]?:.*\/).*",
       caseSensitive: false,
       multiLine: false);
+
+  static RegExp _noConnectedDeviceRegex =
+      RegExp(r"no connected device", caseSensitive: false, multiLine: false);
   Process _runningProcess;
   Stream<String> _processStdoutStream;
   List<StreamSubscription> _openSubscriptions = List<StreamSubscription>();
@@ -59,17 +62,24 @@ class FlutterRunProcessHandler extends ProcessHandler {
     _ensureRunningProcess();
     final completer = Completer<String>();
     StreamSubscription sub;
-    sub = _processStdoutStream
-        .timeout(timeout,
-            onTimeout: (_) => completer.completeError(TimeoutException(
-                "Time out while wait for observatory debugger uri", timeout)))
-        .listen((logLine) {
+    sub = _processStdoutStream.timeout(timeout, onTimeout: (_) {
+      sub?.cancel();
+      if (!completer.isCompleted)
+        completer.completeError(TimeoutException(
+            "Timeout while wait for observatory debugger uri", timeout));
+    }).listen((logLine) {
       if (_observatoryDebuggerUriRegex.hasMatch(logLine)) {
         sub?.cancel();
-        completer.complete(
-            _observatoryDebuggerUriRegex.firstMatch(logLine).group(1));
+        if (!completer.isCompleted)
+          completer.complete(
+              _observatoryDebuggerUriRegex.firstMatch(logLine).group(1));
+      } else if (_noConnectedDeviceRegex.hasMatch(logLine)) {
+        sub?.cancel();
+        if (!completer.isCompleted)
+          stderr.writeln(
+              "${FAIL_COLOR}No connected devices found to run app on and tests against$RESET_COLOR");
       }
-    });
+    }, cancelOnError: true);
 
     return completer.future;
   }

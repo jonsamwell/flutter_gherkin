@@ -22,6 +22,7 @@ export "src/reporters/message_level.dart";
 export "src/reporters/messages.dart";
 export "src/reporters/stdout_reporter.dart";
 export "src/reporters/progress_reporter.dart";
+export "src/reporters/test_run_summary_reporter.dart";
 
 // Hooks
 export "src/hooks/hook.dart";

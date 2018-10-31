@@ -5,25 +5,23 @@ import 'package:flutter_gherkin/src/reporters/message_level.dart';
 import 'package:flutter_gherkin/src/reporters/messages.dart';
 
 class ProgressReporter extends StdoutReporter {
-  static const String PASS_COLOR = "\u001b[33;32m"; // green
-
   @override
   Future<void> onScenarioStarted(StartedMessage message) async {
-    printMessage(
+    printMessageLine(
         "Running scenario: ${_getNameAndContext(message.name, message.context)}",
         StdoutReporter.WARN_COLOR);
   }
 
   @override
   Future<void> onScenarioFinished(ScenarioFinishedMessage message) async {
-    printMessage(
+    printMessageLine(
         "${message.passed ? 'PASSED' : 'FAILED'}: Scenario ${_getNameAndContext(message.name, message.context)}",
-        message.passed ? PASS_COLOR : StdoutReporter.FAIL_COLOR);
+        message.passed ? StdoutReporter.PASS_COLOR : StdoutReporter.FAIL_COLOR);
   }
 
   @override
   Future<void> onStepFinished(StepFinishedMessage message) async {
-    printMessage(
+    printMessageLine(
         [
           "  ",
           _getStatePrefixIcon(message.result.result),
@@ -72,7 +70,7 @@ class ProgressReporter extends StdoutReporter {
   String _getMessageColour(StepExecutionResult result) {
     switch (result) {
       case StepExecutionResult.pass:
-        return PASS_COLOR;
+        return StdoutReporter.PASS_COLOR;
       case StepExecutionResult.fail:
         return StdoutReporter.FAIL_COLOR;
       case StepExecutionResult.error:

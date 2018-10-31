@@ -46,33 +46,40 @@ class GherkinRunner {
       }
     }
 
-    await _reporter.message(
-        "Found ${featureFiles.length} feature file(s) to run",
-        MessageLevel.info);
-
-    if (config.order == ExecutionOrder.random) {
-      await _reporter.message(
-          "Executing features in random order", MessageLevel.info);
-      featureFiles = featureFiles.toList()..shuffle();
-    }
-
-    await _hook.onBeforeRun(config);
-
     bool allFeaturesPassed = true;
-    try {
-      await _reporter.onTestRunStarted();
-      for (var featureFile in featureFiles) {
-        final runner = new FeatureFileRunner(config, _tagExpressionEvaluator,
-            _executableSteps, _reporter, _hook);
-        await runner.run(featureFile);
+
+    if (featureFiles.length == 0) {
+      await _reporter.message(
+          "No feature files found to run, exitting without running any scenarios",
+          MessageLevel.warning);
+    } else {
+      await _reporter.message(
+          "Found ${featureFiles.length} feature file(s) to run",
+          MessageLevel.info);
+
+      if (config.order == ExecutionOrder.random) {
+        await _reporter.message(
+            "Executing features in random order", MessageLevel.info);
+        featureFiles = featureFiles.toList()..shuffle();
       }
-    } finally {
-      await _reporter.onTestRunFinished();
+
+      await _hook.onBeforeRun(config);
+
+      try {
+        await _reporter.onTestRunStarted();
+        for (var featureFile in featureFiles) {
+          final runner = new FeatureFileRunner(config, _tagExpressionEvaluator,
+              _executableSteps, _reporter, _hook);
+          await runner.run(featureFile);
+        }
+      } finally {
+        await _reporter.onTestRunFinished();
+      }
+
+      await _hook.onAfterRun(config);
     }
 
-    await _hook.onAfterRun(config);
     await _reporter.dispose();
-
     exitCode = allFeaturesPassed ? 0 : 1;
 
     if (config.exitAfterTestRun) exit(allFeaturesPassed ? 0 : 1);

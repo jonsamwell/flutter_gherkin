@@ -8,10 +8,12 @@ import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/*.feature")]
+    ..features = [Glob(r"test_driver/features/**.feature")]
     ..reporters = [
-      ProgressReporter()
-    ] // you can include the "StdoutReporter()" for more verbose information
+      ProgressReporter(),
+      TestRunSummaryReporter(),
+      StdoutReporter(MessageLevel.warning)
+    ] // you can include the "StdoutReporter()" without the message level parameter for verbose log information
     ..hooks = [HookExample()]
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..customStepParameterDefinitions = [ColourParameter()]
