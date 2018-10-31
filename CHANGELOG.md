@@ -1,3 +1,7 @@
+## [0.0.8] - 01/11/2018
+
+* Updated feature file glob pattern in readme examples
+
 ## [0.0.7] - 01/11/2018
 
 * Added a test run summary reporter `TestRunSummaryReporter` that logs an aggregated summary of the test run once all tests have run.
