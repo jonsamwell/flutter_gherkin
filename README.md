@@ -68,6 +68,8 @@ This implementation of the Gherkin tries to follow as closely as possible other 
 
 See <https://docs.cucumber.io/gherkin/> for information on the Gherkin syntax and Behaviour Driven Development (BDD).  
 
+See [example readme](example/README.md) for a quick start guide to running the example features and app.
+
 The first step is to create a version of your app that has flutter driver enabled so that it can be automated.  A good guide how to do this is show [here](https://flutter.io/cookbook/testing/integration-test-introduction/#4-instrument-the-app).  However in short, create a folder called `test_driver` and within that create a file called `app.dart` and paste in the below code.
 
 ```dart

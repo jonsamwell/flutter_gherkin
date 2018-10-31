@@ -1,3 +1,7 @@
+## [0.0.6] - 31/10/2018
+
+* Added quick start steps in the example app readme
+
 ## [0.0.5] - 29/10/2018
 
 * Sorted out formatting of pre-defined steps

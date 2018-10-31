@@ -8,13 +8,16 @@ import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/**/*.feature")]
-    ..reporters = [ProgressReporter()]
+    ..features = [Glob(r"test_driver/features/*.feature")]
+    ..reporters = [
+      ProgressReporter()
+    ] // you can include the "StdoutReporter()" for more verbose information
     ..hooks = [HookExample()]
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..customStepParameterDefinitions = [ColourParameter()]
     ..restartAppBetweenScenarios = true
     ..targetAppPath = "test_driver/app.dart"
-    ..exitAfterTestRun = true;
+    // ..tagExpression = "@smoke" // uncomment to see an example of running scenarios based on tag expressions
+    ..exitAfterTestRun = true; // set to false if debugging to exit cleanly
   return GherkinRunner().execute(config);
 }
