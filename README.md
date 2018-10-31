@@ -148,7 +148,7 @@ import 'package:flutter_gherkin/flutter_gherkin.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/*.feature")]
+    ..features = [Glob(r"test_driver/features/**.feature")]
     ..reporters = [ProgressReporter(), TestRunSummaryReporter()]
     ..restartAppBetweenScenarios = true
     ..targetAppPath = "test_driver/app.dart"
@@ -208,7 +208,7 @@ import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/*.feature")]
+    ..features = [Glob(r"test_driver/features/**.feature")]
     ..reporters = [StdoutReporter()]
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..restartAppBetweenScenarios = true
@@ -234,7 +234,7 @@ import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/*.feature")]
+    ..features = [Glob(r"test_driver/features/**.feature")]
     ..reporters = [StdoutReporter()]
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..customStepParameterDefinitions = [ColourParameter()]
@@ -272,7 +272,7 @@ import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/*.feature")]
+    ..features = [Glob(r"test_driver/features/**.feature")]
     ..reporters = [StdoutReporter()]
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..customStepParameterDefinitions = [ColourParameter()]
@@ -299,7 +299,7 @@ import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/*.feature")]
+    ..features = [Glob(r"test_driver/features/**.feature")]
     ..reporters = [StdoutReporter()]
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..customStepParameterDefinitions = [ColourParameter()]
@@ -655,7 +655,7 @@ import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/*.feature")]
+    ..features = [Glob(r"test_driver/features/**.feature")]
     ..reporters = [StdoutReporter()]
     ..hooks = [HookExample()]
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
