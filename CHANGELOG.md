@@ -1,3 +1,8 @@
+## [0.0.10] - 01/11/2018
+
+* Ensured summary reporter reports failure reason
+* Ensured well known Flutter step actions timeout before their parent step
+
 ## [0.0.9] - 01/11/2018
 
 * Updated example of custom parameters and how to use them

@@ -23,7 +23,7 @@ void main() {
       await reporter.onStepFinished(StepFinishedMessage(
           "Step 2",
           RunnableDebugInformation("filePath", 2, "line 2"),
-          StepResult(0, StepExecutionResult.fail)));
+          StepResult(0, StepExecutionResult.fail, "Failed Reason")));
       await reporter.onStepFinished(StepFinishedMessage(
           "Step 3",
           RunnableDebugInformation("filePath", 3, "line 3"),
@@ -38,11 +38,12 @@ void main() {
           StepResult(1, StepExecutionResult.timeout)));
 
       expect(reporter.output, [
-        "   √ Step 1 # filePath:1 took 0ms ",
-        "   × Step 2 # filePath:2 took 0ms ",
-        "   - Step 3 # filePath:3 took 0ms ",
-        "   × Step 4 # filePath:4 took 0ms ",
-        "   × Step 5 # filePath:5 took 1ms "
+        "   √ Step 1 # filePath:1 took 0ms",
+        "   × Step 2 # filePath:2 took 0ms \n"
+            "      Failed Reason",
+        "   - Step 3 # filePath:3 took 0ms",
+        "   × Step 4 # filePath:4 took 0ms",
+        "   × Step 5 # filePath:5 took 1ms"
       ]);
     });
 

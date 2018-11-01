@@ -24,7 +24,7 @@ class ThenExpectElementToHaveValue
     try {
       final text = await FlutterDriverUtils.getText(
           world.driver, find.byValueKey(key),
-          timeout: timeout);
+          timeout: timeout * .9);
       expect(text, value);
     } catch (e) {
       await reporter.message(

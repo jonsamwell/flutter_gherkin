@@ -27,13 +27,22 @@ class ProgressReporter extends StdoutReporter {
           _getStatePrefixIcon(message.result.result),
           _getNameAndContext(message.name, message.context),
           _getExecutionDuration(message.result),
+          _getReasonMessage(message.result),
           _getErrorMessage(message.result)
-        ].join((" ")),
+        ].join((" ")).trimRight(),
         _getMessageColour(message.result.result));
   }
 
   Future<void> message(String message, MessageLevel level) async {
     // ignore messages
+  }
+
+  String _getReasonMessage(StepResult stepResult) {
+    if (stepResult.resultReason != null && stepResult.resultReason.isNotEmpty) {
+      return "\n      ${stepResult.resultReason}";
+    } else {
+      return "";
+    }
   }
 
   String _getErrorMessage(StepResult stepResult) {

@@ -1,5 +1,6 @@
 import 'package:flutter_gherkin/src/gherkin/exceptions/syntax_error.dart';
 import 'package:flutter_gherkin/src/gherkin/runnables/background.dart';
+import 'package:flutter_gherkin/src/gherkin/runnables/comment_line.dart';
 import 'package:flutter_gherkin/src/gherkin/runnables/debug_information.dart';
 import 'package:flutter_gherkin/src/gherkin/runnables/empty_line.dart';
 import 'package:flutter_gherkin/src/gherkin/runnables/runnable.dart';
@@ -50,6 +51,7 @@ class FeatureRunnable extends RunnableBlock {
         }
         break;
       case EmptyLineRunnable:
+      case CommentLineRunnable:
         break;
       default:
         throw new Exception(

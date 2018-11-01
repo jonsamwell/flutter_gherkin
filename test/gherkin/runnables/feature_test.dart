@@ -1,4 +1,5 @@
 import 'package:flutter_gherkin/src/gherkin/runnables/background.dart';
+import 'package:flutter_gherkin/src/gherkin/runnables/comment_line.dart';
 import 'package:flutter_gherkin/src/gherkin/runnables/debug_information.dart';
 import 'package:flutter_gherkin/src/gherkin/runnables/empty_line.dart';
 import 'package:flutter_gherkin/src/gherkin/runnables/feature.dart';
@@ -25,6 +26,10 @@ void main() {
     test('can add EmptyLineRunnable', () {
       final runnable = new FeatureRunnable("", debugInfo);
       runnable.addChild(EmptyLineRunnable(debugInfo));
+    });
+    test('can add CommentLineRunnable', () {
+      final runnable = new FeatureRunnable("", debugInfo);
+      runnable.addChild(CommentLineRunnable("", debugInfo));
     });
     test('can add ScenarioRunnable', () {
       final runnable = new FeatureRunnable("", debugInfo);
