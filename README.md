@@ -537,7 +537,7 @@ enum Colour { red, green, blue }
 
 class ColourParameter extends CustomParameter<Colour> {
   ColourParameter()
-      : super("colour", RegExp(r"red|green|blue", caseSensitive: true), (c) {
+      : super("colour", RegExp(r"(red|green|blue)", caseSensitive: true), (c) {
           switch (c.toLowerCase()) {
             case "red":
               return Colour.red;
@@ -559,15 +559,15 @@ import 'colour_parameter.dart';
 class GivenIPickAColour extends Given1<Colour> {
   @override
   Future<void> executeStep(Colour input1) async {
-    // TODO: implement executeStep
+    print("The picked colour was: '$input1'");
   }
 
   @override
-  RegExp get pattern => RegExp(r"I pick a {colour}");
+  RegExp get pattern => RegExp(r"I pick the colour {colour}");
 }
 ```
 
-This customer parameter would be used like this: `Given I pick the colour red`. When the step is invoked the word "red" would matched and passed to the custom parameter to convert it into a Color object which is then finally passed to the step definition code as a Color object.
+This customer parameter would be used like this: `Given I pick the colour red`. When the step is invoked the word "red" would matched and passed to the custom parameter to convert it into a `Colour` enum which is then finally passed to the step definition code as a `Colour` object.
 
 #### World Context (per test scenario shared state)
 

@@ -1,3 +1,7 @@
+## [0.0.9] - 01/11/2018
+
+* Updated example of custom parameters and how to use them
+
 ## [0.0.8] - 01/11/2018
 
 * Updated feature file glob pattern in readme examples
