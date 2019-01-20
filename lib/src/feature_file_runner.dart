@@ -216,6 +216,10 @@ class FeatureFileRunner {
     if (step.multilineStrings.length > 0) {
       parameters = parameters.toList()..addAll(step.multilineStrings);
     }
+    
+    if (step.table != null) {
+      parameters = parameters.toList()..add(step.table);
+    }
 
     return parameters;
   }
