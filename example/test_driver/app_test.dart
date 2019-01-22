@@ -11,8 +11,7 @@ Future<void> main() {
     ..features = [Glob(r"test_driver/features/**.feature")]
     ..reporters = [
       ProgressReporter(),
-      TestRunSummaryReporter(),
-      StdoutReporter(MessageLevel.warning)
+      TestRunSummaryReporter()
     ] // you can include the "StdoutReporter()" without the message level parameter for verbose log information
     ..hooks = [HookExample()]
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
