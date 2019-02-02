@@ -14,6 +14,10 @@ abstract class Hook {
   Future<void> onAfterRun(TestConfiguration config) => Future.value(null);
 
   /// Run before a scenario and it steps are executed
+  Future<void> onAfterScenarioWorldCreated(World world, String scenario) =>
+          Future.value(null);
+
+  /// Run before a scenario and it steps are executed
   Future<void> onBeforeScenario(TestConfiguration config, String scenario) =>
       Future.value(null);
 
