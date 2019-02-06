@@ -8,8 +8,8 @@ import 'package:flutter_gherkin/src/gherkin/runnables/tags.dart';
 
 class ScenarioRunnable extends RunnableBlock {
   String _name;
-  List<String> tags = List<String>();
-  List<StepRunnable> steps = new List<StepRunnable>();
+  List<String> tags = <String>[];
+  List<StepRunnable> steps = <StepRunnable>[];
 
   ScenarioRunnable(this._name, RunnableDebugInformation debug) : super(debug);
 
@@ -29,7 +29,7 @@ class ScenarioRunnable extends RunnableBlock {
       case EmptyLineRunnable:
         break;
       default:
-        throw new Exception(
+        throw Exception(
             "Unknown runnable child given to Scenario '${child.runtimeType}'");
     }
   }

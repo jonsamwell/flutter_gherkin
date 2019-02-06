@@ -8,7 +8,7 @@ import 'package:flutter_gherkin/src/gherkin/runnables/runnable_block.dart';
 class FeatureFile extends RunnableBlock {
   String _language = "en";
 
-  List<FeatureRunnable> features = new List<FeatureRunnable>();
+  List<FeatureRunnable> features = <FeatureRunnable>[];
 
   FeatureFile(RunnableDebugInformation debug) : super(debug);
 
@@ -26,7 +26,7 @@ class FeatureFile extends RunnableBlock {
       case EmptyLineRunnable:
         break;
       default:
-        throw new Exception(
+        throw Exception(
             "Unknown runnable child given to FeatureFile '${child.runtimeType}'");
     }
   }

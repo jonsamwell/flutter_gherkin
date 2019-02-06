@@ -20,12 +20,12 @@ import 'package:flutter_gherkin/src/reporters/message_level.dart';
 import 'package:flutter_gherkin/src/reporters/reporter.dart';
 
 class GherkinRunner {
-  final _reporter = new AggregatedReporter();
-  final _hook = new AggregatedHook();
-  final _parser = new GherkinParser();
-  final _tagExpressionEvaluator = new TagExpressionEvaluator();
-  final List<ExectuableStep> _executableSteps = new List<ExectuableStep>();
-  final List<CustomParameter> _customParameters = new List<CustomParameter>();
+  final _reporter = AggregatedReporter();
+  final _hook = AggregatedHook();
+  final _parser = GherkinParser();
+  final _tagExpressionEvaluator = TagExpressionEvaluator();
+  final List<ExectuableStep> _executableSteps = <ExectuableStep>[];
+  final List<CustomParameter> _customParameters = <CustomParameter>[];
 
   Future<void> execute(TestConfiguration config) async {
     config.prepare();
@@ -34,7 +34,7 @@ class GherkinRunner {
     _registerCustomParameters(config.customStepParameterDefinitions);
     _registerStepDefinitions(config.stepDefinitions);
 
-    List<FeatureFile> featureFiles = List<FeatureFile>();
+    List<FeatureFile> featureFiles = <FeatureFile>[];
     for (var glob in config.features) {
       for (var entity in glob.listSync()) {
         await _reporter.message(
@@ -48,7 +48,7 @@ class GherkinRunner {
 
     bool allFeaturesPassed = true;
 
-    if (featureFiles.length == 0) {
+    if (featureFiles.isEmpty) {
       await _reporter.message(
           "No feature files found to run, exitting without running any scenarios",
           MessageLevel.warning);
@@ -68,9 +68,9 @@ class GherkinRunner {
       try {
         await _reporter.onTestRunStarted();
         for (var featureFile in featureFiles) {
-          final runner = new FeatureFileRunner(config, _tagExpressionEvaluator,
+          final runner = FeatureFileRunner(config, _tagExpressionEvaluator,
               _executableSteps, _reporter, _hook);
-          await runner.run(featureFile);
+          allFeaturesPassed &= await runner.run(featureFile);
         }
       } finally {
         await _reporter.onTestRunFinished();
@@ -94,17 +94,17 @@ class GherkinRunner {
   }
 
   void _registerCustomParameters(Iterable<CustomParameter> customParameters) {
-    _customParameters.add(new FloatParameterLower());
-    _customParameters.add(new FloatParameterCamel());
-    _customParameters.add(new NumParameterLower());
-    _customParameters.add(new NumParameterCamel());
-    _customParameters.add(new IntParameterLower());
-    _customParameters.add(new IntParameterCamel());
-    _customParameters.add(new StringParameterLower());
-    _customParameters.add(new StringParameterCamel());
-    _customParameters.add(new WordParameterLower());
-    _customParameters.add(new WordParameterCamel());
-    _customParameters.add(new PluralParameter());
+    _customParameters.add(FloatParameterLower());
+    _customParameters.add(FloatParameterCamel());
+    _customParameters.add(NumParameterLower());
+    _customParameters.add(NumParameterCamel());
+    _customParameters.add(IntParameterLower());
+    _customParameters.add(IntParameterCamel());
+    _customParameters.add(StringParameterLower());
+    _customParameters.add(StringParameterCamel());
+    _customParameters.add(WordParameterLower());
+    _customParameters.add(WordParameterCamel());
+    _customParameters.add(PluralParameter());
     if (customParameters != null) _customParameters.addAll(customParameters);
   }
 

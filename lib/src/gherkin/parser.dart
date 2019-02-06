@@ -74,7 +74,7 @@ class GherkinParser {
 
         parentBlock.addChild(runnable);
       } else {
-        throw new GherkinSyntaxException(
+        throw GherkinSyntaxException(
             "Unknown or un-implemented syntax: '$line', file: '${parentBlock.debug.filePath}");
       }
     }

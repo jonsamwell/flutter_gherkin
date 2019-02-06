@@ -8,11 +8,11 @@ void main() {
   final debugInfo = RunnableDebugInformation(null, 0, null);
   group("addChild", () {
     test('can add EmptyLineRunnable', () {
-      final runnable = new MultilineStringRunnable(debugInfo);
+      final runnable = MultilineStringRunnable(debugInfo);
       runnable.addChild(EmptyLineRunnable(debugInfo));
     });
     test('can add TextLineRunnable', () {
-      final runnable = new MultilineStringRunnable(debugInfo);
+      final runnable = MultilineStringRunnable(debugInfo);
       runnable.addChild(TextLineRunnable(debugInfo)..text = "1");
       runnable.addChild(TextLineRunnable(debugInfo)..text = "2");
       runnable.addChild(TextLineRunnable(debugInfo)..text = "3");

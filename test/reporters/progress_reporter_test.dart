@@ -4,7 +4,7 @@ import "package:flutter_gherkin/src/gherkin/steps/step_run_result.dart";
 import "package:test/test.dart";
 
 class TestableProgressReporter extends ProgressReporter {
-  final output = List<String>();
+  final output = <String>[];
   @override
   void printMessageLine(String message, [String colour]) {
     output.add(message);
@@ -39,8 +39,7 @@ void main() {
 
       expect(reporter.output, [
         "   √ Step 1 # filePath:1 took 0ms",
-        "   × Step 2 # filePath:2 took 0ms \n"
-            "      Failed Reason",
+        "   × Step 2 # filePath:2 took 0ms \n      Failed Reason",
         "   - Step 3 # filePath:3 took 0ms",
         "   × Step 4 # filePath:4 took 0ms",
         "   × Step 5 # filePath:5 took 1ms"

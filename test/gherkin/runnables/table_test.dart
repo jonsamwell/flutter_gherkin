@@ -7,11 +7,11 @@ void main() {
   final debugInfo = RunnableDebugInformation(null, 0, null);
   group("addChild", () {
     test('can add CommentLineRunnable', () {
-      final runnable = new TableRunnable(debugInfo);
+      final runnable = TableRunnable(debugInfo);
       runnable.addChild(CommentLineRunnable("", debugInfo));
     });
     test('can add TableRunnable', () {
-      final runnable = new TableRunnable(debugInfo);
+      final runnable = TableRunnable(debugInfo);
       runnable.addChild(
           TableRunnable(debugInfo)..rows.add("| Header 1 | Header 2 |"));
       runnable.addChild(TableRunnable(debugInfo)..rows.add("|  1 | 2 |"));
@@ -24,7 +24,7 @@ void main() {
 
   group("to table", () {
     test("single row table has no header row", () async {
-      final runnable = new TableRunnable(debugInfo);
+      final runnable = TableRunnable(debugInfo);
       runnable.addChild(
           TableRunnable(debugInfo)..rows.add("| one | two | three |"));
       final table = runnable.toTable();
@@ -34,7 +34,7 @@ void main() {
     });
 
     test("two row table has header row", () async {
-      final runnable = new TableRunnable(debugInfo);
+      final runnable = TableRunnable(debugInfo);
       runnable.addChild(TableRunnable(debugInfo)
         ..rows.add("| header one | header two | header three |"));
       runnable.addChild(
@@ -48,7 +48,7 @@ void main() {
     });
 
     test("three row table has header row and correct rows", () async {
-      final runnable = new TableRunnable(debugInfo);
+      final runnable = TableRunnable(debugInfo);
       runnable.addChild(TableRunnable(debugInfo)
         ..rows.add("| header one | header two | header three |"));
       runnable.addChild(
@@ -65,7 +65,7 @@ void main() {
     });
 
     test("table removes columns leading and trailing spaces", () async {
-      final runnable = new TableRunnable(debugInfo);
+      final runnable = TableRunnable(debugInfo);
       runnable.addChild(TableRunnable(debugInfo)
         ..rows.add("| header one | header two | header three |"));
       runnable.addChild(TableRunnable(debugInfo)

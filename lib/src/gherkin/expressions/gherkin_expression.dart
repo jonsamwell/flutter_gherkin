@@ -11,7 +11,7 @@ class _SortedParameterPosition {
 class GherkinExpression {
   final RegExp originalExpression;
   final List<_SortedParameterPosition> _sortedParameterPositions =
-      List<_SortedParameterPosition>();
+      <_SortedParameterPosition>[];
   RegExp _expression;
 
   GherkinExpression(this.originalExpression,
@@ -41,7 +41,7 @@ class GherkinExpression {
     bool inCustomBracketSection = false;
     int indexOfOpeningBracket;
     for (var i = 0; i < originalExpression.pattern.length; i += 1) {
-      var char = originalExpression.pattern[i];
+      final char = originalExpression.pattern[i];
       if (char == "(") {
         // look ahead and make sure we don't see "s)" which would
         // indicate the plural parameter
@@ -75,8 +75,8 @@ class GherkinExpression {
   }
 
   Iterable<dynamic> getParameters(String input) {
-    List<String> stringValues = List<String>();
-    List<dynamic> values = List<dynamic>();
+    final List<String> stringValues = <String>[];
+    final List<dynamic> values = <dynamic>[];
     _expression.allMatches(input).forEach((m) {
       // the first group is always the input string
       final indicies =

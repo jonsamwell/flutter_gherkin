@@ -16,7 +16,7 @@ class FlutterRunProcessHandler extends ProcessHandler {
       RegExp(r"no connected device", caseSensitive: false, multiLine: false);
   Process _runningProcess;
   Stream<String> _processStdoutStream;
-  List<StreamSubscription> _openSubscriptions = List<StreamSubscription>();
+  List<StreamSubscription> _openSubscriptions = <StreamSubscription>[];
   String _appTarget;
   String _workingDirectory;
 
@@ -86,7 +86,7 @@ class FlutterRunProcessHandler extends ProcessHandler {
 
   void _ensureRunningProcess() {
     if (_runningProcess == null) {
-      throw new Exception(
+      throw Exception(
           "FlutterRunProcessHandler: flutter run process is not active");
     }
   }

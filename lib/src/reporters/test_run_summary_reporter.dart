@@ -4,10 +4,10 @@ import 'package:flutter_gherkin/src/reporters/message_level.dart';
 import 'package:flutter_gherkin/src/reporters/messages.dart';
 
 class TestRunSummaryReporter extends StdoutReporter {
-  final _timer = new Stopwatch();
-  final List<StepFinishedMessage> _ranSteps = List<StepFinishedMessage>();
+  final _timer = Stopwatch();
+  final List<StepFinishedMessage> _ranSteps = <StepFinishedMessage>[];
   final List<ScenarioFinishedMessage> _ranScenarios =
-      List<ScenarioFinishedMessage>();
+      <ScenarioFinishedMessage>[];
 
   @override
   Future<void> onScenarioFinished(ScenarioFinishedMessage message) async {
@@ -47,7 +47,7 @@ class TestRunSummaryReporter extends StdoutReporter {
   }
 
   String _collectScenarioSummary(Iterable<ScenarioFinishedMessage> scenarios) {
-    List<String> summaries = List<String>();
+    final List<String> summaries = <String>[];
     if (scenarios.any((s) => s.passed)) {
       summaries.add(
           "${StdoutReporter.PASS_COLOR}${scenarios.where((s) => s.passed).length} passed${StdoutReporter.RESET_COLOR}");
@@ -62,7 +62,7 @@ class TestRunSummaryReporter extends StdoutReporter {
   }
 
   String _collectStepSummary(Iterable<StepFinishedMessage> steps) {
-    List<String> summaries = List<String>();
+    final List<String> summaries = <String>[];
     final passed =
         steps.where((s) => s.result.result == StepExecutionResult.pass);
     final skipped =
@@ -71,17 +71,17 @@ class TestRunSummaryReporter extends StdoutReporter {
         s.result.result == StepExecutionResult.error ||
         s.result.result == StepExecutionResult.fail ||
         s.result.result == StepExecutionResult.timeout);
-    if (passed.length > 0) {
+    if (passed.isNotEmpty) {
       summaries.add(
           "${StdoutReporter.PASS_COLOR}${passed.length} passed${StdoutReporter.RESET_COLOR}");
     }
 
-    if (skipped.length > 0) {
+    if (skipped.isNotEmpty) {
       summaries.add(
           "${StdoutReporter.WARN_COLOR}${skipped.length} skipped${StdoutReporter.RESET_COLOR}");
     }
 
-    if (failed.length > 0) {
+    if (failed.isNotEmpty) {
       summaries.add(
           "${StdoutReporter.FAIL_COLOR}${failed.length} failed${StdoutReporter.RESET_COLOR}");
     }

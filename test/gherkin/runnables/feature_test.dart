@@ -12,27 +12,27 @@ void main() {
   final debugInfo = RunnableDebugInformation(null, 0, null);
   group("addChild", () {
     test('can add TextLineRunnable', () {
-      final runnable = new FeatureRunnable("", debugInfo);
+      final runnable = FeatureRunnable("", debugInfo);
       runnable.addChild(TextLineRunnable(debugInfo)..text = "text");
       runnable.addChild(TextLineRunnable(debugInfo)..text = "text line two");
       expect(runnable.description, "text\ntext line two");
     });
     test('can add TagsRunnable', () {
-      final runnable = new FeatureRunnable("", debugInfo);
+      final runnable = FeatureRunnable("", debugInfo);
       runnable.addChild(TagsRunnable(debugInfo)..tags = ["one", "two"]);
       runnable.addChild(TagsRunnable(debugInfo)..tags = ["three"]);
       expect(runnable.tags, ["one", "two", "three"]);
     });
     test('can add EmptyLineRunnable', () {
-      final runnable = new FeatureRunnable("", debugInfo);
+      final runnable = FeatureRunnable("", debugInfo);
       runnable.addChild(EmptyLineRunnable(debugInfo));
     });
     test('can add CommentLineRunnable', () {
-      final runnable = new FeatureRunnable("", debugInfo);
+      final runnable = FeatureRunnable("", debugInfo);
       runnable.addChild(CommentLineRunnable("", debugInfo));
     });
     test('can add ScenarioRunnable', () {
-      final runnable = new FeatureRunnable("", debugInfo);
+      final runnable = FeatureRunnable("", debugInfo);
       runnable.addChild(ScenarioRunnable("1", debugInfo));
       runnable.addChild(ScenarioRunnable("2", debugInfo));
       runnable.addChild(ScenarioRunnable("3", debugInfo));
@@ -42,7 +42,7 @@ void main() {
       expect(runnable.scenarios.elementAt(2).name, "3");
     });
     test('can add BackgroundRunnable', () {
-      final runnable = new FeatureRunnable("", debugInfo);
+      final runnable = FeatureRunnable("", debugInfo);
       runnable.addChild(BackgroundRunnable("1", debugInfo));
       expect(runnable.background, isNotNull);
       expect(runnable.background.name, "1");

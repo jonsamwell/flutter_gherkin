@@ -42,11 +42,11 @@ class ExpectMimic {
   /// you want to wait for the matcher to complete before continuing the test, you
   /// can call [expectLater] instead and `await` the result.
   void expect(actualValue, matcher, {String reason}) {
-    var matchState = {};
+    final matchState = {};
     matcher = wrapMatcher(matcher);
     final result = matcher.matches(actualValue, matchState);
     final formatter = (actual, matcher, reason, matchState, verbose) {
-      var mismatchDescription = new StringDescription();
+      final mismatchDescription = StringDescription();
       matcher.describeMismatch(
           actual, mismatchDescription, matchState, verbose);
 

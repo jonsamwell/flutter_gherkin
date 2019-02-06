@@ -23,22 +23,21 @@ void main() {
     test("run simple feature file scenario", () async {
       final stepDefiniton = MockStepDefinition();
       final executableStep =
-          new ExectuableStep(MockGherkinExpression((_) => true), stepDefiniton);
-      final runner = new FeatureFileRunner(
+          ExectuableStep(MockGherkinExpression((_) => true), stepDefiniton);
+      final runner = FeatureFileRunner(
           TestConfiguration(),
           MockTagExpressionEvaluator(),
           [executableStep],
           ReporterMock(),
           HookMock());
 
-      final step = new StepRunnable(
+      final step = StepRunnable(
           "Step 1", RunnableDebugInformation("", 0, "Given I do a"));
-      final scenario = new ScenarioRunnable("Scenario: 1", emptyDebuggable)
+      final scenario = ScenarioRunnable("Scenario: 1", emptyDebuggable)
         ..steps.add(step);
-      final feature = new FeatureRunnable("1", emptyDebuggable)
+      final feature = FeatureRunnable("1", emptyDebuggable)
         ..scenarios.add(scenario);
-      final featureFile = new FeatureFile(emptyDebuggable)
-        ..features.add(feature);
+      final featureFile = FeatureFile(emptyDebuggable)..features.add(feature);
       await runner.run(featureFile);
       expect(stepDefiniton.hasRun, true);
       expect(stepDefiniton.runCount, 1);
@@ -49,8 +48,8 @@ void main() {
       bool worldCreationFnInoked = false;
       final stepDefiniton = MockStepDefinition();
       final executableStep =
-          new ExectuableStep(MockGherkinExpression((_) => true), stepDefiniton);
-      final runner = new FeatureFileRunner(
+          ExectuableStep(MockGherkinExpression((_) => true), stepDefiniton);
+      final runner = FeatureFileRunner(
           TestConfiguration()
             ..createWorld = (_) async {
               worldCreationFnInoked = true;
@@ -61,14 +60,13 @@ void main() {
           ReporterMock(),
           HookMock());
 
-      final step = new StepRunnable(
+      final step = StepRunnable(
           "Step 1", RunnableDebugInformation("", 0, "Given I do a"));
-      final scenario = new ScenarioRunnable("Scenario: 1", emptyDebuggable)
+      final scenario = ScenarioRunnable("Scenario: 1", emptyDebuggable)
         ..steps.add(step);
-      final feature = new FeatureRunnable("1", emptyDebuggable)
+      final feature = FeatureRunnable("1", emptyDebuggable)
         ..scenarios.add(scenario);
-      final featureFile = new FeatureFile(emptyDebuggable)
-        ..features.add(feature);
+      final featureFile = FeatureFile(emptyDebuggable)..features.add(feature);
       await runner.run(featureFile);
       expect(worldCreationFnInoked, true);
       expect(worldMock.disposeFnInvoked, true);
@@ -77,30 +75,29 @@ void main() {
     test("steps are skipped if previous step failed", () async {
       final stepTextOne = "Given I do a";
       final stepTextTwo = "Given I do b";
-      final stepDefiniton = MockStepDefinition((_) => throw new Exception());
+      final stepDefiniton = MockStepDefinition((_) => throw Exception());
       final stepDefinitonTwo = MockStepDefinition();
-      final executableStep = new ExectuableStep(
+      final executableStep = ExectuableStep(
           MockGherkinExpression((s) => s == stepTextOne), stepDefiniton);
-      final executableStepTwo = new ExectuableStep(
+      final executableStepTwo = ExectuableStep(
           MockGherkinExpression((s) => s == stepTextTwo), stepDefinitonTwo);
-      final runner = new FeatureFileRunner(
+      final runner = FeatureFileRunner(
           TestConfiguration(),
           MockTagExpressionEvaluator(),
           [executableStep, executableStepTwo],
           ReporterMock(),
           HookMock());
 
-      final step = new StepRunnable(
-          "Step 1", RunnableDebugInformation("", 0, stepTextOne));
-      final stepTwo = new StepRunnable(
-          "Step 2", RunnableDebugInformation("", 0, stepTextTwo));
-      final scenario = new ScenarioRunnable("Scenario: 1", emptyDebuggable)
+      final step =
+          StepRunnable("Step 1", RunnableDebugInformation("", 0, stepTextOne));
+      final stepTwo =
+          StepRunnable("Step 2", RunnableDebugInformation("", 0, stepTextTwo));
+      final scenario = ScenarioRunnable("Scenario: 1", emptyDebuggable)
         ..steps.add(step)
         ..steps.add(stepTwo);
-      final feature = new FeatureRunnable("1", emptyDebuggable)
+      final feature = FeatureRunnable("1", emptyDebuggable)
         ..scenarios.add(scenario);
-      final featureFile = new FeatureFile(emptyDebuggable)
-        ..features.add(feature);
+      final featureFile = FeatureFile(emptyDebuggable)..features.add(feature);
       await runner.run(featureFile);
       expect(stepDefiniton.hasRun, true);
       expect(stepDefiniton.runCount, 1);
@@ -110,23 +107,22 @@ void main() {
     group("step matching", () {
       test("exception throw when matching step definition not found", () async {
         final stepDefiniton = MockStepDefinition();
-        final executableStep = new ExectuableStep(
-            MockGherkinExpression((_) => false), stepDefiniton);
-        final runner = new FeatureFileRunner(
+        final executableStep =
+            ExectuableStep(MockGherkinExpression((_) => false), stepDefiniton);
+        final runner = FeatureFileRunner(
             TestConfiguration(),
             MockTagExpressionEvaluator(),
             [executableStep],
             ReporterMock(),
             HookMock());
 
-        final step = new StepRunnable("Step 1",
+        final step = StepRunnable("Step 1",
             RunnableDebugInformation("File Path", 2, "Given I do 'a'"));
-        final scenario = new ScenarioRunnable("Scenario: 1", emptyDebuggable)
+        final scenario = ScenarioRunnable("Scenario: 1", emptyDebuggable)
           ..steps.add(step);
-        final feature = new FeatureRunnable("1", emptyDebuggable)
+        final feature = FeatureRunnable("1", emptyDebuggable)
           ..scenarios.add(scenario);
-        final featureFile = new FeatureFile(emptyDebuggable)
-          ..features.add(feature);
+        final featureFile = FeatureFile(emptyDebuggable)..features.add(feature);
         expect(
             () async => await runner.run(featureFile),
             throwsA(allOf(
@@ -172,24 +168,23 @@ void main() {
             MockStepDefinition((Iterable<dynamic> parameters) async {
           tableParameterProvided = parameters.first is Table;
         }, 1);
-        final executableStep = new ExectuableStep(
-            MockGherkinExpression((_) => true), stepDefiniton);
-        final runner = new FeatureFileRunner(
+        final executableStep =
+            ExectuableStep(MockGherkinExpression((_) => true), stepDefiniton);
+        final runner = FeatureFileRunner(
             TestConfiguration(),
             MockTagExpressionEvaluator(),
             [executableStep],
             ReporterMock(),
             HookMock());
 
-        final step = new StepRunnable(
+        final step = StepRunnable(
             "Step 1", RunnableDebugInformation("", 0, "Given I do a"));
-        step.table = new Table(null, null);
-        final scenario = new ScenarioRunnable("Scenario: 1", emptyDebuggable)
+        step.table = Table(null, null);
+        final scenario = ScenarioRunnable("Scenario: 1", emptyDebuggable)
           ..steps.add(step);
-        final feature = new FeatureRunnable("1", emptyDebuggable)
+        final feature = FeatureRunnable("1", emptyDebuggable)
           ..scenarios.add(scenario);
-        final featureFile = new FeatureFile(emptyDebuggable)
-          ..features.add(feature);
+        final featureFile = FeatureFile(emptyDebuggable)..features.add(feature);
         await runner.run(featureFile);
         expect(stepDefiniton.hasRun, true);
         expect(stepDefiniton.runCount, 1);
@@ -201,26 +196,25 @@ void main() {
       test("hook is called when starting and finishing scenarios", () async {
         final hookMock = HookMock();
         final stepDefiniton = MockStepDefinition();
-        final executableStep = new ExectuableStep(
-            MockGherkinExpression((_) => true), stepDefiniton);
-        final runner = new FeatureFileRunner(
+        final executableStep =
+            ExectuableStep(MockGherkinExpression((_) => true), stepDefiniton);
+        final runner = FeatureFileRunner(
             TestConfiguration(),
             MockTagExpressionEvaluator(),
             [executableStep],
             ReporterMock(),
             hookMock);
 
-        final step = new StepRunnable(
+        final step = StepRunnable(
             "Step 1", RunnableDebugInformation("", 0, "Given I do a"));
-        final scenario1 = new ScenarioRunnable("Scenario: 1", emptyDebuggable)
+        final scenario1 = ScenarioRunnable("Scenario: 1", emptyDebuggable)
           ..steps.add(step);
-        final scenario2 = new ScenarioRunnable("Scenario: 2", emptyDebuggable)
+        final scenario2 = ScenarioRunnable("Scenario: 2", emptyDebuggable)
           ..steps.add(step);
-        final feature = new FeatureRunnable("1", emptyDebuggable)
+        final feature = FeatureRunnable("1", emptyDebuggable)
           ..scenarios.add(scenario1)
           ..scenarios.add(scenario2);
-        final featureFile = new FeatureFile(emptyDebuggable)
-          ..features.add(feature);
+        final featureFile = FeatureFile(emptyDebuggable)..features.add(feature);
         await runner.run(featureFile);
         expect(hookMock.onBeforeScenarioInvocationCount, 2);
         expect(hookMock.onAfterScenarioInvocationCount, 2);
@@ -232,27 +226,26 @@ void main() {
           () async {
         final reporterMock = ReporterMock();
         final stepDefiniton = MockStepDefinition();
-        final executableStep = new ExectuableStep(
-            MockGherkinExpression((_) => true), stepDefiniton);
-        final runner = new FeatureFileRunner(
+        final executableStep =
+            ExectuableStep(MockGherkinExpression((_) => true), stepDefiniton);
+        final runner = FeatureFileRunner(
             TestConfiguration(),
             MockTagExpressionEvaluator(),
             [executableStep],
             reporterMock,
             HookMock());
 
-        final step = new StepRunnable(
+        final step = StepRunnable(
             "Step 1", RunnableDebugInformation("", 0, "Given I do a"));
-        final scenario1 = new ScenarioRunnable("Scenario: 1", emptyDebuggable)
+        final scenario1 = ScenarioRunnable("Scenario: 1", emptyDebuggable)
           ..steps.add(step);
-        final scenario2 = new ScenarioRunnable("Scenario: 2", emptyDebuggable)
+        final scenario2 = ScenarioRunnable("Scenario: 2", emptyDebuggable)
           ..steps.add(step)
           ..steps.add(step);
-        final feature = new FeatureRunnable("1", emptyDebuggable)
+        final feature = FeatureRunnable("1", emptyDebuggable)
           ..scenarios.add(scenario1)
           ..scenarios.add(scenario2);
-        final featureFile = new FeatureFile(emptyDebuggable)
-          ..features.add(feature);
+        final featureFile = FeatureFile(emptyDebuggable)..features.add(feature);
         await runner.run(featureFile);
         expect(reporterMock.onFeatureStartedInvocationCount, 1);
         expect(reporterMock.onFeatureFinishedInvocationCount, 1);
@@ -269,23 +262,22 @@ void main() {
         final reporterMock = ReporterMock();
         reporterMock.onStepFinishedFn = (message) => finishedMessage = message;
         final stepDefiniton = MockStepDefinition();
-        final executableStep = new ExectuableStep(
-            MockGherkinExpression((_) => true), stepDefiniton);
-        final runner = new FeatureFileRunner(
+        final executableStep =
+            ExectuableStep(MockGherkinExpression((_) => true), stepDefiniton);
+        final runner = FeatureFileRunner(
             TestConfiguration(),
             MockTagExpressionEvaluator(),
             [executableStep],
             reporterMock,
             HookMock());
 
-        final step = new StepRunnable(
+        final step = StepRunnable(
             "Step 1", RunnableDebugInformation("", 0, "Given I do a"));
-        final scenario1 = new ScenarioRunnable("Scenario: 1", emptyDebuggable)
+        final scenario1 = ScenarioRunnable("Scenario: 1", emptyDebuggable)
           ..steps.add(step);
-        final feature = new FeatureRunnable("1", emptyDebuggable)
+        final feature = FeatureRunnable("1", emptyDebuggable)
           ..scenarios.add(scenario1);
-        final featureFile = new FeatureFile(emptyDebuggable)
-          ..features.add(feature);
+        final featureFile = FeatureFile(emptyDebuggable)..features.add(feature);
         await runner.run(featureFile);
         expect(stepDefiniton.hasRun, true);
         expect(finishedMessage, (m) => m.name == "Step 1");
@@ -300,23 +292,22 @@ void main() {
         reporterMock.onStepFinishedFn = (message) => finishedMessage = message;
         final stepDefiniton =
             MockStepDefinition((_) => throw testFailureException);
-        final executableStep = new ExectuableStep(
-            MockGherkinExpression((_) => true), stepDefiniton);
-        final runner = new FeatureFileRunner(
+        final executableStep =
+            ExectuableStep(MockGherkinExpression((_) => true), stepDefiniton);
+        final runner = FeatureFileRunner(
             TestConfiguration(),
             MockTagExpressionEvaluator(),
             [executableStep],
             reporterMock,
             HookMock());
 
-        final step = new StepRunnable(
+        final step = StepRunnable(
             "Step 1", RunnableDebugInformation("", 0, "Given I do a"));
-        final scenario1 = new ScenarioRunnable("Scenario: 1", emptyDebuggable)
+        final scenario1 = ScenarioRunnable("Scenario: 1", emptyDebuggable)
           ..steps.add(step);
-        final feature = new FeatureRunnable("1", emptyDebuggable)
+        final feature = FeatureRunnable("1", emptyDebuggable)
           ..scenarios.add(scenario1);
-        final featureFile = new FeatureFile(emptyDebuggable)
-          ..features.add(feature);
+        final featureFile = FeatureFile(emptyDebuggable)..features.add(feature);
         await runner.run(featureFile);
         expect(stepDefiniton.hasRun, true);
         expect(finishedMessage, (m) => m.name == "Step 1");
@@ -332,23 +323,22 @@ void main() {
         reporterMock.onStepFinishedFn = (message) => finishedMessage = message;
         final stepDefiniton = MockStepDefinition(
             (_) async => await Future.delayed(Duration(seconds: 2)));
-        final executableStep = new ExectuableStep(
-            MockGherkinExpression((_) => true), stepDefiniton);
-        final runner = new FeatureFileRunner(
+        final executableStep =
+            ExectuableStep(MockGherkinExpression((_) => true), stepDefiniton);
+        final runner = FeatureFileRunner(
             TestConfiguration()..defaultTimeout = Duration(milliseconds: 1),
             MockTagExpressionEvaluator(),
             [executableStep],
             reporterMock,
             HookMock());
 
-        final step = new StepRunnable(
+        final step = StepRunnable(
             "Step 1", RunnableDebugInformation("", 0, "Given I do a"));
-        final scenario1 = new ScenarioRunnable("Scenario: 1", emptyDebuggable)
+        final scenario1 = ScenarioRunnable("Scenario: 1", emptyDebuggable)
           ..steps.add(step);
-        final feature = new FeatureRunnable("1", emptyDebuggable)
+        final feature = FeatureRunnable("1", emptyDebuggable)
           ..scenarios.add(scenario1);
-        final featureFile = new FeatureFile(emptyDebuggable)
-          ..features.add(feature);
+        final featureFile = FeatureFile(emptyDebuggable)..features.add(feature);
         await runner.run(featureFile);
         expect(stepDefiniton.hasRun, true);
         expect(finishedMessage, (m) => m.name == "Step 1");
@@ -357,7 +347,7 @@ void main() {
       });
 
       test("skipped step reported correctly", () async {
-        final finishedMessages = List<StepFinishedMessage>();
+        final finishedMessages = <StepFinishedMessage>[];
         final reporterMock = ReporterMock();
         reporterMock.onStepFinishedFn =
             (message) => finishedMessages.add(message);
@@ -365,37 +355,36 @@ void main() {
         final stepTextOne = "Given I do a";
         final stepTextTwo = "Given I do b";
         final stepTextThree = "Given I do c";
-        final stepDefiniton = MockStepDefinition((_) => throw new Exception());
+        final stepDefiniton = MockStepDefinition((_) => throw Exception());
         final stepDefinitonTwo = MockStepDefinition();
         final stepDefinitonThree = MockStepDefinition();
-        final executableStep = new ExectuableStep(
+        final executableStep = ExectuableStep(
             MockGherkinExpression((s) => s == stepTextOne), stepDefiniton);
-        final executableStepTwo = new ExectuableStep(
+        final executableStepTwo = ExectuableStep(
             MockGherkinExpression((s) => s == stepTextTwo), stepDefinitonTwo);
-        final executableStepThree = new ExectuableStep(
+        final executableStepThree = ExectuableStep(
             MockGherkinExpression((s) => s == stepTextThree),
             stepDefinitonThree);
-        final runner = new FeatureFileRunner(
+        final runner = FeatureFileRunner(
             TestConfiguration()..defaultTimeout = Duration(milliseconds: 1),
             MockTagExpressionEvaluator(),
             [executableStep, executableStepTwo, executableStepThree],
             reporterMock,
             HookMock());
 
-        final step = new StepRunnable(
+        final step = StepRunnable(
             "Step 1", RunnableDebugInformation("", 0, stepTextOne));
-        final stepTwo = new StepRunnable(
+        final stepTwo = StepRunnable(
             "Step 2", RunnableDebugInformation("", 0, stepTextTwo));
-        final stepThree = new StepRunnable(
+        final stepThree = StepRunnable(
             "Step 3", RunnableDebugInformation("", 0, stepTextThree));
-        final scenario1 = new ScenarioRunnable("Scenario: 1", emptyDebuggable)
+        final scenario1 = ScenarioRunnable("Scenario: 1", emptyDebuggable)
           ..steps.add(step)
           ..steps.add(stepTwo)
           ..steps.add(stepThree);
-        final feature = new FeatureRunnable("1", emptyDebuggable)
+        final feature = FeatureRunnable("1", emptyDebuggable)
           ..scenarios.add(scenario1);
-        final featureFile = new FeatureFile(emptyDebuggable)
-          ..features.add(feature);
+        final featureFile = FeatureFile(emptyDebuggable)..features.add(feature);
         await runner.run(featureFile);
         expect(stepDefiniton.hasRun, true);
         expect(finishedMessages.length, 3);

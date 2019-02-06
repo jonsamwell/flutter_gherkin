@@ -1,3 +1,8 @@
+## [0.0.11] - 06/02/2019
+
+* Fixes issue with table parameters not being given to step
+* Added news hook that is called after the world for a scenario is created
+
 ## [0.0.10] - 01/11/2018
 
 * Ensured summary reporter reports failure reason

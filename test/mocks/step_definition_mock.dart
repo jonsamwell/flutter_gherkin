@@ -6,6 +6,7 @@ typedef Future<void> OnRunCode(Iterable parameters);
 class MockStepDefinition extends StepDefinitionBase<World, Function> {
   bool hasRun = false;
   int runCount = 0;
+  @override
   final OnRunCode code;
 
   MockStepDefinition([this.code, int expectedParameterCount = 0])

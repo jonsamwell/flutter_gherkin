@@ -30,7 +30,7 @@ class TagExpressionEvaluator {
   }
 
   bool _evaluateRpn(Queue<String> rpn, List<String> tags) {
-    Queue<bool> stack = Queue<bool>();
+    final Queue<bool> stack = Queue<bool>();
     for (var token in rpn) {
       if (_isTag(token)) {
         stack.addFirst(tags.contains(token.replaceFirst(RegExp("@"), "")));
@@ -79,25 +79,25 @@ class TagExpressionEvaluator {
         operatorQueue.addLast(part);
       } else if (part == closingBracket) {
         while (
-            operatorQueue.length > 0 && operatorQueue.last != openingBracket) {
+            operatorQueue.isNotEmpty && operatorQueue.last != openingBracket) {
           rpn.add(operatorQueue.removeLast());
         }
         operatorQueue.removeLast();
       } else if (_isOperator(part)) {
         final precendence = _operatorPrededence[part.toLowerCase()];
 
-        while (operatorQueue.length > 0 &&
+        while (operatorQueue.isNotEmpty &&
             _operatorPrededence[operatorQueue.last] >= precendence) {
           rpn.add(operatorQueue.removeLast());
         }
         operatorQueue.addLast(part);
       } else {
-        throw new GherkinSyntaxException(
+        throw GherkinSyntaxException(
             "Tag expression '$infixExpression' is not valid.  Unknown token '$part'. Known tokens are '@tag', 'and', 'or', 'not' '(' and ')'");
       }
     }
 
-    while (operatorQueue.length > 0) {
+    while (operatorQueue.isNotEmpty) {
       rpn.add(operatorQueue.removeLast());
     }
 

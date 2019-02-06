@@ -3,7 +3,7 @@ import 'package:flutter_gherkin/src/gherkin/steps/step_run_result.dart';
 import 'package:test/test.dart';
 
 class TestableTestRunSummaryReporter extends TestRunSummaryReporter {
-  final output = List<String>();
+  final output = <String>[];
   @override
   void printMessageLine(String message, [String colour]) {
     output.add(message);

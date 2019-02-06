@@ -6,6 +6,7 @@ import 'package:flutter_gherkin/src/gherkin/syntax/syntax_matcher.dart';
 import 'package:flutter_gherkin/src/gherkin/syntax/tag_syntax.dart';
 
 class ScenarioSyntax extends RegExMatchedGherkinSyntax {
+  @override
   final RegExp pattern = RegExp(r"^\s*Scenario:\s*(.+)\s*$",
       multiLine: false, caseSensitive: false);
 
@@ -19,7 +20,7 @@ class ScenarioSyntax extends RegExMatchedGherkinSyntax {
   @override
   Runnable toRunnable(String line, RunnableDebugInformation debug) {
     final name = pattern.firstMatch(line).group(1);
-    final runnable = new ScenarioRunnable(name, debug);
+    final runnable = ScenarioRunnable(name, debug);
     return runnable;
   }
 }

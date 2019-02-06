@@ -6,7 +6,7 @@ import '../mocks/reporter_mock.dart';
 void main() {
   group("parse", () {
     test('parses simple, single scenario correctly', () async {
-      final parser = new GherkinParser();
+      final parser = GherkinParser();
       final featureContents = """
       # language: en
       Feature: The name of the feature
@@ -30,7 +30,7 @@ void main() {
           When I do step c
           Then I expect to see d
       """;
-      FeatureFile featureFile =
+      final FeatureFile featureFile =
           await parser.parseFeatureFile(featureContents, "", ReporterMock());
       expect(featureFile, isNot(null));
       expect(featureFile.langauge, equals("en"));
@@ -66,7 +66,7 @@ void main() {
     });
 
     test('parses complex multi-scenario correctly', () async {
-      final parser = new GherkinParser();
+      final parser = GherkinParser();
       final featureContents = """
       # language: en
       Feature: The name of the feature
@@ -97,7 +97,7 @@ void main() {
           # When I do step c.1
           Then I expect to see d
       """;
-      FeatureFile featureFile =
+      final FeatureFile featureFile =
           await parser.parseFeatureFile(featureContents, "", ReporterMock());
       expect(featureFile, isNot(null));
       expect(featureFile.langauge, equals("en"));

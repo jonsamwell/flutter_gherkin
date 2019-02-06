@@ -6,7 +6,7 @@ import 'package:flutter_gherkin/src/gherkin/runnables/runnable.dart';
 import 'package:flutter_gherkin/src/gherkin/runnables/runnable_block.dart';
 
 class TableRunnable extends RunnableBlock {
-  final List<String> rows = List<String>();
+  final List<String> rows = <String>[];
 
   @override
   String get name => "Table";
@@ -22,14 +22,14 @@ class TableRunnable extends RunnableBlock {
       case CommentLineRunnable:
         break;
       default:
-        throw new Exception(
+        throw Exception(
             "Unknown runnable child given to Table '${child.runtimeType}'");
     }
   }
 
   Table toTable() {
     TableRow header;
-    List<TableRow> tableRows = List<TableRow>();
+    final List<TableRow> tableRows = <TableRow>[];
     if (rows.length > 1) {
       header = _toRow(rows.first, 0, true);
     }

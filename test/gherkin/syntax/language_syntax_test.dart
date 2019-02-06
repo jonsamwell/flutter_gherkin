@@ -6,14 +6,14 @@ import 'package:test/test.dart';
 void main() {
   group("isMatch", () {
     test('matches correctly', () {
-      final keyword = new LanguageSyntax();
+      final keyword = LanguageSyntax();
       expect(keyword.isMatch("# language: en"), true);
       expect(keyword.isMatch("#language: fr"), true);
       expect(keyword.isMatch("#language:de"), true);
     });
 
     test('does not match', () {
-      final keyword = new LanguageSyntax();
+      final keyword = LanguageSyntax();
       expect(keyword.isMatch("#language no"), false);
       expect(keyword.isMatch("# language comment"), false);
     });
@@ -21,8 +21,8 @@ void main() {
 
   group("toRunnable", () {
     test('creates LanguageRunnable', () {
-      final keyword = new LanguageSyntax();
-      LanguageRunnable runnable = keyword.toRunnable(
+      final keyword = LanguageSyntax();
+      final LanguageRunnable runnable = keyword.toRunnable(
           "# language: de", RunnableDebugInformation(null, 0, null));
       expect(runnable, isNotNull);
       expect(runnable, predicate((x) => x is LanguageRunnable));

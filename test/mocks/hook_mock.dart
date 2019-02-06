@@ -17,6 +17,7 @@ class HookMock extends Hook {
 
   HookMock({this.onBeforeRunCode, this.providedPriority = 0});
 
+  @override
   Future<void> onBeforeRun(TestConfiguration config) async {
     onBeforeRunInvocationCount += 1;
     if (onBeforeRunCode != null) {
@@ -24,17 +25,21 @@ class HookMock extends Hook {
     }
   }
 
+  @override
   Future<void> onAfterRun(TestConfiguration config) async =>
       onAfterRunInvocationCount += 1;
 
+  @override
   Future<void> onBeforeScenario(
           TestConfiguration config, String scenario) async =>
       onBeforeScenarioInvocationCount += 1;
 
+  @override
   Future<void> onAfterScenario(
           TestConfiguration config, String scenario) async =>
       onAfterScenarioInvocationCount += 1;
 
+  @override
   Future<void> onAfterScenarioWorldCreated(
           World world, String scenario) async =>
       onAfterScenarioWorldCreatedInvocationCount += 1;

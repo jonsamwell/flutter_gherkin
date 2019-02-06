@@ -7,13 +7,13 @@ import 'package:test/test.dart';
 void main() {
   group("isMatch", () {
     test('matches correctly', () {
-      final keyword = new FeatureSyntax();
+      final keyword = FeatureSyntax();
       expect(keyword.isMatch("Feature: one"), true);
       expect(keyword.isMatch("Feature:one"), true);
     });
 
     test('does not match', () {
-      final keyword = new FeatureSyntax();
+      final keyword = FeatureSyntax();
       expect(keyword.isMatch("#Feature: no"), false);
       expect(keyword.isMatch("# Feature no"), false);
     });
@@ -21,8 +21,8 @@ void main() {
 
   group("toRunnable", () {
     test('creates FeatureRunnable', () {
-      final keyword = new FeatureSyntax();
-      Runnable runnable = keyword.toRunnable(
+      final keyword = FeatureSyntax();
+      final Runnable runnable = keyword.toRunnable(
           "Feature: A feature 123", RunnableDebugInformation(null, 0, null));
       expect(runnable, isNotNull);
       expect(runnable, predicate((x) => x is FeatureRunnable));

@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 void main() {
   group("isMatch", () {
     test('matches correctly', () {
-      final keyword = new EmptyLineSyntax();
+      final keyword = EmptyLineSyntax();
       expect(keyword.isMatch(""), true);
       expect(keyword.isMatch(" "), true);
       expect(keyword.isMatch("  "), true);
@@ -12,7 +12,7 @@ void main() {
     });
 
     test('does not match', () {
-      final keyword = new EmptyLineSyntax();
+      final keyword = EmptyLineSyntax();
       expect(keyword.isMatch("a"), false);
       expect(keyword.isMatch(" b"), false);
       expect(keyword.isMatch("  c"), false);

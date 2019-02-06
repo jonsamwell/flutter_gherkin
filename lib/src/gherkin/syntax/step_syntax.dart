@@ -7,6 +7,7 @@ import 'package:flutter_gherkin/src/gherkin/syntax/syntax_matcher.dart';
 import 'package:flutter_gherkin/src/gherkin/syntax/table_line_syntax.dart';
 
 class StepSyntax extends RegExMatchedGherkinSyntax {
+  @override
   final RegExp pattern = RegExp(r"^(given|then|when|and|but)\s.*",
       multiLine: false, caseSensitive: false);
 
@@ -19,7 +20,7 @@ class StepSyntax extends RegExMatchedGherkinSyntax {
 
   @override
   Runnable toRunnable(String line, RunnableDebugInformation debug) {
-    final runnable = new StepRunnable(line, debug);
+    final runnable = StepRunnable(line, debug);
     return runnable;
   }
 }

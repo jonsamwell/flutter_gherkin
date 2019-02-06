@@ -9,11 +9,11 @@ void main() {
   final debugInfo = RunnableDebugInformation(null, 0, null);
   group("addChild", () {
     test('can add EmptyLineRunnable', () {
-      final runnable = new ScenarioRunnable("", debugInfo);
+      final runnable = ScenarioRunnable("", debugInfo);
       runnable.addChild(EmptyLineRunnable(debugInfo));
     });
     test('can add StepRunnable', () {
-      final runnable = new ScenarioRunnable("", debugInfo);
+      final runnable = ScenarioRunnable("", debugInfo);
       runnable.addChild(StepRunnable("1", debugInfo));
       runnable.addChild(StepRunnable("2", debugInfo));
       runnable.addChild(StepRunnable("3", debugInfo));
@@ -23,7 +23,7 @@ void main() {
       expect(runnable.steps.elementAt(2).name, "3");
     });
     test('can add TagsRunnable', () {
-      final runnable = new ScenarioRunnable("", debugInfo);
+      final runnable = ScenarioRunnable("", debugInfo);
       runnable.addChild(TagsRunnable(debugInfo)..tags = ["one", "two"]);
       runnable.addChild(TagsRunnable(debugInfo)..tags = ["three"]);
       expect(runnable.tags, ["one", "two", "three"]);

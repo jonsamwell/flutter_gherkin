@@ -5,10 +5,10 @@ import 'package:matcher/matcher.dart';
 /// The matcher package doesn't expose its pretty-print function directly, but
 /// we can use it through StringDescription.
 String prettyPrint(value) =>
-    new StringDescription().addDescriptionOf(value).toString();
+    StringDescription().addDescriptionOf(value).toString();
 
 String formatFailure(Matcher expected, actual, String which, {String reason}) {
-  var buffer = new StringBuffer();
+  final buffer = StringBuffer();
   buffer.writeln(indent(prettyPrint(expected), first: 'Expected: '));
   buffer.writeln(indent(prettyPrint(actual), first: '  Actual: '));
   if (which.isNotEmpty) buffer.writeln(indent(which, first: '   Which: '));
@@ -37,13 +37,13 @@ String prefixLines(String text, String prefix,
   last ??= prefix;
   single ??= first ?? last ?? prefix;
 
-  var lines = text.split('\n');
+  final lines = text.split('\n');
   if (lines.length == 1) return "$single$text";
 
-  var buffer = new StringBuffer("$first${lines.first}\n");
+  final buffer = StringBuffer("$first${lines.first}\n");
 
   // Write out all but the first and last lines with [prefix].
-  for (var line in lines.skip(1).take(lines.length - 2)) {
+  for (final line in lines.skip(1).take(lines.length - 2)) {
     buffer.writeln("$prefix$line");
   }
   buffer.write("$last${lines.last}");

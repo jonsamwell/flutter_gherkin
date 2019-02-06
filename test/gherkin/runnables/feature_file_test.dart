@@ -8,12 +8,12 @@ void main() {
   final debugInfo = RunnableDebugInformation(null, 0, null);
   group("addChild", () {
     test('can add LangaugeRunnable', () {
-      final runnable = new FeatureFile(debugInfo);
+      final runnable = FeatureFile(debugInfo);
       runnable.addChild(LanguageRunnable(debugInfo)..language = "en");
       expect(runnable.langauge, "en");
     });
     test('can add TagsRunnable', () {
-      final runnable = new FeatureFile(debugInfo);
+      final runnable = FeatureFile(debugInfo);
       runnable.addChild(FeatureRunnable("1", debugInfo));
       runnable.addChild(FeatureRunnable("2", debugInfo));
       runnable.addChild(FeatureRunnable("3", debugInfo));

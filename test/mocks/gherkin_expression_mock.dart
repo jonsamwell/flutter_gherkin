@@ -8,7 +8,7 @@ class MockGherkinExpression implements GherkinExpression {
   MockGherkinExpression(this.isMatchFn);
 
   @override
-  Iterable getParameters(String input) => Iterable.empty();
+  Iterable getParameters(String input) => const Iterable.empty();
 
   @override
   bool isMatch(String input) => isMatchFn(input);

@@ -9,7 +9,7 @@ import 'package:flutter_gherkin/src/gherkin/runnables/table.dart';
 class StepRunnable extends RunnableBlock {
   String _name;
   String description;
-  List<String> multilineStrings = List<String>();
+  List<String> multilineStrings = <String>[];
   Table table;
 
   StepRunnable(this._name, RunnableDebugInformation debug) : super(debug);
@@ -26,13 +26,13 @@ class StepRunnable extends RunnableBlock {
         break;
       case TableRunnable:
         if (table != null)
-          throw new GherkinSyntaxException(
+          throw GherkinSyntaxException(
               "Only a single table can be added to the step '$name'");
 
         table = (child as TableRunnable).toTable();
         break;
       default:
-        throw new Exception(
+        throw Exception(
             "Unknown runnable child given to Step '${child.runtimeType}'");
     }
   }

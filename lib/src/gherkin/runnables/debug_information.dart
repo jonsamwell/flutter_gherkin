@@ -6,6 +6,6 @@ class RunnableDebugInformation {
   RunnableDebugInformation(this.filePath, this.lineNumber, this.lineText);
 
   RunnableDebugInformation copyWith(int lineNumber, String line) {
-    return RunnableDebugInformation(this.filePath, lineNumber, line);
+    return RunnableDebugInformation(filePath, lineNumber, line);
   }
 }

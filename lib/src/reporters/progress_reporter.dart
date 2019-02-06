@@ -33,6 +33,7 @@ class ProgressReporter extends StdoutReporter {
         _getMessageColour(message.result.result));
   }
 
+  @override
   Future<void> message(String message, MessageLevel level) async {
     // ignore messages
   }

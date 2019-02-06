@@ -21,7 +21,7 @@ class GivenOpenDrawer extends Given1WithWorld<String, FlutterWorld> {
     if (isOpen && action == "close") {
       // Swipe to the left across the whole app to close the drawer
       await world.driver
-          .scroll(drawerFinder, -300.0, 0.0, Duration(milliseconds: 300));
+          .scroll(drawerFinder, -300.0, 0.0, const Duration(milliseconds: 300));
     } else if (!isOpen && action == "open") {
       await FlutterDriverUtils.tap(
           world.driver, find.byTooltip("Open navigation menu"),

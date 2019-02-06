@@ -9,7 +9,7 @@ void main() {
   final debugInfo = RunnableDebugInformation(null, 0, null);
   group("addChild", () {
     test('can add MultilineStringRunnable', () {
-      final runnable = new StepRunnable("", debugInfo);
+      final runnable = StepRunnable("", debugInfo);
       runnable.addChild(
           MultilineStringRunnable(debugInfo)..lines = ["1", "2", "3"].toList());
       runnable.addChild(
@@ -20,7 +20,7 @@ void main() {
     });
 
     test('can add TableRunnable', () {
-      final runnable = new StepRunnable("", debugInfo);
+      final runnable = StepRunnable("", debugInfo);
       runnable.addChild(TableRunnable(debugInfo)
         ..addChild(TableRunnable(debugInfo)..rows.add("|Col A|Col B|"))
         ..addChild(TableRunnable(debugInfo)..rows.add("|1|2|"))
@@ -33,7 +33,7 @@ void main() {
     });
 
     test('can only add single TableRunnable', () {
-      final runnable = new StepRunnable("Step A", debugInfo);
+      final runnable = StepRunnable("Step A", debugInfo);
       runnable.addChild(TableRunnable(debugInfo)
         ..addChild(TableRunnable(debugInfo)..rows.add("|Col A|Col B|"))
         ..addChild(TableRunnable(debugInfo)..rows.add("|1|2|"))

@@ -9,14 +9,14 @@ import 'package:test/test.dart';
 void main() {
   group("isMatch", () {
     test('matches correctly', () {
-      final syntax = new TableLineSyntax();
+      final syntax = TableLineSyntax();
       expect(syntax.isMatch('||'), true);
       expect(syntax.isMatch(' | | '), true);
       expect(syntax.isMatch("  |a|b|c| "), true);
     });
 
     test('does not match', () {
-      final syntax = new TableLineSyntax();
+      final syntax = TableLineSyntax();
       expect(syntax.isMatch('#||'), false);
       expect(syntax.isMatch(' |  '), false);
       expect(syntax.isMatch("  |a|b|c "), false);
@@ -25,57 +25,57 @@ void main() {
 
   group("block", () {
     test("is block", () {
-      final syntax = new TableLineSyntax();
+      final syntax = TableLineSyntax();
       expect(syntax.isBlockSyntax, true);
     });
 
     test("continue block if table line string", () {
-      final syntax = new TableLineSyntax();
-      expect(syntax.hasBlockEnded(new TableLineSyntax()), false);
+      final syntax = TableLineSyntax();
+      expect(syntax.hasBlockEnded(TableLineSyntax()), false);
     });
 
     test("continue block if comment string", () {
-      final syntax = new TableLineSyntax();
-      expect(syntax.hasBlockEnded(new CommentSyntax()), false);
+      final syntax = TableLineSyntax();
+      expect(syntax.hasBlockEnded(CommentSyntax()), false);
     });
 
     test("end block if not table line string", () {
-      final syntax = new TableLineSyntax();
-      expect(syntax.hasBlockEnded(new MultilineStringSyntax()), true);
+      final syntax = TableLineSyntax();
+      expect(syntax.hasBlockEnded(MultilineStringSyntax()), true);
     });
   });
 
   group("block", () {
     test("is block", () {
-      final syntax = new TableLineSyntax();
+      final syntax = TableLineSyntax();
       expect(syntax.isBlockSyntax, true);
     });
 
     test("continue block if table line", () {
-      final syntax = new TableLineSyntax();
-      expect(syntax.hasBlockEnded(new TableLineSyntax()), false);
+      final syntax = TableLineSyntax();
+      expect(syntax.hasBlockEnded(TableLineSyntax()), false);
     });
 
     test("continue block if comment string", () {
-      final syntax = new TableLineSyntax();
-      expect(syntax.hasBlockEnded(new CommentSyntax()), false);
+      final syntax = TableLineSyntax();
+      expect(syntax.hasBlockEnded(CommentSyntax()), false);
     });
 
     test("end block if step", () {
-      final syntax = new TableLineSyntax();
-      expect(syntax.hasBlockEnded(new StepSyntax()), true);
+      final syntax = TableLineSyntax();
+      expect(syntax.hasBlockEnded(StepSyntax()), true);
     });
 
     test("end block if multiline string", () {
-      final syntax = new TableLineSyntax();
-      expect(syntax.hasBlockEnded(new MultilineStringSyntax()), true);
+      final syntax = TableLineSyntax();
+      expect(syntax.hasBlockEnded(MultilineStringSyntax()), true);
     });
   });
 
   group("toRunnable", () {
     test('creates TableRunnable', () {
-      final syntax = new TableLineSyntax();
-      TableRunnable runnable = syntax.toRunnable(
+      final syntax = TableLineSyntax();
+      final TableRunnable runnable = syntax.toRunnable(
           " | Row One | Row Two | ", RunnableDebugInformation(null, 0, null));
       expect(runnable, isNotNull);
       expect(runnable, predicate((x) => x is TableRunnable));

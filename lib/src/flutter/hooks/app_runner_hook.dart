@@ -11,15 +11,19 @@ class FlutterAppRunnerHook extends Hook {
   FlutterRunProcessHandler _flutterAppProcess;
   bool haveRunFirstScenario = false;
 
+  @override
   int get priority => 999999;
 
+  @override
   Future<void> onBeforeRun(TestConfiguration config) async {
     await _runApp(_castConfig(config));
   }
 
+  @override
   Future<void> onAfterRun(TestConfiguration config) async =>
       await _terminateApp();
 
+  @override
   Future<void> onBeforeScenario(
       TestConfiguration config, String scenario) async {
     final flutterConfig = _castConfig(config);
@@ -28,6 +32,7 @@ class FlutterAppRunnerHook extends Hook {
     }
   }
 
+  @override
   Future<void> onAfterScenario(
       TestConfiguration config, String scenario) async {
     final flutterConfig = _castConfig(config);
@@ -39,7 +44,7 @@ class FlutterAppRunnerHook extends Hook {
   }
 
   Future<void> _runApp(FlutterTestConfiguration config) async {
-    _flutterAppProcess = new FlutterRunProcessHandler();
+    _flutterAppProcess = FlutterRunProcessHandler();
     _flutterAppProcess.setApplicationTargetFile(config.targetAppPath);
     stdout.writeln(
         "Starting Flutter app under test '${config.targetAppPath}', this might take a few moments");

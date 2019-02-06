@@ -12,11 +12,11 @@ import 'package:flutter_gherkin/src/gherkin/runnables/text_line.dart';
 class FeatureRunnable extends RunnableBlock {
   String _name;
   String description;
-  List<String> tags = List<String>();
+  List<String> tags = <String>[];
   BackgroundRunnable background;
-  List<ScenarioRunnable> scenarios = List<ScenarioRunnable>();
+  List<ScenarioRunnable> scenarios = <ScenarioRunnable>[];
 
-  Map<int, Iterable<String>> _tagMap = Map<int, Iterable<String>>();
+  Map<int, Iterable<String>> _tagMap = <int, Iterable<String>>{};
 
   FeatureRunnable(this._name, RunnableDebugInformation debug) : super(debug);
 
@@ -46,7 +46,7 @@ class FeatureRunnable extends RunnableBlock {
         if (background == null) {
           background = child;
         } else {
-          throw new GherkinSyntaxException(
+          throw GherkinSyntaxException(
               "Feature file can only contain one backgroung block. File'${debug.filePath}' :: line '${child.debug.lineNumber}'");
         }
         break;
@@ -54,7 +54,7 @@ class FeatureRunnable extends RunnableBlock {
       case CommentLineRunnable:
         break;
       default:
-        throw new Exception(
+        throw Exception(
             "Unknown runnable child given to Feature '${child.runtimeType}'");
     }
   }

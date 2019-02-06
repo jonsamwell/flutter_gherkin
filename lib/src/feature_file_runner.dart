@@ -85,7 +85,7 @@ class FeatureFileRunner {
       await _hook.onAfterScenarioWorldCreated(world, scenario.name);
     }
 
-    _reporter.onScenarioStarted(
+    await _reporter.onScenarioStarted(
         StartedMessage(Target.scenario, scenario.name, scenario.debug));
     if (background != null) {
       await _log("Running background steps for scenerio '${scenario.name}'",
@@ -95,7 +95,7 @@ class FeatureFileRunner {
         scenarioPassed = result.result == StepExecutionResult.pass;
         if (!_canContinueScenario(result)) {
           scenarioPassed = false;
-          _log(
+          await _log(
               "Background step '${step.name}' did not pass, all remaining steps will be skiped",
               step.debug,
               MessageLevel.warning);
@@ -108,7 +108,7 @@ class FeatureFileRunner {
       scenarioPassed = result.result == StepExecutionResult.pass;
       if (!_canContinueScenario(result)) {
         scenarioPassed = false;
-        _log(
+        await _log(
             "Step '${step.name}' did not pass, all remaining steps will be skiped",
             step.debug,
             MessageLevel.warning);
@@ -130,8 +130,8 @@ class FeatureFileRunner {
   Future<StepResult> _runStep(
       StepRunnable step, World world, bool skipExecution) async {
     StepResult result;
-    ExectuableStep code = _matchStepToExectuableStep(step);
-    Iterable<dynamic> parameters = _getStepParameters(step, code);
+    final ExectuableStep code = _matchStepToExectuableStep(step);
+    final Iterable<dynamic> parameters = _getStepParameters(step, code);
 
     await _log(
         "Attempting to run step '${step.name}'", step.debug, MessageLevel.info);
@@ -206,7 +206,7 @@ class FeatureFileRunner {
       }
       """;
       _reporter.message(message, MessageLevel.error);
-      throw new GherkinStepNotDefinedException(message);
+      throw GherkinStepNotDefinedException(message);
     }
 
     return executable;
@@ -215,7 +215,7 @@ class FeatureFileRunner {
   Iterable<dynamic> _getStepParameters(StepRunnable step, ExectuableStep code) {
     Iterable<dynamic> parameters =
         code.expression.getParameters(step.debug.lineText);
-    if (step.multilineStrings.length > 0) {
+    if (step.multilineStrings.isNotEmpty) {
       parameters = parameters.toList()..addAll(step.multilineStrings);
     }
 

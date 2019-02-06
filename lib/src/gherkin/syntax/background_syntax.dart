@@ -8,6 +8,7 @@ import 'package:flutter_gherkin/src/gherkin/syntax/syntax_matcher.dart';
 import 'package:flutter_gherkin/src/gherkin/syntax/tag_syntax.dart';
 
 class BackgroundSyntax extends RegExMatchedGherkinSyntax {
+  @override
   final RegExp pattern = RegExp(r"^\s*Background:\s*(.+)\s*$",
       multiLine: false, caseSensitive: false);
 
@@ -23,7 +24,7 @@ class BackgroundSyntax extends RegExMatchedGherkinSyntax {
   @override
   Runnable toRunnable(String line, RunnableDebugInformation debug) {
     final name = pattern.firstMatch(line).group(1);
-    final runnable = new BackgroundRunnable(name, debug);
+    final runnable = BackgroundRunnable(name, debug);
     return runnable;
   }
 }

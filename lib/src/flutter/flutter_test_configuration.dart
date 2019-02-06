@@ -28,7 +28,7 @@ class FlutterTestConfiguration extends TestConfiguration {
         Platform.environment['VM_SERVICE_URL'];
     final driver = await FlutterDriver.connect(
         dartVmServiceUrl: dartVmServiceUrl,
-        isolateReadyTimeout: Duration(seconds: 30),
+        isolateReadyTimeout: const Duration(seconds: 30),
         logCommunicationToFile: false,
         printCommunication: false);
     return driver;
@@ -36,7 +36,7 @@ class FlutterTestConfiguration extends TestConfiguration {
 
   Future<FlutterWorld> createFlutterWorld(
       TestConfiguration config, FlutterWorld world) async {
-    world = world ?? new FlutterWorld();
+    world = world ?? FlutterWorld();
     final driver = await createFlutterDriver();
     world.setFlutterDriver(driver);
     return world;

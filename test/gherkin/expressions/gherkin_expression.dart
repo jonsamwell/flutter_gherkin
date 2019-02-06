@@ -9,7 +9,7 @@ import 'package:test/test.dart';
 void main() {
   group("GherkinExpression", () {
     test('parse simple regex expression correctly', () async {
-      final parser = new GherkinExpression(RegExp('I (open|close) the drawer'),
+      final parser = GherkinExpression(RegExp('I (open|close) the drawer'),
           [WordParameterLower(), WordParameterCamel()]);
 
       expect(parser.isMatch("I open the drawer"), equals(true));
@@ -20,7 +20,7 @@ void main() {
 
     test('parse complex regex with custom parameters expression correctly',
         () async {
-      final parser = new GherkinExpression(
+      final parser = GherkinExpression(
           RegExp(
               'I (open|close) the drawer {int} time(s) and find {word} which is (good|bad)'),
           [WordParameterLower(), IntParameterLower(), PluralParameter()]);
@@ -44,7 +44,7 @@ void main() {
     });
 
     test('parse simple {word} expression correctly', () async {
-      final parser = new GherkinExpression(RegExp('I am {word} as {Word}'),
+      final parser = GherkinExpression(RegExp('I am {word} as {Word}'),
           [WordParameterLower(), WordParameterCamel()]);
 
       expect(parser.isMatch("I am 'happy'"), equals(false));
@@ -54,8 +54,8 @@ void main() {
     });
 
     test('parse simple {string} expression correctly', () async {
-      final parser = new GherkinExpression(
-          RegExp('I am {string}'), [StringParameterLower()]);
+      final parser =
+          GherkinExpression(RegExp('I am {string}'), [StringParameterLower()]);
 
       expect(parser.isMatch("I am 'happy as Larry'"), equals(true));
       expect(parser.getParameters("I am 'happy as Larry'"),
@@ -63,7 +63,7 @@ void main() {
     });
 
     test('parse simple {int} expression correctly', () async {
-      final parser = new GherkinExpression(
+      final parser = GherkinExpression(
           RegExp('I am {int} years and {Int} days old'),
           [IntParameterLower(), IntParameterCamel()]);
 
@@ -73,7 +73,7 @@ void main() {
     });
 
     test('parse simple {float} expression correctly', () async {
-      final parser = new GherkinExpression(
+      final parser = GherkinExpression(
           RegExp('I am {float} years and {Float} days old'),
           [FloatParameterLower(), FloatParameterCamel()]);
 
@@ -84,7 +84,7 @@ void main() {
     });
 
     test('parse simple plural (s) expression correctly', () async {
-      final parser = new GherkinExpression(
+      final parser = GherkinExpression(
           RegExp('I have {int} cucumber(s) in my belly'),
           [IntParameterLower(), PluralParameter()]);
 
@@ -97,7 +97,7 @@ void main() {
     });
 
     test('parse complex expression correctly', () async {
-      final parser = new GherkinExpression(
+      final parser = GherkinExpression(
           RegExp(
               '{word} {int} {string} {int} (jon|laurie) {float} {word} {float} cucumber(s)'),
           [

@@ -6,6 +6,7 @@ import 'package:flutter_gherkin/src/gherkin/syntax/regex_matched_syntax.dart';
 import 'package:flutter_gherkin/src/gherkin/syntax/syntax_matcher.dart';
 
 class TableLineSyntax extends RegExMatchedGherkinSyntax {
+  @override
   final RegExp pattern =
       RegExp(r"^\s*\|.*\|\s*$", multiLine: false, caseSensitive: false);
 
@@ -22,7 +23,7 @@ class TableLineSyntax extends RegExMatchedGherkinSyntax {
 
   @override
   Runnable toRunnable(String line, RunnableDebugInformation debug) {
-    final runnable = new TableRunnable(debug);
+    final runnable = TableRunnable(debug);
     runnable.rows.add(line.trim());
     return runnable;
   }

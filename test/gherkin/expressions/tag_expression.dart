@@ -4,7 +4,7 @@ import "package:test/test.dart";
 void main() {
   group("TagExpression", () {
     test("evaluate simple single tag expression correctly", () async {
-      final evaluator = new TagExpressionEvaluator();
+      final evaluator = TagExpressionEvaluator();
       final tags = ["a", "b", "c"];
 
       expect(evaluator.evaluate("@a", tags), true);
@@ -13,7 +13,7 @@ void main() {
     });
 
     test("evaluate complex and tag expression correctly", () async {
-      final evaluator = new TagExpressionEvaluator();
+      final evaluator = TagExpressionEvaluator();
       final tags = ["a", "b", "c"];
 
       expect(evaluator.evaluate("@a and @d", tags), false);
@@ -22,7 +22,7 @@ void main() {
     });
 
     test("evaluate complex or tag expression correctly", () async {
-      final evaluator = new TagExpressionEvaluator();
+      final evaluator = TagExpressionEvaluator();
       final tags = ["a", "b", "c"];
 
       expect(evaluator.evaluate("(@a or @b)", tags), true);
@@ -31,7 +31,7 @@ void main() {
     });
 
     test("evaluate complex bracket tag expression correctly", () async {
-      final evaluator = new TagExpressionEvaluator();
+      final evaluator = TagExpressionEvaluator();
       final tags = ["a", "b", "c"];
 
       expect(evaluator.evaluate("@a or (@b and @c)", tags), true);

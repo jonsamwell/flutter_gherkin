@@ -7,13 +7,13 @@ import 'package:test/test.dart';
 void main() {
   group("isMatch", () {
     test('matches correctly', () {
-      final syntax = new BackgroundSyntax();
+      final syntax = BackgroundSyntax();
       expect(syntax.isMatch("Background: something"), true);
       expect(syntax.isMatch(" Background:   something"), true);
     });
 
     test('does not match', () {
-      final syntax = new BackgroundSyntax();
+      final syntax = BackgroundSyntax();
       expect(syntax.isMatch("Background something"), false);
       expect(syntax.isMatch("#Background: something"), false);
     });
@@ -21,8 +21,8 @@ void main() {
 
   group("toRunnable", () {
     test('creates BackgroundRunnable', () {
-      final syntax = new BackgroundSyntax();
-      Runnable runnable = syntax.toRunnable("Background: A backgroun 123",
+      final syntax = BackgroundSyntax();
+      final Runnable runnable = syntax.toRunnable("Background: A backgroun 123",
           RunnableDebugInformation(null, 0, null));
       expect(runnable, isNotNull);
       expect(runnable, predicate((x) => x is BackgroundRunnable));

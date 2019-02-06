@@ -34,12 +34,12 @@ void main() {
         final step = StepDefinitionMock(StepDefinitionConfiguration(), 2);
         expect(
             () async => await step.run(
-                null, null, Duration(seconds: 1), Iterable.empty()),
+                null, null, Duration(seconds: 1), const Iterable.empty()),
             throwsA((e) =>
                 e is GherkinStepParameterMismatchException &&
                 e.message ==
-                    "StepDefinitionMock parameter count mismatch. Expect 2 parameters but got 0. " +
-                        "Ensure you are extending the correct step class which would be Given"));
+                    "StepDefinitionMock parameter count mismatch. Expect 2 parameters but got 0. "
+                    "Ensure you are extending the correct step class which would be Given"));
         expect(step.invocationCount, 0);
       });
 
@@ -52,8 +52,8 @@ void main() {
             throwsA((e) =>
                 e is GherkinStepParameterMismatchException &&
                 e.message ==
-                    "StepDefinitionMock parameter count mismatch. Expect 2 parameters but got 1. " +
-                        "Ensure you are extending the correct step class which would be Given1<TInputType0>"));
+                    "StepDefinitionMock parameter count mismatch. Expect 2 parameters but got 1. "
+                    "Ensure you are extending the correct step class which would be Given1<TInputType0>"));
         expect(step.invocationCount, 0);
       });
 
@@ -71,7 +71,8 @@ void main() {
             StepDefinitionConfiguration(), 0, () async => throw Exception("1"));
         expect(
             await step.run(
-                null, null, Duration(milliseconds: 1), Iterable.empty()), (r) {
+                null, null, Duration(milliseconds: 1), const Iterable.empty()),
+            (r) {
           return r is ErroredStepResult &&
               r.result == StepExecutionResult.error &&
               r.exception is Exception &&
@@ -86,7 +87,8 @@ void main() {
             () async => throw TestFailure("1"));
         expect(
             await step.run(
-                null, null, Duration(milliseconds: 1), Iterable.empty()), (r) {
+                null, null, Duration(milliseconds: 1), const Iterable.empty()),
+            (r) {
           return r is StepResult &&
               r.result == StepExecutionResult.fail &&
               r.resultReason == "1";

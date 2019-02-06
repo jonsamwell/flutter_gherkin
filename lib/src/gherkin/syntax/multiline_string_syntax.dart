@@ -8,8 +8,13 @@ import 'package:flutter_gherkin/src/gherkin/syntax/syntax_matcher.dart';
 import 'package:flutter_gherkin/src/gherkin/syntax/text_line_syntax.dart';
 
 class MultilineStringSyntax extends RegExMatchedGherkinSyntax {
-  final RegExp pattern = RegExp(r"^\s*(" + '"""' + r"|'''|```)\s*$",
-      multiLine: false, caseSensitive: false);
+  @override
+  final RegExp pattern = RegExp(
+      r"^\s*("
+      '"""'
+      r"|'''|```)\s*$",
+      multiLine: false,
+      caseSensitive: false);
 
   @override
   bool get isBlockSyntax => true;
@@ -27,7 +32,7 @@ class MultilineStringSyntax extends RegExMatchedGherkinSyntax {
 
   @override
   Runnable toRunnable(String line, RunnableDebugInformation debug) {
-    final runnable = new MultilineStringRunnable(debug);
+    final runnable = MultilineStringRunnable(debug);
     return runnable;
   }
 

@@ -3,7 +3,7 @@ import 'package:flutter_gherkin/src/reporters/message_level.dart';
 import 'package:flutter_gherkin/src/reporters/reporter.dart';
 
 class AggregatedReporter extends Reporter {
-  final List<Reporter> _reporters = new List<Reporter>();
+  final List<Reporter> _reporters = <Reporter>[];
 
   void addReporter(Reporter reporter) => _reporters.add(reporter);
 
@@ -64,7 +64,7 @@ class AggregatedReporter extends Reporter {
   }
 
   Future<void> _invokeReporters(Future<void> invoke(Reporter r)) async {
-    if (_reporters != null && _reporters.length > 0) {
+    if (_reporters != null && _reporters.isNotEmpty) {
       for (var reporter in _reporters) {
         try {
           await invoke(reporter);

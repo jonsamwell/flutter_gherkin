@@ -8,14 +8,14 @@ import 'package:test/test.dart';
 void main() {
   group("isMatch", () {
     test('matches correctly', () {
-      final syntax = new MultilineStringSyntax();
+      final syntax = MultilineStringSyntax();
       expect(syntax.isMatch('"""'), true);
       expect(syntax.isMatch('```'), true);
       expect(syntax.isMatch("'''"), true);
     });
 
     test('does not match', () {
-      final syntax = new MultilineStringSyntax();
+      final syntax = MultilineStringSyntax();
       expect(syntax.isMatch('#"""'), false);
       expect(syntax.isMatch('#```'), false);
       expect(syntax.isMatch("#'''"), false);
@@ -26,30 +26,30 @@ void main() {
   });
   group("block", () {
     test("is block", () {
-      final syntax = new MultilineStringSyntax();
+      final syntax = MultilineStringSyntax();
       expect(syntax.isBlockSyntax, true);
     });
 
     test("continue block if text line string", () {
-      final syntax = new MultilineStringSyntax();
-      expect(syntax.hasBlockEnded(new TextLineSyntax()), false);
+      final syntax = MultilineStringSyntax();
+      expect(syntax.hasBlockEnded(TextLineSyntax()), false);
     });
 
     test("continue block if comment string", () {
-      final syntax = new MultilineStringSyntax();
-      expect(syntax.hasBlockEnded(new CommentSyntax()), false);
+      final syntax = MultilineStringSyntax();
+      expect(syntax.hasBlockEnded(CommentSyntax()), false);
     });
 
     test("end block if multiline string", () {
-      final syntax = new MultilineStringSyntax();
-      expect(syntax.hasBlockEnded(new MultilineStringSyntax()), true);
+      final syntax = MultilineStringSyntax();
+      expect(syntax.hasBlockEnded(MultilineStringSyntax()), true);
     });
   });
 
   group("toRunnable", () {
     test('creates TextLineRunnable', () {
-      final syntax = new MultilineStringSyntax();
-      MultilineStringRunnable runnable =
+      final syntax = MultilineStringSyntax();
+      final MultilineStringRunnable runnable =
           syntax.toRunnable("'''", RunnableDebugInformation(null, 0, null));
       expect(runnable, isNotNull);
       expect(runnable, predicate((x) => x is MultilineStringRunnable));

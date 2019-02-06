@@ -37,18 +37,18 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       drawer: Drawer(
-        key: Key("drawer"),
+        key: const Key("drawer"),
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
             DrawerHeader(
-              child: Text('Drawer Header'),
+              child: const Text('Drawer Header'),
               decoration: BoxDecoration(
                 color: Colors.blue,
               ),
             ),
             ListTile(
-              title: Text('Item 1'),
+              title: const Text('Item 1'),
               onTap: () {
                 // Update the state of the app
                 // ...
@@ -57,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             ListTile(
-              title: Text('Item 2'),
+              title: const Text('Item 2'),
               onTap: () {
                 // Update the state of the app
                 // ...
@@ -72,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
+            const Text(
               'You have pushed the button this many times:',
             ),
             Text(
@@ -80,7 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
               // Provide a Key to this specific Text Widget. This allows us
               // to identify this specific Widget from inside our test suite and
               // read the text.
-              key: Key('counter'),
+              key: const Key('counter'),
               style: Theme.of(context).textTheme.display1,
             ),
           ],
@@ -89,10 +89,10 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         // Provide a Key to this the button. This allows us to find this
         // specific button and tap it inside the test suite.
-        key: Key('increment'),
+        key: const Key('increment'),
         onPressed: _incrementCounter,
         tooltip: 'Increment',
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }

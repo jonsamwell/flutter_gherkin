@@ -6,7 +6,7 @@ class FlutterWorld extends World {
 
   FlutterDriver get driver => _driver;
 
-  setFlutterDriver(FlutterDriver flutterDriver) {
+  void setFlutterDriver(FlutterDriver flutterDriver) {
     _driver = flutterDriver;
   }
 

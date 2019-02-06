@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 void main() {
   group("isMatch", () {
     test('matches correctly', () {
-      final syntax = new TextLineSyntax();
+      final syntax = TextLineSyntax();
       expect(syntax.isMatch("Hello Jon"), true);
       expect(syntax.isMatch("Hello 'Jon'!"), true);
       expect(syntax.isMatch(" Hello Jon"), true);
@@ -15,7 +15,7 @@ void main() {
     });
 
     test('does not match', () {
-      final syntax = new TextLineSyntax();
+      final syntax = TextLineSyntax();
       expect(syntax.isMatch("#Hello Jon"), false);
       expect(syntax.isMatch("# Hello Jon"), false);
       expect(syntax.isMatch("#  Hello Jon"), false);
@@ -26,8 +26,8 @@ void main() {
 
   group("toRunnable", () {
     test('creates TextLineRunnable', () {
-      final syntax = new TextLineSyntax();
-      TextLineRunnable runnable = syntax.toRunnable(
+      final syntax = TextLineSyntax();
+      final TextLineRunnable runnable = syntax.toRunnable(
           "  Some text ", RunnableDebugInformation(null, 0, null));
       expect(runnable, isNotNull);
       expect(runnable, predicate((x) => x is TextLineRunnable));

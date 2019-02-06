@@ -13,6 +13,7 @@ class StdoutReporter extends Reporter {
 
   StdoutReporter([this._logLevel = MessageLevel.verbose]);
 
+  @override
   Future<void> message(String message, MessageLevel level) async {
     if (level.index >= _logLevel.index) {
       printMessageLine(message, getColour(level));

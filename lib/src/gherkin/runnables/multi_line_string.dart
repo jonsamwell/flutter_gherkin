@@ -5,7 +5,7 @@ import 'package:flutter_gherkin/src/gherkin/runnables/runnable_block.dart';
 import 'package:flutter_gherkin/src/gherkin/runnables/text_line.dart';
 
 class MultilineStringRunnable extends RunnableBlock {
-  List<String> lines = List<String>();
+  List<String> lines = <String>[];
 
   @override
   String get name => "Multiline String";
@@ -14,6 +14,8 @@ class MultilineStringRunnable extends RunnableBlock {
 
   @override
   void addChild(Runnable child) {
+    final exception = Exception(
+        "Unknown runnable child given to Multiline string '${child.runtimeType}'");
     switch (child.runtimeType) {
       case TextLineRunnable:
         lines.add((child as TextLineRunnable).text);
@@ -21,8 +23,7 @@ class MultilineStringRunnable extends RunnableBlock {
       case EmptyLineRunnable:
         break;
       default:
-        throw new Exception(
-            "Unknown runnable child given to Multiline string '${child.runtimeType}'");
+        throw exception;
     }
   }
 }

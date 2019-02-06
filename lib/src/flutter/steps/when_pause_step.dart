@@ -10,7 +10,8 @@ import 'package:flutter_gherkin/src/gherkin/steps/when.dart';
 ///   When I pause for 120 seconds
 class WhenPauseStep extends When1<int> {
   WhenPauseStep()
-      : super(StepDefinitionConfiguration()..timeout = Duration(minutes: 5));
+      : super(StepDefinitionConfiguration()
+          ..timeout = const Duration(minutes: 5));
 
   @override
   Future<void> executeStep(int seconds) async {

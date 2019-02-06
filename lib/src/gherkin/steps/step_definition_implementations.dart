@@ -28,6 +28,7 @@ abstract class StepDefinition<TWorld extends World>
   StepDefinition([StepDefinitionConfiguration configuration])
       : super(configuration, 0);
 
+  @override
   Future<void> onRun(Iterable<dynamic> parameters) async => await code();
 }
 
@@ -36,6 +37,7 @@ abstract class StepDefinition1<TWorld extends World, TInput1>
   StepDefinition1([StepDefinitionConfiguration configuration])
       : super(configuration, 1);
 
+  @override
   Future<void> onRun(Iterable<dynamic> parameters) async =>
       await code(parameters.elementAt(0));
 }
@@ -45,6 +47,7 @@ abstract class StepDefinition2<TWorld extends World, TInput1, TInput2>
   StepDefinition2([StepDefinitionConfiguration configuration])
       : super(configuration, 2);
 
+  @override
   Future<void> onRun(Iterable<dynamic> parameters) async =>
       await code(parameters.elementAt(0), parameters.elementAt(1));
 }
@@ -55,6 +58,7 @@ abstract class StepDefinition3<TWorld extends World, TInput1, TInput2, TInput3>
   StepDefinition3([StepDefinitionConfiguration configuration])
       : super(configuration, 3);
 
+  @override
   Future<void> onRun(Iterable<dynamic> parameters) async => await code(
       parameters.elementAt(0),
       parameters.elementAt(1),
@@ -68,6 +72,7 @@ abstract class StepDefinition4<TWorld extends World, TInput1, TInput2, TInput3,
   StepDefinition4([StepDefinitionConfiguration configuration])
       : super(configuration, 4);
 
+  @override
   Future<void> onRun(Iterable<dynamic> parameters) async => await code(
       parameters.elementAt(0),
       parameters.elementAt(1),
@@ -82,6 +87,7 @@ abstract class StepDefinition5<TWorld extends World, TInput1, TInput2, TInput3,
   StepDefinition5([StepDefinitionConfiguration configuration])
       : super(configuration, 5);
 
+  @override
   Future<void> onRun(Iterable<dynamic> parameters) async => await code(
       parameters.elementAt(0),
       parameters.elementAt(1),

@@ -16,7 +16,7 @@ abstract class StepDefinitionGeneric<TWorld extends World> {
   RegExp get pattern;
 
   StepDefinitionGeneric(this.config, this._expectParameterCount) {
-    this._timeout = this.config?.timeout;
+    _timeout = config?.timeout;
   }
 
   TWorld get world => _world;
@@ -54,6 +54,6 @@ abstract class StepDefinitionGeneric<TWorld extends World> {
   void _ensureParameterCount(int actual, int expected) {
     if (actual != expected)
       throw GherkinStepParameterMismatchException(
-          this.runtimeType, expected, actual);
+          runtimeType, expected, actual);
   }
 }
