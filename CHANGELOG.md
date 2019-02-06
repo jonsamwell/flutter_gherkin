@@ -1,3 +1,6 @@
+## [0.0.12] - 06/02/2019
+* Fixed package analysis error
+
 ## [0.0.11] - 06/02/2019
 
 * Fixes issue with table parameters not being given to step

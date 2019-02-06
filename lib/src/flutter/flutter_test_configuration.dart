@@ -28,7 +28,6 @@ class FlutterTestConfiguration extends TestConfiguration {
         Platform.environment['VM_SERVICE_URL'];
     final driver = await FlutterDriver.connect(
         dartVmServiceUrl: dartVmServiceUrl,
-        isolateReadyTimeout: const Duration(seconds: 30),
         logCommunicationToFile: false,
         printCommunication: false);
     return driver;

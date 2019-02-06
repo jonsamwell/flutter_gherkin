@@ -322,11 +322,12 @@ void main() {
         final reporterMock = ReporterMock();
         reporterMock.onStepFinishedFn = (message) => finishedMessage = message;
         final stepDefiniton = MockStepDefinition(
-            (_) async => await Future.delayed(Duration(seconds: 2)));
+            (_) async => await Future.delayed(const Duration(seconds: 2)));
         final executableStep =
             ExectuableStep(MockGherkinExpression((_) => true), stepDefiniton);
         final runner = FeatureFileRunner(
-            TestConfiguration()..defaultTimeout = Duration(milliseconds: 1),
+            TestConfiguration()
+              ..defaultTimeout = const Duration(milliseconds: 1),
             MockTagExpressionEvaluator(),
             [executableStep],
             reporterMock,
@@ -366,7 +367,8 @@ void main() {
             MockGherkinExpression((s) => s == stepTextThree),
             stepDefinitonThree);
         final runner = FeatureFileRunner(
-            TestConfiguration()..defaultTimeout = Duration(milliseconds: 1),
+            TestConfiguration()
+              ..defaultTimeout = const Duration(milliseconds: 1),
             MockTagExpressionEvaluator(),
             [executableStep, executableStepTwo, executableStepThree],
             reporterMock,

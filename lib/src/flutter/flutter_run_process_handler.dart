@@ -68,6 +68,7 @@ class FlutterRunProcessHandler extends ProcessHandler {
         completer.completeError(TimeoutException(
             "Timeout while wait for observatory debugger uri", timeout));
     }).listen((logLine) {
+      // stdout.write(logLine);
       if (_observatoryDebuggerUriRegex.hasMatch(logLine)) {
         sub?.cancel();
         if (!completer.isCompleted)

@@ -21,7 +21,7 @@ class TestConfiguration {
   String tagExpression;
 
   /// The default step timeout - this can be override when definition a step definition
-  Duration defaultTimeout = Duration(seconds: 10);
+  Duration defaultTimeout = const Duration(seconds: 10);
 
   /// The execution order of features - this default to random to avoid any inter-test depedencies
   ExecutionOrder order = ExecutionOrder.random;
