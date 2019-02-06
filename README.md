@@ -24,47 +24,7 @@ Available as a Dart package https://pub.dartlang.org/packages/flutter_gherkin
 
 ## Table of Contents
 
-<!-- TOC -->
-
-- [flutter_gherkin](#fluttergherkin)
-  - [Table of Contents](#table-of-contents)
-  - [Getting Started](#getting-started)
-    - [Configuration](#configuration)
-      - [features](#features)
-      - [tagExpression](#tagexpression)
-      - [order](#order)
-      - [stepDefinitions](#stepdefinitions)
-      - [customStepParameterDefinitions](#customstepparameterdefinitions)
-      - [hooks](#hooks)
-      - [reporters](#reporters)
-      - [createWorld](#createworld)
-      - [exitAfterTestRun](#exitaftertestrun)
-    - [Flutter specific configuration options](#flutter-specific-configuration-options)
-      - [restartAppBetweenScenarios](#restartappbetweenscenarios)
-      - [targetAppPath](#targetapppath)
-  - [Features Files](#features-files)
-    - [Steps Definitions](#steps-definitions)
-      - [Given](#given)
-      - [Then](#then)
-      - [Step Timeout](#step-timeout)
-      - [Multiline Strings](#multiline-strings)
-      - [Data tables](#data-tables)
-      - [Well known step parameters](#well-known-step-parameters)
-      - [Pluralisation](#pluralisation)
-      - [Custom Parameters](#custom-parameters)
-      - [World Context (per test scenario shared state)](#world-context-per-test-scenario-shared-state)
-      - [Assertions](#assertions)
-    - [Tags](#tags)
-  - [Hooks](#hooks)
-  - [Reporting](#reporting)
-  - [Flutter](#flutter)
-    - [Restarting the app before each test](#restarting-the-app-before-each-test)
-      - [Flutter World](#flutter-world)
-    - [Pre-defined Steps](#pre-defined-steps)
-      - [Flutter Driver Utilities](#flutter-driver-utilities)
-    - [Debugging](#debugging)
-
-<!-- /TOC -->
+<!-- TOC -->autoauto- [flutter_gherkin](#flutter_gherkin)auto  - [Table of Contents](#table-of-contents)auto  - [Getting Started](#getting-started)auto    - [Configuration](#configuration)auto      - [features](#features)auto      - [tagExpression](#tagexpression)auto      - [order](#order)auto      - [stepDefinitions](#stepdefinitions)auto      - [customStepParameterDefinitions](#customstepparameterdefinitions)auto      - [hooks](#hooks)auto      - [reporters](#reporters)auto      - [createWorld](#createworld)auto      - [exitAfterTestRun](#exitaftertestrun)auto    - [Flutter specific configuration options](#flutter-specific-configuration-options)auto      - [restartAppBetweenScenarios](#restartappbetweenscenarios)auto      - [targetAppPath](#targetapppath)auto  - [Features Files](#features-files)auto    - [Steps Definitions](#steps-definitions)auto      - [Given](#given)auto      - [Then](#then)auto      - [Step Timeout](#step-timeout)auto      - [Multiline Strings](#multiline-strings)auto      - [Data tables](#data-tables)auto      - [Well known step parameters](#well-known-step-parameters)auto      - [Pluralisation](#pluralisation)auto      - [Custom Parameters](#custom-parameters)auto      - [World Context (per test scenario shared state)](#world-context-per-test-scenario-shared-state)auto      - [Assertions](#assertions)auto    - [Tags](#tags)auto  - [Hooks](#hooks)auto  - [Reporting](#reporting)auto  - [Flutter](#flutter)auto    - [Restarting the app before each test](#restarting-the-app-before-each-test)auto      - [Flutter World](#flutter-world)auto    - [Pre-defined Steps](#pre-defined-steps)auto      - [Flutter Driver Utilities](#flutter-driver-utilities)auto    - [Debugging](#debugging)autoauto<!-- /TOC -->
 
 ## Getting Started
 
@@ -633,6 +593,13 @@ class HookExample extends Hook {
   Future<void> onBeforeScenario(
       TestConfiguration config, String scenario) async {
     print("running hook before scenario '$scenario'");
+  }
+
+  @override
+  /// Run after the scenario world is created but run before a scenario and its steps are executed
+  /// Might not be invoked if there is not a world object
+  Future<void> onAfterScenarioWorldCreated(World world, String scenario) {
+    print("running hook after world scenario created'$scenario'");
   }
 
   @override

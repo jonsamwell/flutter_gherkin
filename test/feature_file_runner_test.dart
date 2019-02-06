@@ -165,6 +165,38 @@ void main() {
       });
     });
 
+    group("step parameters", () {
+      test("table parameters are given to the step", () async {
+        bool tableParameterProvided = false;
+        final stepDefiniton =
+            MockStepDefinition((Iterable<dynamic> parameters) async {
+          tableParameterProvided = parameters.first is Table;
+        }, 1);
+        final executableStep = new ExectuableStep(
+            MockGherkinExpression((_) => true), stepDefiniton);
+        final runner = new FeatureFileRunner(
+            TestConfiguration(),
+            MockTagExpressionEvaluator(),
+            [executableStep],
+            ReporterMock(),
+            HookMock());
+
+        final step = new StepRunnable(
+            "Step 1", RunnableDebugInformation("", 0, "Given I do a"));
+        step.table = new Table(null, null);
+        final scenario = new ScenarioRunnable("Scenario: 1", emptyDebuggable)
+          ..steps.add(step);
+        final feature = new FeatureRunnable("1", emptyDebuggable)
+          ..scenarios.add(scenario);
+        final featureFile = new FeatureFile(emptyDebuggable)
+          ..features.add(feature);
+        await runner.run(featureFile);
+        expect(stepDefiniton.hasRun, true);
+        expect(stepDefiniton.runCount, 1);
+        expect(tableParameterProvided, true);
+      });
+    });
+
     group("hooks", () {
       test("hook is called when starting and finishing scenarios", () async {
         final hookMock = HookMock();

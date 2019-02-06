@@ -7,6 +7,7 @@ class HookMock extends Hook {
   int onAfterRunInvocationCount = 0;
   int onBeforeScenarioInvocationCount = 0;
   int onAfterScenarioInvocationCount = 0;
+  int onAfterScenarioWorldCreatedInvocationCount = 0;
 
   final int providedPriority;
   final OnBeforeRunCode onBeforeRunCode;
@@ -33,4 +34,8 @@ class HookMock extends Hook {
   Future<void> onAfterScenario(
           TestConfiguration config, String scenario) async =>
       onAfterScenarioInvocationCount += 1;
+
+  Future<void> onAfterScenarioWorldCreated(
+          World world, String scenario) async =>
+      onAfterScenarioWorldCreatedInvocationCount += 1;
 }
