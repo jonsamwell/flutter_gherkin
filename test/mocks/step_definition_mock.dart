@@ -8,7 +8,8 @@ class MockStepDefinition extends StepDefinitionBase<World, Function> {
   int runCount = 0;
   final OnRunCode code;
 
-  MockStepDefinition([this.code, int expectedParameterCount = 0]) : super(null, expectedParameterCount);
+  MockStepDefinition([this.code, int expectedParameterCount = 0])
+      : super(null, expectedParameterCount);
 
   @override
   Future<void> onRun(Iterable parameters) async {
