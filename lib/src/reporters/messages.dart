@@ -1,3 +1,4 @@
+import 'package:flutter_gherkin/src/gherkin/models/table.dart';
 import 'package:flutter_gherkin/src/gherkin/runnables/debug_information.dart';
 import 'package:flutter_gherkin/src/gherkin/steps/step_run_result.dart';
 
@@ -17,6 +18,14 @@ class FinishedMessage {
   final RunnableDebugInformation context;
 
   FinishedMessage(this.target, this.name, this.context);
+}
+
+class StepStartedMessage extends StartedMessage {
+  final Table table;
+
+  StepStartedMessage(
+      Target target, String name, RunnableDebugInformation context, this.table)
+      : super(target, name, context);
 }
 
 class StepFinishedMessage extends FinishedMessage {

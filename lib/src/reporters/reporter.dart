@@ -8,7 +8,7 @@ abstract class Reporter {
   Future<void> onFeatureFinished(FinishedMessage message) async {}
   Future<void> onScenarioStarted(StartedMessage message) async {}
   Future<void> onScenarioFinished(ScenarioFinishedMessage message) async {}
-  Future<void> onStepStarted(StartedMessage message) async {}
+  Future<void> onStepStarted(StepStartedMessage message) async {}
   Future<void> onStepFinished(StepFinishedMessage message) async {}
   Future<void> onException(Exception exception, StackTrace stackTrace) async {}
   Future<void> message(String message, MessageLevel level) async {}
