@@ -136,7 +136,7 @@ class FeatureFileRunner {
     await _log(
         "Attempting to run step '${step.name}'", step.debug, MessageLevel.info);
     await _reporter
-        .onStepStarted(StartedMessage(Target.step, step.name, step.debug));
+        .onStepStarted(StepStartedMessage(Target.step, step.name, step.debug, step.table));
     if (skipExecution) {
       result = StepResult(0, StepExecutionResult.skipped);
     } else {

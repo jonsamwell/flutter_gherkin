@@ -43,7 +43,7 @@ class AggregatedReporter extends Reporter {
   }
 
   @override
-  Future<void> onStepStarted(StartedMessage message) async {
+  Future<void> onStepStarted(StepStartedMessage message) async {
     await _invokeReporters((r) async => await r.onStepStarted(message));
   }
 
