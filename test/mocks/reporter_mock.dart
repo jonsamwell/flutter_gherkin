@@ -35,7 +35,7 @@ class ReporterMock extends Reporter {
   Future<void> onScenarioFinished(FinishedMessage message) async =>
       onScenarioFinishedInvocationCount += 1;
   @override
-  Future<void> onStepStarted(StartedMessage message) async =>
+  Future<void> onStepStarted(StepStartedMessage message) async =>
       onStepStartedInvocationCount += 1;
   @override
   Future<void> onStepFinished(StepFinishedMessage message) async {
