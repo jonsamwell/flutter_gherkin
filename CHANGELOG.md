@@ -1,3 +1,6 @@
+## [0.0.13] - 07/03/2019
+* StepStartedMessage created which includes a table parameter that reporters receive when step is started thanks to @Holloweye for the PR
+
 ## [0.0.12] - 06/02/2019
 * Fixed package analysis error
 
