@@ -31,16 +31,16 @@ class HookMock extends Hook {
 
   @override
   Future<void> onBeforeScenario(
-          TestConfiguration config, String scenario) async =>
+          TestConfiguration config, String scenario, List<String> tags) async =>
       onBeforeScenarioInvocationCount += 1;
 
   @override
   Future<void> onAfterScenario(
-          TestConfiguration config, String scenario) async =>
+          TestConfiguration config, String scenario, List<String> tags) async =>
       onAfterScenarioInvocationCount += 1;
 
   @override
   Future<void> onAfterScenarioWorldCreated(
-          World world, String scenario) async =>
+          World world, String scenario, List<String> tags) async =>
       onAfterScenarioWorldCreatedInvocationCount += 1;
 }

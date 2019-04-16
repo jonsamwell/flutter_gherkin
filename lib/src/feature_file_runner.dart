@@ -76,13 +76,13 @@ class FeatureFileRunner {
       ScenarioRunnable scenario, BackgroundRunnable background) async {
     World world;
     bool scenarioPassed = true;
-    await _hook.onBeforeScenario(_config, scenario.name);
+    await _hook.onBeforeScenario(_config, scenario.name, List.unmodifiable(scenario.tags));
 
     if (_config.createWorld != null) {
       await _log("Creating new world for scenerio '${scenario.name}'",
           scenario.debug, MessageLevel.debug);
       world = await _config.createWorld(_config);
-      await _hook.onAfterScenarioWorldCreated(world, scenario.name);
+      await _hook.onAfterScenarioWorldCreated(world, scenario.name, List.unmodifiable(scenario.tags));
     }
 
     await _reporter.onScenarioStarted(
@@ -119,7 +119,7 @@ class FeatureFileRunner {
 
     await _reporter.onScenarioFinished(
         ScenarioFinishedMessage(scenario.name, scenario.debug, scenarioPassed));
-    await _hook.onAfterScenario(_config, scenario.name);
+    await _hook.onAfterScenario(_config, scenario.name, List.unmodifiable(scenario.tags));
     return scenarioPassed;
   }
 

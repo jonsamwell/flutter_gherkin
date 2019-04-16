@@ -25,7 +25,7 @@ class FlutterAppRunnerHook extends Hook {
 
   @override
   Future<void> onBeforeScenario(
-      TestConfiguration config, String scenario) async {
+      TestConfiguration config, String scenario, List<String> tags) async {
     final flutterConfig = _castConfig(config);
     if (_flutterAppProcess == null) {
       await _runApp(flutterConfig);
@@ -34,7 +34,7 @@ class FlutterAppRunnerHook extends Hook {
 
   @override
   Future<void> onAfterScenario(
-      TestConfiguration config, String scenario) async {
+      TestConfiguration config, String scenario, List<String> tags) async {
     final flutterConfig = _castConfig(config);
     haveRunFirstScenario = true;
     if (_flutterAppProcess != null &&
