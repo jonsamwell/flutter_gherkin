@@ -1,3 +1,7 @@
+## [0.0.14] - 23/04/2019
+* Updated to rely on the abstracted Gherkin library 'https://github.com/jonsamwell/dart_gherkin' which now includes a JsonReporter
+* Updated docs
+
 ## [0.0.13] - 07/03/2019
 * StepStartedMessage created which includes a table parameter that reporters receive when step is started thanks to @Holloweye for the PR
 

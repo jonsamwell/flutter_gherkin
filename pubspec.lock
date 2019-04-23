@@ -98,6 +98,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  gherkin:
+    dependency: "direct main"
+    description:
+      name: gherkin
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.4"
   glob:
     dependency: "direct main"
     description:

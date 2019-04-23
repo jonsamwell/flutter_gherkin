@@ -8,6 +8,7 @@ import 'package:flutter_gherkin/src/flutter/steps/when_fill_field_step.dart';
 import 'package:flutter_gherkin/src/flutter/steps/when_pause_step.dart';
 import 'package:flutter_gherkin/src/flutter/steps/when_tap_widget_step.dart';
 import 'package:flutter_driver/flutter_driver.dart';
+import 'package:gherkin/gherkin.dart';
 
 class FlutterTestConfiguration extends TestConfiguration {
   String _observatoryDebuggerUri;

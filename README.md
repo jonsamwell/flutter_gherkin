@@ -25,43 +25,41 @@ Available as a Dart package https://pub.dartlang.org/packages/flutter_gherkin
 ## Table of Contents
 
 <!-- TOC -->
-
-- [flutter_gherkin](#fluttergherkin)
-  - [Getting Started](#getting-started)
-    - [Configuration](#configuration)
-      - [features](#features)
-      - [tagExpression](#tagexpression)
-      - [order](#order)
-      - [stepDefinitions](#stepdefinitions)
-      - [customStepParameterDefinitions](#customstepparameterdefinitions)
-      - [hooks](#hooks)
-      - [reporters](#reporters)
-      - [createWorld](#createworld)
-      - [exitAfterTestRun](#exitaftertestrun)
-    - [Flutter specific configuration options](#flutter-specific-configuration-options)
-      - [restartAppBetweenScenarios](#restartappbetweenscenarios)
-      - [targetAppPath](#targetapppath)
-  - [Features Files](#features-files)
-    - [Steps Definitions](#steps-definitions)
-      - [Given](#given)
-      - [Then](#then)
-      - [Step Timeout](#step-timeout)
-      - [Multiline Strings](#multiline-strings)
-      - [Data tables](#data-tables)
-      - [Well known step parameters](#well-known-step-parameters)
-      - [Pluralisation](#pluralisation)
-      - [Custom Parameters](#custom-parameters)
-      - [World Context (per test scenario shared state)](#world-context-per-test-scenario-shared-state)
-      - [Assertions](#assertions)
-    - [Tags](#tags)
-  - [Hooks](#hooks)
-  - [Reporting](#reporting)
-  - [Flutter](#flutter)
-    - [Restarting the app before each test](#restarting-the-app-before-each-test)
-      - [Flutter World](#flutter-world)
-    - [Pre-defined Steps](#pre-defined-steps)
-      - [Flutter Driver Utilities](#flutter-driver-utilities)
-    - [Debugging](#debugging)
+- [Getting Started](#getting-started)
+  - [Configuration](#configuration)
+    - [features](#features)
+    - [tagExpression](#tagexpression)
+    - [order](#order)
+    - [stepDefinitions](#stepdefinitions)
+    - [customStepParameterDefinitions](#customstepparameterdefinitions)
+    - [hooks](#hooks)
+    - [reporters](#reporters)
+    - [createWorld](#createworld)
+    - [exitAfterTestRun](#exitaftertestrun)
+  - [Flutter specific configuration options](#flutter-specific-configuration-options)
+    - [restartAppBetweenScenarios](#restartappbetweenscenarios)
+    - [targetAppPath](#targetapppath)
+- [Features Files](#features-files)
+  - [Steps Definitions](#steps-definitions)
+    - [Given](#given)
+    - [Then](#then)
+    - [Step Timeout](#step-timeout)
+    - [Multiline Strings](#multiline-strings)
+    - [Data tables](#data-tables)
+    - [Well known step parameters](#well-known-step-parameters)
+    - [Pluralisation](#pluralisation)
+    - [Custom Parameters](#custom-parameters)
+    - [World Context (per test scenario shared state)](#world-context-per-test-scenario-shared-state)
+    - [Assertions](#assertions)
+  - [Tags](#tags)
+- [Hooks](#hooks)
+- [Reporting](#reporting)
+- [Flutter](#flutter)
+  - [Restarting the app before each test](#restarting-the-app-before-each-test)
+    - [Flutter World](#flutter-world)
+  - [Pre-defined Steps](#pre-defined-steps)
+    - [Flutter Driver Utilities](#flutter-driver-utilities)
+  - [Debugging](#debugging)
 
 <!-- /TOC -->
 
@@ -114,13 +112,17 @@ This library has a couple of built in step definitions for convenience.  The fir
 ```dart
 import 'package:flutter_driver/flutter_driver.dart';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
+import 'package:gherkin/gherkin.dart';
 
 class TapButtonNTimesStep extends When2WithWorld<String, int, FlutterWorld> {
+  TapButtonNTimesStep()
+      : super(StepDefinitionConfiguration()..timeout = Duration(seconds: 10));
+
   @override
   Future<void> executeStep(String input1, int input2) async {
     final locator = find.byValueKey(input1);
     for (var i = 0; i < input2; i += 1) {
-      await world.driver.tap(locator);
+      await FlutterDriverUtils.tap(world.driver, locator, timeout: timeout);
     }
   }
 
@@ -144,16 +146,29 @@ Now that we have a testable app, a feature file and a custom step definition we 
 
 ```dart
 import 'dart:async';
-import 'package:glob/glob.dart';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
+import 'package:gherkin/gherkin.dart';
+import 'package:glob/glob.dart';
+import 'hooks/hook_example.dart';
+import 'steps/colour_parameter.dart';
+import 'steps/given_I_pick_a_colour_step.dart';
+import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
     ..features = [Glob(r"test_driver/features/**.feature")]
-    ..reporters = [ProgressReporter(), TestRunSummaryReporter()]
+    ..reporters = [
+      ProgressReporter(),
+      TestRunSummaryReporter(),
+      JsonReporter(path: './report.json')
+    ] // you can include the "StdoutReporter()" without the message level parameter for verbose log information
+    ..hooks = [HookExample()]
+    ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
+    ..customStepParameterDefinitions = [ColourParameter()]
     ..restartAppBetweenScenarios = true
     ..targetAppPath = "test_driver/app.dart"
-    ..exitAfterTestRun = true;
+    // ..tagExpression = "@smoke" // uncomment to see an example of running scenarios based on tag expressions
+    ..exitAfterTestRun = true; // set to false if debugging to exit cleanly
   return GherkinRunner().execute(config);
 }
 ```
@@ -202,8 +217,9 @@ Place instances of any custom step definition classes `Given`, `Then`, `When`, `
 
 ```dart
 import 'dart:async';
-import 'package:glob/glob.dart';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
+import 'package:gherkin/gherkin.dart';
+import 'package:glob/glob.dart';
 import 'steps/given_I_pick_a_colour_step.dart';
 import 'steps/tap_button_n_times_step.dart';
 
@@ -214,9 +230,10 @@ Future<void> main() {
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..restartAppBetweenScenarios = true
     ..targetAppPath = "test_driver/app.dart"
-    ..exitAfterTestRun = true;
+    ..exitAfterTestRun = true; // set to false if debugging to exit cleanly
   return GherkinRunner().execute(config);
 }
+
 ```
 
 #### customStepParameterDefinitions
@@ -227,11 +244,12 @@ Place instances of any custom step parameters that you have defined.  These will
 
 ```dart
 import 'dart:async';
-import 'package:glob/glob.dart';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
-import 'steps/colour_parameter.dart';
+import 'package:gherkin/gherkin.dart';
+import 'package:glob/glob.dart';
 import 'steps/given_I_pick_a_colour_step.dart';
 import 'steps/tap_button_n_times_step.dart';
+import 'steps/colour_parameter.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
@@ -241,7 +259,7 @@ Future<void> main() {
     ..customStepParameterDefinitions = [ColourParameter()]
     ..restartAppBetweenScenarios = true
     ..targetAppPath = "test_driver/app.dart"
-    ..exitAfterTestRun = true;
+    ..exitAfterTestRun = true; // set to false if debugging to exit cleanly
   return GherkinRunner().execute(config);
 }
 ```
@@ -258,6 +276,7 @@ Reporters are classes that are able to report on the status of the test run.  Th
 
 - `StdoutReporter` : Logs all messages from the test run to the standard output (console).
 - `ProgressReporter` : Logs the progress of the test run marking each step with a scenario as either passed, skipped or failed.
+- `JsonReporter` - creates a JSON file with the results of the test run which can then be used by 'https://www.npmjs.com/package/cucumber-html-reporter.' to create a HTML report.  You can pass in the file path of the json file to be created.
 
 You should provide at least one reporter in the configuration otherwise it'll be hard to know what is going on.
 
@@ -294,7 +313,6 @@ While it is not recommended so share state between steps within the same scenari
 import 'dart:async';
 import 'package:glob/glob.dart';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
-import 'steps/colour_parameter.dart';
 import 'steps/given_I_pick_a_colour_step.dart';
 import 'steps/tap_button_n_times_step.dart';
 
@@ -303,7 +321,6 @@ Future<void> main() {
     ..features = [Glob(r"test_driver/features/**.feature")]
     ..reporters = [StdoutReporter()]
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
-    ..customStepParameterDefinitions = [ColourParameter()]
     ..createWorld = (TestConfiguration config) async => await createMyWorldInstance(config)
     ..restartAppBetweenScenarios = true
     ..targetAppPath = "test_driver/app.dart"
@@ -320,7 +337,7 @@ True to exit the program after all tests have run.  You may want to set this to 
 
 ### Flutter specific configuration options
 
-The `FlutterTestConfiguration` will automatically create some default Flutter options such as well know step definitions, the Flutter world context object which provides access to a Flutter driver instance as well as the ability to restart you application under test between scenarios.  Most of the time you should use this configuation object if you are testing Flutter applications.
+The `FlutterTestConfiguration` will automatically create some default Flutter options such as well know step definitions, the Flutter world context object which provides access to a Flutter driver instance as well as the ability to restart you application under test between scenarios.  Most of the time you should use this configuration object if you are testing Flutter applications.
 
 #### restartAppBetweenScenarios
 
@@ -362,7 +379,7 @@ Given Bob has logged in
 Would be implemented like so:
 
 ```dart
-import 'package:flutter_gherkin/flutter_gherkin.dart';
+import 'package:gherkin/gherkin.dart';
 
 class GivenWellKnownUserIsLoggedIn extends Given1<String> {
   @override
@@ -393,7 +410,7 @@ Then I expect 10 apples
 Would be implemented like so:
 
 ```dart
-import 'package:flutter_gherkin/flutter_gherkin.dart';
+import 'package:gherkin/gherkin.dart';
 
 class ThenExpectAppleCount extends Then1<int> {
   @override
@@ -418,6 +435,7 @@ For example, the below sets the step's timeout to 10 seconds.
 
 ```dart
 import 'package:flutter_driver/flutter_driver.dart';
+import 'package:gherkin/gherkin.dart';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 
 class TapButtonNTimesStep extends When2WithWorld<String, int, FlutterWorld> {
@@ -461,7 +479,7 @@ Maybe even include some numbers
 The matching step definition would then be:
 
 ```dart
-import 'package:flutter_gherkin/flutter_gherkin.dart';
+import 'package:gherkin/gherkin.dart';
 
 class GivenIProvideAComment extends Given2<String, String> {
   @override
@@ -478,7 +496,7 @@ class GivenIProvideAComment extends Given2<String, String> {
 #### Data tables
 
 ```dart
-import 'package:flutter_gherkin/flutter_gherkin.dart';
+import 'package:gherkin/gherkin.dart';
 
 /// This step expects a multiline string proceeding it
 ///
@@ -532,7 +550,7 @@ While the well know step parameter will be sufficient in most cases there are ti
 The below custom parameter defines a regex that matches the words "red", "green" or "blue". The matches word is passed into the function which is then able to convert the string into a Color object.  The name of the custom parameter is used to identity the parameter within the step text.  In the below example the word "colour" is used.  This is combined with the pre / post prefixes (which default to "{" and "}") to match to the custom parameter.
 
 ```dart
-import 'package:flutter_gherkin/flutter_gherkin.dart';
+import 'package:gherkin/gherkin.dart';
 
 enum Colour { red, green, blue }
 
@@ -554,7 +572,7 @@ class ColourParameter extends CustomParameter<Colour> {
 The step definition would then use this custom parameter like so:
 
 ```dart
-import 'package:flutter_gherkin/flutter_gherkin.dart';
+import 'package:gherkin/gherkin.dart';
 import 'colour_parameter.dart';
 
 class GivenIPickAColour extends Given1<Colour> {
@@ -608,41 +626,35 @@ A hook is a point in the execution that custom code can be run.  Hooks can be ru
 To create a hook is easy.  Just inherit from `Hook` and override the method(s) that signifies the point in the process you want to run code at. Note that not all methods need to be override, just the points at which you want to run custom code.
 
 ```dart
-import 'package:flutter_gherkin/flutter_gherkin.dart';
+import 'package:gherkin/gherkin.dart';
 
 class HookExample extends Hook {
   /// The priority to assign to this hook.
   /// Higher priority gets run first so a priority of 10 is run before a priority of 2
+  @override
   int get priority => 1;
 
-  @override
   /// Run before any scenario in a test run have executed
+  @override
   Future<void> onBeforeRun(TestConfiguration config) async {
     print("before run hook");
   }
 
-  @override
   /// Run after all scenarios in a test run have completed
+  @override
   Future<void> onAfterRun(TestConfiguration config) async {
     print("after run hook");
   }
 
-  @override
   /// Run before a scenario and it steps are executed
+  @override
   Future<void> onBeforeScenario(
       TestConfiguration config, String scenario) async {
     print("running hook before scenario '$scenario'");
   }
 
-  @override
-  /// Run after the scenario world is created but run before a scenario and its steps are executed
-  /// Might not be invoked if there is not a world object
-  Future<void> onAfterScenarioWorldCreated(World world, String scenario) {
-    print("running hook after world scenario created'$scenario'");
-  }
-
-  @override
   /// Run after a scenario has executed
+  @override
   Future<void> onAfterScenario(
       TestConfiguration config, String scenario) async {
     print("running hook after scenario '$scenario'");
@@ -654,25 +666,25 @@ Finally ensure the hook is added to the hook collection in your configuration fi
 
 ```dart
 import 'dart:async';
-import 'package:glob/glob.dart';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
+import 'package:gherkin/gherkin.dart';
+import 'package:glob/glob.dart';
 import 'hooks/hook_example.dart';
-import 'steps/colour_parameter.dart';
 import 'steps/given_I_pick_a_colour_step.dart';
 import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
     ..features = [Glob(r"test_driver/features/**.feature")]
-    ..reporters = [StdoutReporter()]
+    ..reporters = [ProgressReporter()]
     ..hooks = [HookExample()]
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
-    ..customStepParameterDefinitions = [ColourParameter()]
     ..restartAppBetweenScenarios = true
     ..targetAppPath = "test_driver/app.dart"
     ..exitAfterTestRun = true;
   return GherkinRunner().execute(config);
 }
+
 ```
 
 ## Reporting
@@ -682,6 +694,7 @@ A reporter is a class that is able to report on the progress of the test run. In
 - `StdoutReporter` - prints all messages from the test run to the console.
 - `ProgressReporter` - prints the result of each scenario and step to the console - colours the output.
 - `TestRunSummaryReporter` - prints the results and duration of the test run once the run has completed - colours the output.
+- `JsonReporter` - creates a JSON file with the results of the test run which can then be used by 'https://www.npmjs.com/package/cucumber-html-reporter.' to create a HTML report.  You can pass in the file path of the json file to be created.
 
 You can create your own custom reporter by inheriting from the base `Reporter` class and overriding the one or many of the methods to direct the output message.  The `Reporter` defines the following methods that can be overridden.  All methods must return a `Future<void>` and can be async.
 

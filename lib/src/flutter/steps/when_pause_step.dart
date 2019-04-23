@@ -1,5 +1,4 @@
-import 'package:flutter_gherkin/src/gherkin/steps/step_configuration.dart';
-import 'package:flutter_gherkin/src/gherkin/steps/when.dart';
+import 'package:gherkin/gherkin.dart';
 
 /// Pauses the execution for the provided number of seconds.
 /// Handy when you want to pause to check something.

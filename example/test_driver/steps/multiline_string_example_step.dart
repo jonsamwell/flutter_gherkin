@@ -1,4 +1,4 @@
-import 'package:flutter_gherkin/flutter_gherkin.dart';
+import 'package:gherkin/gherkin.dart';
 
 /// This step expects a multiline string proceeding it
 ///

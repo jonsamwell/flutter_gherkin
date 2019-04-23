@@ -1,11 +1,9 @@
 import 'dart:io';
-
-import 'package:flutter_gherkin/src/configuration.dart';
 import 'package:flutter_gherkin/src/flutter/flutter_run_process_handler.dart';
 import 'package:flutter_gherkin/src/flutter/flutter_test_configuration.dart';
-import 'package:flutter_gherkin/src/hooks/hook.dart';
+import 'package:gherkin/gherkin.dart';
 
-/// A hook that manages running the arget flutter application
+/// A hook that manages running the target flutter application
 /// that is under test
 class FlutterAppRunnerHook extends Hook {
   FlutterRunProcessHandler _flutterAppProcess;

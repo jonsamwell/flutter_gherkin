@@ -1,5 +1,4 @@
-import 'package:flutter_gherkin/flutter_gherkin.dart';
-import 'package:flutter_gherkin/src/gherkin/steps/step_definition_implementations.dart';
+import 'package:gherkin/gherkin.dart';
 
 typedef Future<void> OnRunCode(Iterable parameters);
 

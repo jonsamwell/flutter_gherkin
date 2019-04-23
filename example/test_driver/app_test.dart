@@ -1,6 +1,7 @@
 import 'dart:async';
-import 'package:glob/glob.dart';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
+import 'package:gherkin/gherkin.dart';
+import 'package:glob/glob.dart';
 import 'hooks/hook_example.dart';
 import 'steps/colour_parameter.dart';
 import 'steps/given_I_pick_a_colour_step.dart';
@@ -11,7 +12,8 @@ Future<void> main() {
     ..features = [Glob(r"test_driver/features/**.feature")]
     ..reporters = [
       ProgressReporter(),
-      TestRunSummaryReporter()
+      TestRunSummaryReporter(),
+      JsonReporter(path: './report.json')
     ] // you can include the "StdoutReporter()" without the message level parameter for verbose log information
     ..hooks = [HookExample()]
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
