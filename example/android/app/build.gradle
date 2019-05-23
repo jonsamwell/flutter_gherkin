@@ -48,6 +48,16 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
+    /// uncomment to see example of using flavor
+
+    // flavorDimensions "env"
+    // productFlavors {
+    //     staging {
+    //         dimension "env"
+    //         applicationIdSuffix ".dev"
+    //     }
+    // }
 }
 
 flutter {
