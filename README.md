@@ -351,6 +351,18 @@ Defaults to `lib/test_driver/app.dart`
 
 This should point to the *testable* application that enables the Flutter driver extensions and thus is able to be automated.  This application wil be started when the test run in started and restarted if the `restartAppBetweenScenarios` configuration property is set to true.
 
+#### buildFlavor
+
+Defaults to empty string
+
+This optional argument lets you specify which flutter flavor you want to test against.  Flutter's flavor has similar concept with `Android Build Variants` or `iOS Scheme Configuration`. This [flavoring flutter](https://flutter.dev/docs/deployment/flavors) documentation has complete guide on both flutter and android/ios side.
+
+#### targetDeviceId
+
+Defaults to empty string
+
+This optional argument lets you specify device target id as `flutter run --device-id` command. To show list of connected devices, run `flutter devices`. If you only have one device connected, no need to provide this argument.
+
 ## Features Files
 
 ### Steps Definitions

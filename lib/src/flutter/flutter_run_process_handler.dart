@@ -19,6 +19,8 @@ class FlutterRunProcessHandler extends ProcessHandler {
   List<StreamSubscription> _openSubscriptions = <StreamSubscription>[];
   String _appTarget;
   String _workingDirectory;
+  String _buildFlavor;
+  String _deviceTargetId;
 
   void setApplicationTargetFile(String targetPath) {
     _appTarget = targetPath;
@@ -28,10 +30,27 @@ class FlutterRunProcessHandler extends ProcessHandler {
     _workingDirectory = workingDirectory;
   }
 
+  void setBuildFlavor(String buildFlavor) {
+    _buildFlavor = buildFlavor;
+  }
+
+  void setDeviceTargetId(String deviceTargetId) {
+    _deviceTargetId = deviceTargetId;
+  }
+
   @override
   Future<void> run() async {
-    _runningProcess = await Process.start(
-        "flutter", ["run", "--target=$_appTarget"],
+    final arguments = ["run", "--target=$_appTarget"];
+
+    if (_buildFlavor.isNotEmpty) {
+      arguments.add("--target=$_appTarget");
+    }
+    if (_deviceTargetId.isNotEmpty) {
+      arguments.add("-d");
+      arguments.add(_deviceTargetId);
+    }
+
+    _runningProcess = await Process.start("flutter", arguments,
         workingDirectory: _workingDirectory, runInShell: true);
     _processStdoutStream =
         _runningProcess.stdout.transform(utf8.decoder).asBroadcastStream();
