@@ -22,6 +22,10 @@ class FlutterTestConfiguration extends TestConfiguration {
   /// Defaults to "lib/test_driver/app.dart"
   String targetAppPath = "lib/test_driver/app.dart";
 
+  /// The build flavor to run the tests against
+  /// Defaults to empty
+  String buildFlavor = "";
+
   void setObservatoryDebuggerUri(String uri) => _observatoryDebuggerUri = uri;
 
   Future<FlutterDriver> createFlutterDriver([String dartVmServiceUrl]) async {
