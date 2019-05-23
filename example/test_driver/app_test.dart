@@ -21,6 +21,7 @@ Future<void> main() {
     ..restartAppBetweenScenarios = true
     ..targetAppPath = "test_driver/app.dart"
     // ..buildFlavor = "staging" // uncomment when using build flavor and check android/ios flavor setup
+    // ..targetDeviceId = "all" // uncomment to run tests on all connected devices or set specific device target id
     // ..tagExpression = "@smoke" // uncomment to see an example of running scenarios based on tag expressions
     ..exitAfterTestRun = true; // set to false if debugging to exit cleanly
   return GherkinRunner().execute(config);
