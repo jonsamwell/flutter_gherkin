@@ -43,7 +43,7 @@ class FlutterRunProcessHandler extends ProcessHandler {
     final arguments = ["run", "--target=$_appTarget"];
 
     if (_buildFlavor.isNotEmpty) {
-      arguments.add("--target=$_appTarget");
+      arguments.add("--flavor=$_appTarget");
     }
     if (_deviceTargetId.isNotEmpty) {
       arguments.add("-d");
