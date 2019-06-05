@@ -1,3 +1,6 @@
+## [1.0.1] - 05/06/2019
+* Fixed dependency conflicts
+
 ## [1.0.0] - 05/06/2019
 * Huge speed improvement when running tests by hot reloading (which clears the state) rather than restarting the app
 * Added flag to determine if the application should be built prior to running tests
