@@ -1,3 +1,6 @@
+## [1.0.2] - 05/06/2019
+* Fixed analysis suggestions
+
 ## [1.0.1] - 05/06/2019
 * Fixed dependency conflicts
 

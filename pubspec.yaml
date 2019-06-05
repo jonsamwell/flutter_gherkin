@@ -1,6 +1,6 @@
 name: flutter_gherkin
 description: A Gherkin / Cucumber parser and test runner for Dart and Flutter
-version: 1.0.1
+version: 1.0.2
 author: Jon Samwell <jonsamwell@gmail.com>
 homepage: https://github.com/jonsamwell/flutter_gherkin
 
@@ -14,6 +14,7 @@ dependencies:
     sdk: flutter
   flutter_driver:
     sdk: flutter
+  glob: ^1.1.7
   pedantic: ^1.5.0
   gherkin: ^1.0.0
 

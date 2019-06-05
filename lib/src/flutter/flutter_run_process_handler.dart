@@ -91,7 +91,6 @@ class FlutterRunProcessHandler extends ProcessHandler {
     return exitCode;
   }
 
-  @override
   Future restart() async {
     _ensureRunningProcess();
     _runningProcess.stdin.write("R");
