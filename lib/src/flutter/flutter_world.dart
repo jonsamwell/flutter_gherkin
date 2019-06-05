@@ -11,7 +11,7 @@ class FlutterWorld extends World {
   }
 
   @override
-  void dispose() {
-    _driver.close();
+  void dispose() async {
+    await _driver?.close();
   }
 }

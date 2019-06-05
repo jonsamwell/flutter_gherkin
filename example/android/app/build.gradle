@@ -49,13 +49,16 @@ android {
         }
     }
 
-    /// uncomment to see example of using flavor
-
+    /// uncomment to see example of using flavors
     // flavorDimensions "env"
     // productFlavors {
     //     staging {
     //         dimension "env"
     //         applicationIdSuffix ".dev"
+    //         versionNameSuffix "-dev"
+    //     }
+    //     production {
+    //         dimension "env"
     //     }
     // }
 }

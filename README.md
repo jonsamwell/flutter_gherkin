@@ -38,6 +38,9 @@ Available as a Dart package https://pub.dartlang.org/packages/flutter_gherkin
     - [exitAfterTestRun](#exitaftertestrun)
   - [Flutter specific configuration options](#flutter-specific-configuration-options)
     - [restartAppBetweenScenarios](#restartappbetweenscenarios)
+    - [build](#build)
+    - [buildFlavor](#buildFlavor)
+    - [targetDeviceId](#targetDeviceId)
     - [targetAppPath](#targetapppath)
 - [Features Files](#features-files)
   - [Steps Definitions](#steps-definitions)
@@ -343,13 +346,19 @@ The `FlutterTestConfiguration` will automatically create some default Flutter op
 
 Defaults to `true`.
 
-To avoid tests starting on an app changed by a previous test it is suggested that the Flutter application under test be restarted between each scenario.  While this will increase the execution time slightly it will limit tests failing because they run against an app changed by a previous test.  Note in more complex application it may also be necessary to use the `AfterScenario` hook to reset the application to a base state a test can run on.  Logging out for example if restarting an application will present a lock screen etc.
+To avoid tests starting on an app changed by a previous test it is suggested that the Flutter application under test be restarted between each scenario.  While this will increase the execution time slightly it will limit tests failing because they run against an app changed by a previous test.  Note in more complex application it may also be necessary to use the `AfterScenario` hook to reset the application to a base state a test can run on.  Logging out for example if restarting an application will present a lock screen etc.  This now performs a hot reload of the application which resets the state and drastically reduces the time to run the tests.
 
 #### targetAppPath
 
 Defaults to `lib/test_driver/app.dart`
 
-This should point to the *testable* application that enables the Flutter driver extensions and thus is able to be automated.  This application wil be started when the test run in started and restarted if the `restartAppBetweenScenarios` configuration property is set to true.
+This should point to the *testable* application that enables the Flutter driver extensions and thus is able to be automated.  This application wil be started when the test run is started and restarted if the `restartAppBetweenScenarios` configuration property is set to true.
+
+#### build
+
+Defaults to `true`
+
+This optional argument lets you specify if the target application should be built prior to running the first test.  This defaults to `true`
 
 #### buildFlavor
 

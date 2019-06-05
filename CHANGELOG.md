@@ -1,3 +1,9 @@
+## [1.0.0] - 05/06/2019
+* Huge speed improvement when running tests by hot reloading (which clears the state) rather than restarting the app
+* Added flag to determine if the application should be built prior to running tests
+* Merged PR which allows for build flavor and device id to be specified thanks to @iqbalmineraltown for the PR
+* Updated to latest v1 dart_gherkin lib
+
 ## [0.0.14] - 23/04/2019
 * Updated to rely on the abstracted Gherkin library 'https://github.com/jonsamwell/dart_gherkin' which now includes a JsonReporter
 * Updated docs

@@ -14,11 +14,18 @@ class FlutterRunProcessHandler extends ProcessHandler {
 
   static RegExp _noConnectedDeviceRegex =
       RegExp(r"no connected device", caseSensitive: false, multiLine: false);
+
+  static RegExp _restartedApplicationSuccessRegex = RegExp(
+      r"Restarted application (.*)ms.",
+      caseSensitive: false,
+      multiLine: false);
+
   Process _runningProcess;
   Stream<String> _processStdoutStream;
   List<StreamSubscription> _openSubscriptions = <StreamSubscription>[];
-  String _appTarget;
   String _workingDirectory;
+  String _appTarget;
+  bool _buildApp = true;
   String _buildFlavor;
   String _deviceTargetId;
 
@@ -38,13 +45,22 @@ class FlutterRunProcessHandler extends ProcessHandler {
     _deviceTargetId = deviceTargetId;
   }
 
+  void setBuildRequired(bool build) {
+    _buildApp = build;
+  }
+
   @override
   Future<void> run() async {
     final arguments = ["run", "--target=$_appTarget"];
 
+    if (_buildApp == false) {
+      arguments.add("--no-build");
+    }
+
     if (_buildFlavor.isNotEmpty) {
       arguments.add("--flavor=$_buildFlavor");
     }
+
     if (_deviceTargetId.isNotEmpty) {
       arguments.add("--device-id=$_deviceTargetId");
     }
@@ -75,28 +91,41 @@ class FlutterRunProcessHandler extends ProcessHandler {
     return exitCode;
   }
 
-  Future<String> waitForObservatoryDebuggerUri(
-      [Duration timeout = const Duration(seconds: 60)]) {
+  @override
+  Future restart() async {
+    _ensureRunningProcess();
+    _runningProcess.stdin.write("R");
+    return _waitForStdOutMessage(
+        _restartedApplicationSuccessRegex, "Timeout waiting for app restart");
+  }
+
+  Future<String> waitForObservatoryDebuggerUri() => _waitForStdOutMessage(
+      _observatoryDebuggerUriRegex,
+      "Timeout while waiting for observatory debugger uri");
+
+  Future<String> _waitForStdOutMessage(RegExp matcher, String timeoutMessage,
+      [Duration timeout = const Duration(seconds: 90)]) {
     _ensureRunningProcess();
     final completer = Completer<String>();
     StreamSubscription sub;
     sub = _processStdoutStream.timeout(timeout, onTimeout: (_) {
       sub?.cancel();
-      if (!completer.isCompleted)
-        completer.completeError(TimeoutException(
-            "Timeout while wait for observatory debugger uri", timeout));
+      if (!completer.isCompleted) {
+        completer.completeError(TimeoutException(timeoutMessage, timeout));
+      }
     }).listen((logLine) {
       // stdout.write(logLine);
-      if (_observatoryDebuggerUriRegex.hasMatch(logLine)) {
+      if (matcher.hasMatch(logLine)) {
         sub?.cancel();
-        if (!completer.isCompleted)
-          completer.complete(
-              _observatoryDebuggerUriRegex.firstMatch(logLine).group(1));
+        if (!completer.isCompleted) {
+          completer.complete(matcher.firstMatch(logLine).group(1));
+        }
       } else if (_noConnectedDeviceRegex.hasMatch(logLine)) {
         sub?.cancel();
-        if (!completer.isCompleted)
+        if (!completer.isCompleted) {
           stderr.writeln(
               "${FAIL_COLOR}No connected devices found to run app on and tests against$RESET_COLOR");
+        }
       }
     }, cancelOnError: true);
 

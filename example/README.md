@@ -17,5 +17,6 @@ This will run the features files found in the folder `test_driver/features` agai
 To debug this example and step through the library code.
 
 1. Set a break point in `test_driver/app_test.dart`
-2. If you are in VsCode you will simply be able to select `Debug example` from the dropdown in the `debugging tab` as the `launch.json` has been configured.
+2. Set `exitAfterTestRun` on the configuration to false to ensure exiting cleanly as the IDE will handle exiting
+3. If you are in VsCode you will simply be able to select `Debug example` from the dropdown in the `debugging tab` as the `launch.json` has been configured.
     - otherwise you will need to run a debugging session against `test_driver/app_test.dart`.

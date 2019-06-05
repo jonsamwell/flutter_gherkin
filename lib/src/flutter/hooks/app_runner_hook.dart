@@ -37,13 +37,15 @@ class FlutterAppRunnerHook extends Hook {
     haveRunFirstScenario = true;
     if (_flutterAppProcess != null &&
         flutterConfig.restartAppBetweenScenarios) {
-      await _terminateApp();
+      await _restartApp();
     }
   }
 
   Future<void> _runApp(FlutterTestConfiguration config) async {
     _flutterAppProcess = FlutterRunProcessHandler();
     _flutterAppProcess.setApplicationTargetFile(config.targetAppPath);
+    _flutterAppProcess
+        .setBuildRequired(haveRunFirstScenario ? false : config.build);
     _flutterAppProcess.setBuildFlavor(config.buildFlavor);
     _flutterAppProcess.setDeviceTargetId(config.targetDeviceId);
     stdout.writeln(
@@ -59,6 +61,16 @@ class FlutterAppRunnerHook extends Hook {
       stdout.writeln("Terminating Flutter app under test");
       await _flutterAppProcess.terminate();
       _flutterAppProcess = null;
+    }
+  }
+
+  Future<void> _restartApp() async {
+    if (_flutterAppProcess != null) {
+      stdout.writeln("Restarting Flutter app under test");
+      await _flutterAppProcess.restart();
+      // it seems we need a small delay here otherwise the flutter driver fails to
+      // consistently connect
+      await Future.delayed(Duration(seconds: 1));
     }
   }
 

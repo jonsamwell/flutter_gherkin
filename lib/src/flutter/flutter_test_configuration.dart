@@ -26,6 +26,10 @@ class FlutterTestConfiguration extends TestConfiguration {
   /// Defaults to empty
   String buildFlavor = "";
 
+  /// If the application should be built prior to running the tests
+  /// Defaults to true
+  bool build = true;
+
   /// The target device id to run the tests against when multiple devices detected
   /// Defaults to empty
   String targetDeviceId = "";
@@ -35,11 +39,11 @@ class FlutterTestConfiguration extends TestConfiguration {
   Future<FlutterDriver> createFlutterDriver([String dartVmServiceUrl]) async {
     dartVmServiceUrl = (dartVmServiceUrl ?? _observatoryDebuggerUri) ??
         Platform.environment['VM_SERVICE_URL'];
-    final driver = await FlutterDriver.connect(
+
+    return await FlutterDriver.connect(
         dartVmServiceUrl: dartVmServiceUrl,
         logCommunicationToFile: false,
         printCommunication: false);
-    return driver;
   }
 
   Future<FlutterWorld> createFlutterWorld(
