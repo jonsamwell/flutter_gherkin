@@ -15,7 +15,9 @@ Future<void> main() {
       TestRunSummaryReporter(),
       JsonReporter(path: './report.json')
     ] // you can include the "StdoutReporter()" without the message level parameter for verbose log information
-    ..hooks = [HookExample()]
+    ..hooks = [
+      HookExample()
+    ] // you can include "AttachScreenhotOnFailedStepHook()" to take a screenshot of each step failure and attach it to the world object
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..customStepParameterDefinitions = [ColourParameter()]
     ..restartAppBetweenScenarios = true

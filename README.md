@@ -56,6 +56,8 @@ Available as a Dart package https://pub.dartlang.org/packages/flutter_gherkin
     - [Assertions](#assertions)
   - [Tags](#tags)
 - [Hooks](#hooks)
+- [Attachements](#attachments)
+  - [Screenshot on step failure](#screenshot)
 - [Reporting](#reporting)
 - [Flutter](#flutter)
   - [Restarting the app before each test](#restarting-the-app-before-each-test)
@@ -269,11 +271,64 @@ Future<void> main() {
 
 #### hooks
 
-Hooks are custom bits of code that can be run at certain points with the test run such as before or after a scenario.  Place instances of any custom `Hook` class instance in this collection.  They will then be run at the defined points with the test run. See [Hooks](#hooks).
+Hooks are custom bits of code that can be run at certain points with the test run such as before or after a scenario.  Place instances of any custom `Hook` class instance in this collection.  They will then be run at the defined points with the test run.
+
+#### attachments
+
+Attachment are pieces of data you can attach to a running scenario.  This could be simple bits of textual data or even image like a screenshot.  These attachments can then be used by reporters to provide more contextual information.  For example when a step fails some contextual information could be attached to the scenario which is then used by a reporter to display why the step failed.
+
+Attachments would typically be attached via a `Hook` for example `onAfterStep`.
+
+```
+import 'package:gherkin/gherkin.dart';
+
+class AttachScreenhotOnFailedStepHook extends Hook {
+  /// Run after a step has executed
+  @override
+  Future<void> onAfterStep(World world, String step, StepResult stepResult) async {
+    if (stepResult.result == StepExecutionResult.fail) {
+      world.attach('Some info.','text/plain');
+      world.attach('{"some", "JSON"}}', 'application/json');
+    }
+  }
+}
+
+```
+
+
+##### screenshot
+
+To take a screenshot on a step failing you can used the pre-defined hook `AttachScreenhotOnFailedStepHook` and include it in the hook configuration of the tests config.  This hook will take a screenshot and add it as an attachment to the scenerio.  If the `JsonReporter` is being used the screenshot will be embedded in the report which can be used to generate a HTML report which will ultimately display the screenshot under the failed step.
+
+```
+import 'dart:async';
+import 'package:flutter_gherkin/flutter_gherkin.dart';
+import 'package:gherkin/gherkin.dart';
+import 'package:glob/glob.dart';
+import 'hooks/hook_example.dart';
+import 'steps/colour_parameter.dart';
+import 'steps/given_I_pick_a_colour_step.dart';
+import 'steps/tap_button_n_times_step.dart';
+
+Future<void> main() {
+  final config = FlutterTestConfiguration()
+    ..features = [Glob(r"test_driver/features/**.feature")]
+    ..reporters = [
+      ProgressReporter(),
+      TestRunSummaryReporter(),
+      JsonReporter(path: './report.json')
+    ]
+    ..hooks = [HookExample(), AttachScreenhotOnFailedStepHook()]
+    ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
+    ..customStepParameterDefinitions = [ColourParameter()]
+    ..restartAppBetweenScenarios = true
+    ..targetAppPath = "test_driver/app.dart"
+    ..exitAfterTestRun = true; // set to false if debugging to exit cleanly
+  return GherkinRunner().execute(config);
+}
+```
 
 #### reporters
-
-*Required*
 
 Reporters are classes that are able to report on the status of the test run.  This could be a simple as merely logging scenario result to the console.  There are a number of built-in reporter:
 
