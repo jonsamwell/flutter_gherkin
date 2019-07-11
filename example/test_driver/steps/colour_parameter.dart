@@ -11,6 +11,7 @@ class ColourParameter extends CustomParameter<Colour> {
             case "green":
               return Colour.green;
             case "blue":
+            default:
               return Colour.blue;
           }
         });
