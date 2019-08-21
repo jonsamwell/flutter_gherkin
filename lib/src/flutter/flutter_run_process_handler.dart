@@ -28,6 +28,7 @@ class FlutterRunProcessHandler extends ProcessHandler {
   bool _buildApp = true;
   String _buildFlavor;
   String _deviceTargetId;
+  String currentObservatoryUri;
 
   void setApplicationTargetFile(String targetPath) {
     _appTarget = targetPath;
@@ -91,16 +92,29 @@ class FlutterRunProcessHandler extends ProcessHandler {
     return exitCode;
   }
 
-  Future restart() async {
+  Future<bool> restart({Duration timeout = const Duration(seconds: 90)}) async {
     _ensureRunningProcess();
     _runningProcess.stdin.write("R");
-    return _waitForStdOutMessage(
-        _restartedApplicationSuccessRegex, "Timeout waiting for app restart");
+    await _waitForStdOutMessage(
+      _restartedApplicationSuccessRegex,
+      "Timeout waiting for app restart",
+      timeout,
+    );
+
+    // it seems we need a small delay here otherwise the flutter driver fails to
+    // consistently connect
+    await Future.delayed(Duration(seconds: 1));
+
+    return Future.value(true);
   }
 
-  Future<String> waitForObservatoryDebuggerUri() => _waitForStdOutMessage(
-      _observatoryDebuggerUriRegex,
-      "Timeout while waiting for observatory debugger uri");
+  Future<String> waitForObservatoryDebuggerUri() async {
+    currentObservatoryUri = await _waitForStdOutMessage(
+        _observatoryDebuggerUriRegex,
+        "Timeout while waiting for observatory debugger uri");
+
+    return currentObservatoryUri;
+  }
 
   Future<String> _waitForStdOutMessage(RegExp matcher, String timeoutMessage,
       [Duration timeout = const Duration(seconds: 90)]) {
@@ -113,6 +127,7 @@ class FlutterRunProcessHandler extends ProcessHandler {
         completer.completeError(TimeoutException(timeoutMessage, timeout));
       }
     }).listen((logLine) {
+      // uncomment for debug output
       // stdout.write(logLine);
       if (matcher.hasMatch(logLine)) {
         sub?.cancel();

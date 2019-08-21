@@ -1,3 +1,6 @@
+## [1.0.6] - 21/08/2019
+* Added support to restart app during test ```world.restartApp();```
+
 ## [1.0.5] - 11/07/2019
 * Updated to latest dart_gherkin lib
 

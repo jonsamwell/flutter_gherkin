@@ -3,10 +3,12 @@ import 'package:flutter_gherkin/src/flutter/flutter_run_process_handler.dart';
 import 'package:flutter_gherkin/src/flutter/flutter_test_configuration.dart';
 import 'package:gherkin/gherkin.dart';
 
+import '../flutter_world.dart';
+
 /// A hook that manages running the target flutter application
 /// that is under test
 class FlutterAppRunnerHook extends Hook {
-  FlutterRunProcessHandler _flutterAppProcess;
+  FlutterRunProcessHandler _flutterRunProcessHandler;
   bool haveRunFirstScenario = false;
 
   @override
@@ -25,7 +27,7 @@ class FlutterAppRunnerHook extends Hook {
   Future<void> onBeforeScenario(
       TestConfiguration config, String scenario) async {
     final flutterConfig = _castConfig(config);
-    if (_flutterAppProcess == null) {
+    if (_flutterRunProcessHandler == null) {
       await _runApp(flutterConfig);
     }
   }
@@ -35,42 +37,46 @@ class FlutterAppRunnerHook extends Hook {
       TestConfiguration config, String scenario) async {
     final flutterConfig = _castConfig(config);
     haveRunFirstScenario = true;
-    if (_flutterAppProcess != null &&
+    if (_flutterRunProcessHandler != null &&
         flutterConfig.restartAppBetweenScenarios) {
       await _restartApp();
     }
   }
 
+  @override
+  Future<void> onAfterScenarioWorldCreated(World world, String scenario) async {
+    if (world is FlutterWorld) {
+      world.setFlutterProccessHandler(_flutterRunProcessHandler);
+    }
+  }
+
   Future<void> _runApp(FlutterTestConfiguration config) async {
-    _flutterAppProcess = FlutterRunProcessHandler();
-    _flutterAppProcess.setApplicationTargetFile(config.targetAppPath);
-    _flutterAppProcess
+    _flutterRunProcessHandler = FlutterRunProcessHandler();
+    _flutterRunProcessHandler.setApplicationTargetFile(config.targetAppPath);
+    _flutterRunProcessHandler
         .setBuildRequired(haveRunFirstScenario ? false : config.build);
-    _flutterAppProcess.setBuildFlavor(config.buildFlavor);
-    _flutterAppProcess.setDeviceTargetId(config.targetDeviceId);
+    _flutterRunProcessHandler.setBuildFlavor(config.buildFlavor);
+    _flutterRunProcessHandler.setDeviceTargetId(config.targetDeviceId);
     stdout.writeln(
         "Starting Flutter app under test '${config.targetAppPath}', this might take a few moments");
-    await _flutterAppProcess.run();
+    await _flutterRunProcessHandler.run();
     final observatoryUri =
-        await _flutterAppProcess.waitForObservatoryDebuggerUri();
+        await _flutterRunProcessHandler.waitForObservatoryDebuggerUri();
     config.setObservatoryDebuggerUri(observatoryUri);
   }
 
   Future<void> _terminateApp() async {
-    if (_flutterAppProcess != null) {
+    if (_flutterRunProcessHandler != null) {
       stdout.writeln("Terminating Flutter app under test");
-      await _flutterAppProcess.terminate();
-      _flutterAppProcess = null;
+      await _flutterRunProcessHandler.terminate();
+      _flutterRunProcessHandler = null;
     }
   }
 
   Future<void> _restartApp() async {
-    if (_flutterAppProcess != null) {
+    if (_flutterRunProcessHandler != null) {
       stdout.writeln("Restarting Flutter app under test");
-      await _flutterAppProcess.restart();
-      // it seems we need a small delay here otherwise the flutter driver fails to
-      // consistently connect
-      await Future.delayed(Duration(seconds: 1));
+      await _flutterRunProcessHandler.restart();
     }
   }
 

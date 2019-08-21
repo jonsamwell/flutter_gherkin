@@ -807,10 +807,11 @@ For convenience the library defines a number of pre-defined steps so you can get
 | Step Text                                                               | Description                                                                                                     | Examples                                                      |
 | ----------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
 | I tap the {string} [button\|element\|label\|icon\|field\|text\|\widget] | Taps the element with the provided key ( given by the first input parameter)                                    | `When I tap the "login" button`, `Then I tap the "save" icon` |
-| I fill the {string} field with {string}                                 | Fills the element with the provided key with the given value (given by the second input parameter)              | `When I fill the "email" field with "someone@gmail.com"`      |
-| I expect the {string} to be {string}                                    | Asserts that the element with the given key has the given string value                                          | `Then I expect the "cost" to be "£10.95"`                     |
-| I (open\|close) the drawer                                              | Opens or closes the application default drawer                                                                  | `When I open the drawer`, `And I close the drawer`            |
-| I pause for {int} seconds                                               | Pauses the test execution for the given seconds. Only use in debug scenarios or to inspect the state of the app | `Then I pause for 20 seconds`                                 |
+| I fill the {string} field with {string}                 | Fills the element with the provided key with the given value (given by the second input parameter)          | `When I fill the "email" field with "someone@gmail.com"`      |
+| I expect the {string} to be {string}                                    | Asserts that the element with the given key has the given string value                                        | `Then I expect the "cost" to be "£10.95"`                     |
+| I (open\|close) the drawer                              | Opens or closes the application default drawer    | `When I open the drawer`, `And I close the drawer`|
+| I pause for {int} seconds                               | Pauses the test execution for the given seconds. Only use in debug scenarios or to inspect the state of the app | `Then I pause for 20 seconds`                                 |
+| I restart the app                                       | Restarts the app under test | `Then I restart the app` |
 
 #### Flutter Driver Utilities
 

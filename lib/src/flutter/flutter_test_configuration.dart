@@ -3,6 +3,7 @@ import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'package:flutter_gherkin/src/flutter/flutter_world.dart';
 import 'package:flutter_gherkin/src/flutter/hooks/app_runner_hook.dart';
 import 'package:flutter_gherkin/src/flutter/steps/given_i_open_the_drawer_step.dart';
+import 'package:flutter_gherkin/src/flutter/steps/restart_app_step.dart';
 import 'package:flutter_gherkin/src/flutter/steps/then_expect_element_to_have_value_step.dart';
 import 'package:flutter_gherkin/src/flutter/steps/when_fill_field_step.dart';
 import 'package:flutter_gherkin/src/flutter/steps/when_pause_step.dart';
@@ -73,7 +74,8 @@ class FlutterTestConfiguration extends TestConfiguration {
         WhenTapWidget(),
         GivenOpenDrawer(),
         WhenPauseStep(),
-        WhenFillFieldStep()
+        WhenFillFieldStep(),
+        RestartAppStep()
       ]);
   }
 }

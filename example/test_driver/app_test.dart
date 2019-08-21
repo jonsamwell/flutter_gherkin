@@ -18,8 +18,13 @@ Future<void> main() {
     ..hooks = [
       HookExample()
     ] // you can include "AttachScreenhotOnFailedStepHook()" to take a screenshot of each step failure and attach it to the world object
-    ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
-    ..customStepParameterDefinitions = [ColourParameter()]
+    ..stepDefinitions = [
+      TapButtonNTimesStep(),
+      GivenIPickAColour(),
+    ]
+    ..customStepParameterDefinitions = [
+      ColourParameter(),
+    ]
     ..restartAppBetweenScenarios = true
     ..targetAppPath = "test_driver/app.dart"
     // ..buildFlavor = "staging" // uncomment when using build flavor and check android/ios flavor setup see android file android\app\build.gradle
