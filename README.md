@@ -1,3 +1,7 @@
+<a href="https://github.com/Solido/awesome-flutter">
+   <img alt="Awesome Flutter" src="https://img.shields.io/badge/Awesome-Flutter-blue.svg?longCache=true&style=flat-square" />
+</a>
+
 # flutter_gherkin
 
 A fully featured Gherkin parser and test runner.  Works with Flutter and Dart 2.
