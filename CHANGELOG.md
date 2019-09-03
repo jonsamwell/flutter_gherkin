@@ -1,3 +1,6 @@
+## [1.0.9] - 03/09/2019
+* Added ability to define the working directory for the app to run the tests against
+
 ## [1.0.8] - 25/08/2019
 * Updated to latest dart_gherkin lib which now has support for 'Scenerio Outline' and 'Example' blocks
 
