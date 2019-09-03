@@ -23,7 +23,11 @@ class FlutterTestConfiguration extends TestConfiguration {
   /// Defaults to "lib/test_driver/app.dart"
   String targetAppPath = "lib/test_driver/app.dart";
 
-  /// The build flavor to run the tests against
+  /// Option to define the working directory for the process that runs the app under test (optional)
+  /// Handy if your app is seperated from your tests as flutter needs to be able to find a pubspec file
+  String targetAppWorkingDirecotry;
+
+  /// The build flavor to run the tests against (optional)
   /// Defaults to empty
   String buildFlavor = "";
 

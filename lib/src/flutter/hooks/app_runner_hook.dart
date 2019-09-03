@@ -54,6 +54,8 @@ class FlutterAppRunnerHook extends Hook {
     _flutterRunProcessHandler = FlutterRunProcessHandler();
     _flutterRunProcessHandler.setApplicationTargetFile(config.targetAppPath);
     _flutterRunProcessHandler
+        .setWorkingDirectory(config.targetAppWorkingDirecotry);
+    _flutterRunProcessHandler
         .setBuildRequired(haveRunFirstScenario ? false : config.build);
     _flutterRunProcessHandler.setBuildFlavor(config.buildFlavor);
     _flutterRunProcessHandler.setDeviceTargetId(config.targetDeviceId);

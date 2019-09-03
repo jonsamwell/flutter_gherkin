@@ -23,9 +23,9 @@ class FlutterRunProcessHandler extends ProcessHandler {
   Process _runningProcess;
   Stream<String> _processStdoutStream;
   List<StreamSubscription> _openSubscriptions = <StreamSubscription>[];
+  bool _buildApp = true;
   String _workingDirectory;
   String _appTarget;
-  bool _buildApp = true;
   String _buildFlavor;
   String _deviceTargetId;
   String currentObservatoryUri;
