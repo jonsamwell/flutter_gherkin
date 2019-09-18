@@ -1,3 +1,8 @@
+## [1.0.10] - 18/09/2019
+* {string} placeholder variables can now contain whitespace characters [\n\r\t ]
+* Tags are now inherited by children if requried (see https://cucumber.io/docs/cucumber/api/#tag-inheritance)
+* JSON reporter now adheres to the cucumber json reporter spec, I had to update the way tags and exceptions are handled
+
 ## [1.0.9] - 03/09/2019
 * Added ability to define the working directory for the app to run the tests against
 
