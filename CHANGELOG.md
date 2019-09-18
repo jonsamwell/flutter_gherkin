@@ -1,3 +1,6 @@
+## [1.0.11] - 18/09/2019
+* Fixed package constraints so older versions of Flutter are compatible
+
 ## [1.0.10] - 18/09/2019
 * {string} placeholder variables can now contain whitespace characters [\n\r\t ]
 * Tags are now inherited by children if requried (see https://cucumber.io/docs/cucumber/api/#tag-inheritance)
