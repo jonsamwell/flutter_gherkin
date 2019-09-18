@@ -1,3 +1,6 @@
+## [1.0.12] - 18/09/2019
+* Relaxed package constraints to accomodate older versions of Flutter
+
 ## [1.0.11] - 18/09/2019
 * Fixed package constraints so older versions of Flutter are compatible
 
