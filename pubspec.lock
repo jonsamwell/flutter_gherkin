@@ -104,7 +104,7 @@ packages:
       name: gherkin
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.12"
+    version: "1.1.0"
   glob:
     dependency: "direct main"
     description:
@@ -232,7 +232,7 @@ packages:
     source: hosted
     version: "1.6.4"
   pedantic:
-    dependency: transitive
+    dependency: "direct dev"
     description:
       name: pedantic
       url: "https://pub.dartlang.org"
@@ -417,6 +417,6 @@ packages:
       name: yaml
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.16"
+    version: "2.2.0"
 sdks:
   dart: ">=2.2.2 <3.0.0"

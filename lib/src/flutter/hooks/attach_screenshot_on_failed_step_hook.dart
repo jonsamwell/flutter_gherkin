@@ -8,7 +8,9 @@ class AttachScreenhotOnFailedStepHook extends Hook {
   @override
   Future<void> onAfterStep(
       World world, String step, StepResult stepResult) async {
-    if (stepResult.result == StepExecutionResult.fail) {
+    if (stepResult.result == StepExecutionResult.fail ||
+        stepResult.result == StepExecutionResult.error ||
+        stepResult.result == StepExecutionResult.timeout) {
       final screenshotData = await takeScreenshot(world);
       world.attach(screenshotData, 'image/png', step);
     }

@@ -41,7 +41,7 @@ class FlutterDriverUtils {
   static Future<String> getText(FlutterDriver driver, SerializableFinder finder,
       {Duration timeout = const Duration(seconds: 30)}) async {
     await FlutterDriverUtils.waitForFlutter(driver, timeout: timeout);
-    final text = driver.getText(finder, timeout: timeout);
+    final text = await driver.getText(finder, timeout: timeout);
     return text;
   }
 

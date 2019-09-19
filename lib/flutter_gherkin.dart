@@ -11,6 +11,7 @@ export 'src/flutter/steps/then_expect_element_to_have_value_step.dart';
 export 'src/flutter/steps/when_fill_field_step.dart';
 export 'src/flutter/steps/when_pause_step.dart';
 export 'src/flutter/steps/when_tap_widget_step.dart';
+export 'src/flutter/steps/restart_app_step.dart';
 
 // Hooks
 export 'src/flutter/hooks/attach_screenshot_on_failed_step_hook.dart';

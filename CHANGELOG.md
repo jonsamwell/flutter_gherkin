@@ -1,3 +1,8 @@
+## [1.1.0] - 20/09/2019
+* Updated to latest Gherkin lib which implements langauges - features can now be written in different languages / dialects! See https://cucumber.io/docs/gherkin/reference/#overview for supported dialects.
+* Ensured the hook to take a screenshot `AttachScreenhotOnFailedStepHook` works for steps that error or timeout as well as fail.
+* Fix missing await in `FlutterDriverUtils` when getting text of a widget.
+
 ## [1.0.12] - 18/09/2019
 * Relaxed package constraints to accomodate older versions of Flutter
 

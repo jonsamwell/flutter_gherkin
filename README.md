@@ -35,6 +35,7 @@ Available as a Dart package https://pub.dartlang.org/packages/flutter_gherkin
     - [tagExpression](#tagexpression)
     - [order](#order)
     - [stepDefinitions](#stepdefinitions)
+    - [defaultLanguage](#defaultLanguage)
     - [customStepParameterDefinitions](#customstepparameterdefinitions)
     - [hooks](#hooks)
     - [reporters](#reporters)
@@ -59,6 +60,7 @@ Available as a Dart package https://pub.dartlang.org/packages/flutter_gherkin
     - [World Context (per test scenario shared state)](#world-context-per-test-scenario-shared-state)
     - [Assertions](#assertions)
   - [Tags](#tags)
+  - [Languages](#languages)
 - [Hooks](#hooks)
 - [Attachements](#attachments)
   - [Screenshot on step failure](#screenshot)
@@ -243,6 +245,45 @@ Future<void> main() {
   return GherkinRunner().execute(config);
 }
 
+```
+
+#### defaultLanguage
+
+Defaults to `en`
+
+This specifies the default langauge the feature files are written in.  See https://cucumber.io/docs/gherkin/reference/#overview for supported languages.
+
+Note that this can be overriden in the feature itself by the use of a language block.
+
+```
+# language: de
+Funktionalität: Calculator
+  Tests the addition of two numbers
+
+  Szenariogrundriss: Add two numbers
+    Gegeben sei the numbers <number_one> and <number_two>
+    Wenn they are added
+    Dann the expected result is <result>
+
+    Beispiele:
+      | number_one | number_two | result |
+      | 12         | 5          | 17     |
+      | 20         | 5          | 25     |
+      | 20937      | 1          | 20938  |
+      | 20.937     | -1.937     | 19     |
+```
+
+```
+# language: fr
+Fonctionnalité: Counter
+  The counter should be incremented when the button is pressed.
+
+  @smoke
+  Scénario: Counter increases when the button is pressed
+    Etant donné que I pick the colour red
+    Et I expect the "counter" to be "0"
+    Quand I tap the "increment" button 10 times
+    Alors I expect the "counter" to be "10"
 ```
 
 #### customStepParameterDefinitions
@@ -693,6 +734,53 @@ You can even us brackets to ensure the order of precedence
 You can use the usual boolean statement "and", "or", "not"
 
 Also see <https://docs.cucumber.io/cucumber/api/#tags>
+
+### Languages
+
+In order to allow features to be written in a number of languages, you can now write the keywords in languages other than English. To improve readability and flow, some languages may have more than one translation for any given keyword. See https://cucumber.io/docs/gherkin/reference/#overview for a list of supported langauges.
+
+You can set the default language of feature files in your project via the configuration setting see [defaultLanguage](#defaultLanguage)
+
+For example these two features are the same the keywords are just written in different languages. Note the ```# language: de``` on the second feature.  English is the default language.
+
+```
+Feature: Calculator
+  Tests the addition of two numbers
+
+  Scenario Outline: Add two numbers
+    Given the numbers <number_one> and <number_two>
+    When they are added
+    Then the expected result is <result>
+
+    Examples:
+      | number_one | number_two | result |
+      | 12         | 5          | 17     |
+      | 20         | 5          | 25     |
+      | 20937      | 1          | 20938  |
+      | 20.937     | -1.937     | 19     |
+
+```
+
+```
+# language: de
+Funktionalität: Calculator
+  Tests the addition of two numbers
+
+  Szenariogrundriss: Add two numbers
+    Gegeben sei the numbers <number_one> and <number_two>
+    Wenn they are added
+    Dann the expected result is <result>
+
+    Beispiele:
+      | number_one | number_two | result |
+      | 12         | 5          | 17     |
+      | 20         | 5          | 25     |
+      | 20937      | 1          | 20938  |
+      | 20.937     | -1.937     | 19     |
+
+```
+
+Please note the language data is take and attributed to the cucumber project https://github.com/cucumber/cucumber/blob/master/gherkin/gherkin-languages.json
 
 ## Hooks
 
