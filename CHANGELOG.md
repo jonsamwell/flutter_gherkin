@@ -1,4 +1,7 @@
-## [1.1.1] - 20/09/2019
+## [1.1.2] - 22/09/2019
+* Fixed lint warnings
+
+## [1.1.1] - 22/09/2019
 * Updated to latest Gherkin library
 * Ensured Gradle build warnings do not output to `stderr` and cause tests runs to fail just because of build warnings
 
