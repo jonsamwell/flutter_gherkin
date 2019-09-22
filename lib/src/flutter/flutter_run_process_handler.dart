@@ -77,8 +77,7 @@ class FlutterRunProcessHandler extends ProcessHandler {
       if (line.startsWith('Note:')) {
         // This is most likely a depricated api usage warnings (from Gradle) and should not
         // cause the test run to fail.
-        stdout
-            .writeln("${WARN_COLOR}Flutter build warning: $line$RESET_COLOR");
+        stdout.writeln("${WARN_COLOR}Flutter build warning: $line$RESET_COLOR");
       } else {
         stderr.writeln("${FAIL_COLOR}Flutter build error: $line$RESET_COLOR");
       }
