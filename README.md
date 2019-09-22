@@ -631,11 +631,16 @@ import 'package:gherkin/gherkin.dart';
 class GivenIAddTheUsers extends Given1<Table> {
   @override
   Future<void> executeStep(Table dataTable) async {
-    // TODO: implement executeStep
     for (var row in dataTable.rows) {
       // do something with row
       row.columns.forEach((columnValue) => print(columnValue));
     }
+
+    // or get the table as a map (column values keyed by the header)
+    final columns = dataTable.asMap();
+    final personOne = columns.elementAt(0);
+    final personOneName = personOne["Firstname"];
+    print('Name of first user: `$personOneName`');
   }
 
   @override

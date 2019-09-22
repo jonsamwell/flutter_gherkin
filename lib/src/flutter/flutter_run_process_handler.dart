@@ -5,6 +5,7 @@ import 'package:gherkin/gherkin.dart';
 
 class FlutterRunProcessHandler extends ProcessHandler {
   static const String FAIL_COLOR = "\u001b[33;31m"; // red
+  static const String WARN_COLOR = "\u001b[33;10m"; // yellow
   static const String RESET_COLOR = "\u001b[33;0m";
 
   static RegExp _observatoryDebuggerUriRegex = RegExp(
@@ -72,8 +73,15 @@ class FlutterRunProcessHandler extends ProcessHandler {
         _runningProcess.stdout.transform(utf8.decoder).asBroadcastStream();
 
     _openSubscriptions.add(_runningProcess.stderr.listen((events) {
-      stderr.writeln(
-          "${FAIL_COLOR}Flutter run error: ${String.fromCharCodes(events)}$RESET_COLOR");
+      final line = String.fromCharCodes(events).trim();
+      if (line.startsWith('Note:')) {
+        // This is most likely a depricated api usage warnings (from Gradle) and should not
+        // cause the test run to fail.
+        stdout
+            .writeln("${WARN_COLOR}Flutter build warning: ${line}$RESET_COLOR");
+      } else {
+        stderr.writeln("${FAIL_COLOR}Flutter build error: ${line}$RESET_COLOR");
+      }
     }));
   }
 

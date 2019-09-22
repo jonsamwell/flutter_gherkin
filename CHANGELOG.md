@@ -1,3 +1,7 @@
+## [1.1.1] - 20/09/2019
+* Updated to latest Gherkin library
+* Ensured Gradle build warnings do not output to `stderr` and cause tests runs to fail just because of build warnings
+
 ## [1.1.0] - 20/09/2019
 * Updated to latest Gherkin lib which implements langauges - features can now be written in different languages / dialects! See https://cucumber.io/docs/gherkin/reference/#overview for supported dialects.
 * Ensured the hook to take a screenshot `AttachScreenhotOnFailedStepHook` works for steps that error or timeout as well as fail.
