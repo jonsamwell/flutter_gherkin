@@ -72,14 +72,17 @@ class FlutterRunProcessHandler extends ProcessHandler {
     _processStdoutStream =
         _runningProcess.stdout.transform(utf8.decoder).asBroadcastStream();
 
-    _openSubscriptions.add(_runningProcess.stderr.listen((events) {
-      final line = String.fromCharCodes(events).trim();
-      if (line.startsWith('Note:')) {
+    _openSubscriptions.add(_runningProcess.stderr
+        .map((events) => String.fromCharCodes(events).trim())
+        .where((event) => event.isNotEmpty)
+        .listen((event) {
+      if (event.startsWith('Note:')) {
         // This is most likely a depricated api usage warnings (from Gradle) and should not
         // cause the test run to fail.
-        stdout.writeln("${WARN_COLOR}Flutter build warning: $line$RESET_COLOR");
+        stdout
+            .writeln("${WARN_COLOR}Flutter build warning: $event$RESET_COLOR");
       } else {
-        stderr.writeln("${FAIL_COLOR}Flutter build error: $line$RESET_COLOR");
+        stderr.writeln("${FAIL_COLOR}Flutter build error: $event$RESET_COLOR");
       }
     }));
   }
