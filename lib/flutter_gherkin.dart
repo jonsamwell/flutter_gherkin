@@ -15,3 +15,6 @@ export 'src/flutter/steps/restart_app_step.dart';
 
 // Hooks
 export 'src/flutter/hooks/attach_screenshot_on_failed_step_hook.dart';
+
+// Reporters
+export 'src/flutter/reporters/flutter_driver_reporter.dart';

@@ -35,6 +35,7 @@ class FlutterWorld extends World {
 
   @override
   void dispose() async {
+    super.dispose();
     _flutterRunProcessHandler = null;
     await _driver?.close();
   }

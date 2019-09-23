@@ -13,7 +13,8 @@ Future<void> main() {
     ..reporters = [
       ProgressReporter(),
       TestRunSummaryReporter(),
-      JsonReporter(path: './report.json')
+      JsonReporter(path: './report.json'),
+      FlutterDriverReporter() // include this reporter if running on a CI server as Flutter driver logs all output to stderr
     ] // you can include the "StdoutReporter()" without the message level parameter for verbose log information
     ..hooks = [
       HookExample()
