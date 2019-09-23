@@ -52,7 +52,8 @@ class FlutterAppRunnerHook extends Hook {
 
   Future<void> _runApp(FlutterTestConfiguration config) async {
     _flutterRunProcessHandler = FlutterRunProcessHandler();
-    _flutterRunProcessHandler.setLogFlutterProcessOutput(config.logFlutterProcessOutput);
+    _flutterRunProcessHandler
+        .setLogFlutterProcessOutput(config.logFlutterProcessOutput);
     _flutterRunProcessHandler.setApplicationTargetFile(config.targetAppPath);
     _flutterRunProcessHandler
         .setWorkingDirectory(config.targetAppWorkingDirecotry);
