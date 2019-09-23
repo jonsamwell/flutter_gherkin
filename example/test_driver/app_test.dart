@@ -30,6 +30,7 @@ Future<void> main() {
     // ..buildFlavor = "staging" // uncomment when using build flavor and check android/ios flavor setup see android file android\app\build.gradle
     // ..targetDeviceId = "all" // uncomment to run tests on all connected devices or set specific device target id
     // ..tagExpression = "@smoke" // uncomment to see an example of running scenarios based on tag expressions
+    // ..logFlutterProcessOutput = true // uncomment to see the output from the Flutter process
     ..exitAfterTestRun = true; // set to false if debugging to exit cleanly
   return GherkinRunner().execute(config);
 }

@@ -25,11 +25,16 @@ class FlutterRunProcessHandler extends ProcessHandler {
   Stream<String> _processStdoutStream;
   List<StreamSubscription> _openSubscriptions = <StreamSubscription>[];
   bool _buildApp = true;
+  bool _logFlutterProcessOutput = false;
   String _workingDirectory;
   String _appTarget;
   String _buildFlavor;
   String _deviceTargetId;
   String currentObservatoryUri;
+
+  void setLogFlutterProcessOutput(bool logFlutterProcessOutput) {
+    _logFlutterProcessOutput = logFlutterProcessOutput;
+  }
 
   void setApplicationTargetFile(String targetPath) {
     _appTarget = targetPath;
@@ -136,22 +141,26 @@ class FlutterRunProcessHandler extends ProcessHandler {
       if (!completer.isCompleted) {
         completer.completeError(TimeoutException(timeoutMessage, timeout));
       }
-    }).listen((logLine) {
-      // uncomment for debug output
-      // stdout.write(logLine);
-      if (matcher.hasMatch(logLine)) {
-        sub?.cancel();
-        if (!completer.isCompleted) {
-          completer.complete(matcher.firstMatch(logLine).group(1));
+    }).listen(
+      (logLine) {
+        if (_logFlutterProcessOutput) {
+          stdout.write(logLine);
         }
-      } else if (_noConnectedDeviceRegex.hasMatch(logLine)) {
-        sub?.cancel();
-        if (!completer.isCompleted) {
-          stderr.writeln(
-              "${FAIL_COLOR}No connected devices found to run app on and tests against$RESET_COLOR");
+        if (matcher.hasMatch(logLine)) {
+          sub?.cancel();
+          if (!completer.isCompleted) {
+            completer.complete(matcher.firstMatch(logLine).group(1));
+          }
+        } else if (_noConnectedDeviceRegex.hasMatch(logLine)) {
+          sub?.cancel();
+          if (!completer.isCompleted) {
+            stderr.writeln(
+                "${FAIL_COLOR}No connected devices found to run app on and tests against$RESET_COLOR");
+          }
         }
-      }
-    }, cancelOnError: true);
+      },
+      cancelOnError: true,
+    );
 
     return completer.future;
   }

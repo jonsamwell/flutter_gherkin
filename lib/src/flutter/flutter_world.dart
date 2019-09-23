@@ -27,9 +27,8 @@ class FlutterWorld extends World {
     );
 
     _driver = await FlutterDriver.connect(
-        dartVmServiceUrl: _flutterRunProcessHandler.currentObservatoryUri,
-        logCommunicationToFile: false,
-        printCommunication: false);
+      dartVmServiceUrl: _flutterRunProcessHandler.currentObservatoryUri,
+    );
 
     return result;
   }
