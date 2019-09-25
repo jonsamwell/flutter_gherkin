@@ -25,11 +25,16 @@ class FlutterRunProcessHandler extends ProcessHandler {
   Stream<String> _processStdoutStream;
   List<StreamSubscription> _openSubscriptions = <StreamSubscription>[];
   bool _buildApp = true;
+  bool _logFlutterProcessOutput = false;
   String _workingDirectory;
   String _appTarget;
   String _buildFlavor;
   String _deviceTargetId;
   String currentObservatoryUri;
+
+  void setLogFlutterProcessOutput(bool logFlutterProcessOutput) {
+    _logFlutterProcessOutput = logFlutterProcessOutput;
+  }
 
   void setApplicationTargetFile(String targetPath) {
     _appTarget = targetPath;
@@ -72,14 +77,17 @@ class FlutterRunProcessHandler extends ProcessHandler {
     _processStdoutStream =
         _runningProcess.stdout.transform(utf8.decoder).asBroadcastStream();
 
-    _openSubscriptions.add(_runningProcess.stderr.listen((events) {
-      final line = String.fromCharCodes(events).trim();
-      if (line.startsWith('Note:')) {
+    _openSubscriptions.add(_runningProcess.stderr
+        .map((events) => String.fromCharCodes(events).trim())
+        .where((event) => event.isNotEmpty)
+        .listen((event) {
+      if (event.startsWith('Note:')) {
         // This is most likely a depricated api usage warnings (from Gradle) and should not
         // cause the test run to fail.
-        stdout.writeln("${WARN_COLOR}Flutter build warning: $line$RESET_COLOR");
+        stdout
+            .writeln("${WARN_COLOR}Flutter build warning: $event$RESET_COLOR");
       } else {
-        stderr.writeln("${FAIL_COLOR}Flutter build error: $line$RESET_COLOR");
+        stderr.writeln("${FAIL_COLOR}Flutter build error: $event$RESET_COLOR");
       }
     }));
   }
@@ -133,22 +141,26 @@ class FlutterRunProcessHandler extends ProcessHandler {
       if (!completer.isCompleted) {
         completer.completeError(TimeoutException(timeoutMessage, timeout));
       }
-    }).listen((logLine) {
-      // uncomment for debug output
-      // stdout.write(logLine);
-      if (matcher.hasMatch(logLine)) {
-        sub?.cancel();
-        if (!completer.isCompleted) {
-          completer.complete(matcher.firstMatch(logLine).group(1));
+    }).listen(
+      (logLine) {
+        if (_logFlutterProcessOutput) {
+          stdout.write(logLine);
         }
-      } else if (_noConnectedDeviceRegex.hasMatch(logLine)) {
-        sub?.cancel();
-        if (!completer.isCompleted) {
-          stderr.writeln(
-              "${FAIL_COLOR}No connected devices found to run app on and tests against$RESET_COLOR");
+        if (matcher.hasMatch(logLine)) {
+          sub?.cancel();
+          if (!completer.isCompleted) {
+            completer.complete(matcher.firstMatch(logLine).group(1));
+          }
+        } else if (_noConnectedDeviceRegex.hasMatch(logLine)) {
+          sub?.cancel();
+          if (!completer.isCompleted) {
+            stderr.writeln(
+                "${FAIL_COLOR}No connected devices found to run app on and tests against$RESET_COLOR");
+          }
         }
-      }
-    }, cancelOnError: true);
+      },
+      cancelOnError: true,
+    );
 
     return completer.future;
   }

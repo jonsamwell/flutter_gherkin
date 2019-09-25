@@ -39,6 +39,11 @@ class FlutterTestConfiguration extends TestConfiguration {
   /// Defaults to empty
   String targetDeviceId = "";
 
+  /// Logs Flutter process output to stdout
+  /// The Flutter process is use to start and driver the app under test.
+  /// The output may contain build and run information
+  bool logFlutterProcessOutput = false;
+
   void setObservatoryDebuggerUri(String uri) => _observatoryDebuggerUri = uri;
 
   Future<FlutterDriver> createFlutterDriver([String dartVmServiceUrl]) async {
@@ -46,9 +51,8 @@ class FlutterTestConfiguration extends TestConfiguration {
         Platform.environment['VM_SERVICE_URL'];
 
     return await FlutterDriver.connect(
-        dartVmServiceUrl: dartVmServiceUrl,
-        logCommunicationToFile: false,
-        printCommunication: false);
+      dartVmServiceUrl: dartVmServiceUrl,
+    );
   }
 
   Future<FlutterWorld> createFlutterWorld(

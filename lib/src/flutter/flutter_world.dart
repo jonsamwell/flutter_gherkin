@@ -27,15 +27,15 @@ class FlutterWorld extends World {
     );
 
     _driver = await FlutterDriver.connect(
-        dartVmServiceUrl: _flutterRunProcessHandler.currentObservatoryUri,
-        logCommunicationToFile: false,
-        printCommunication: false);
+      dartVmServiceUrl: _flutterRunProcessHandler.currentObservatoryUri,
+    );
 
     return result;
   }
 
   @override
   void dispose() async {
+    super.dispose();
     _flutterRunProcessHandler = null;
     await _driver?.close();
   }

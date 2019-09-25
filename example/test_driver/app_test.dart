@@ -13,7 +13,8 @@ Future<void> main() {
     ..reporters = [
       ProgressReporter(),
       TestRunSummaryReporter(),
-      JsonReporter(path: './report.json')
+      JsonReporter(path: './report.json'),
+      FlutterDriverReporter() // include this reporter if running on a CI server as Flutter driver logs all output to stderr
     ] // you can include the "StdoutReporter()" without the message level parameter for verbose log information
     ..hooks = [
       HookExample()
@@ -30,6 +31,7 @@ Future<void> main() {
     // ..buildFlavor = "staging" // uncomment when using build flavor and check android/ios flavor setup see android file android\app\build.gradle
     // ..targetDeviceId = "all" // uncomment to run tests on all connected devices or set specific device target id
     // ..tagExpression = "@smoke" // uncomment to see an example of running scenarios based on tag expressions
+    // ..logFlutterProcessOutput = true // uncomment to see the output from the Flutter process
     ..exitAfterTestRun = true; // set to false if debugging to exit cleanly
   return GherkinRunner().execute(config);
 }

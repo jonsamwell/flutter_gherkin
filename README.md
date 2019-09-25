@@ -868,6 +868,7 @@ A reporter is a class that is able to report on the progress of the test run. In
 - `ProgressReporter` - prints the result of each scenario and step to the console - colours the output.
 - `TestRunSummaryReporter` - prints the results and duration of the test run once the run has completed - colours the output.
 - `JsonReporter` - creates a JSON file with the results of the test run which can then be used by 'https://www.npmjs.com/package/cucumber-html-reporter.' to create a HTML report.  You can pass in the file path of the json file to be created.
+- `FlutterDriverReporter` - prints the output from Flutter Driver. Flutter driver logs all messages to the stderr stream by default so most CI servers would mark the process as failed if anything is logged to the stderr stream (even if the Flutter driver logs are only info messages).  This reporter ensures the log messages are output to the most appropiate stream depending on their log level.
 
 You can create your own custom reporter by inheriting from the base `Reporter` class and overriding the one or many of the methods to direct the output message.  The `Reporter` defines the following methods that can be overridden.  All methods must return a `Future<void>` and can be async.
 
