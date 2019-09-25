@@ -58,16 +58,15 @@ class FlutterAppRunnerHook extends Hook {
   }
 
   Future<void> _runApp(FlutterTestConfiguration config) async {
-    _flutterRunProcessHandler = FlutterRunProcessHandler();
-    _flutterRunProcessHandler
-        .setLogFlutterProcessOutput(config.logFlutterProcessOutput);
-    _flutterRunProcessHandler.setApplicationTargetFile(config.targetAppPath);
-    _flutterRunProcessHandler
-        .setWorkingDirectory(config.targetAppWorkingDirecotry);
-    _flutterRunProcessHandler
-        .setBuildRequired(haveRunFirstScenario ? false : config.build);
-    _flutterRunProcessHandler.setBuildFlavor(config.buildFlavor);
-    _flutterRunProcessHandler.setDeviceTargetId(config.targetDeviceId);
+    _flutterRunProcessHandler = FlutterRunProcessHandler()
+      ..setLogFlutterProcessOutput(config.logFlutterProcessOutput)
+      ..setVerboseFluterlogs(config.verboseFlutterProcessLogs)
+      ..setApplicationTargetFile(config.targetAppPath)
+      ..setWorkingDirectory(config.targetAppWorkingDirecotry)
+      ..setBuildRequired(haveRunFirstScenario ? false : config.build)
+      ..setBuildFlavor(config.buildFlavor)
+      ..setDeviceTargetId(config.targetDeviceId);
+
     stdout.writeln(
         "Starting Flutter app under test '${config.targetAppPath}', this might take a few moments");
     await _flutterRunProcessHandler.run();
