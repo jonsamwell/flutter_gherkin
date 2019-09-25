@@ -44,6 +44,11 @@ class FlutterTestConfiguration extends TestConfiguration {
   /// The output may contain build and run information
   bool logFlutterProcessOutput = false;
 
+  /// Duration to wait for Flutter to build and start the app on the target device
+  /// Slower machine may take longer to build and run a large app
+  /// Defaults to 90 seconds
+  Duration flutterBuildTimeout = Duration(seconds: 90);
+
   void setObservatoryDebuggerUri(String uri) => _observatoryDebuggerUri = uri;
 
   Future<FlutterDriver> createFlutterDriver([String dartVmServiceUrl]) async {

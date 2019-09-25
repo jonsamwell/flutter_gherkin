@@ -40,6 +40,8 @@ Available as a Dart package https://pub.dartlang.org/packages/flutter_gherkin
     - [hooks](#hooks)
     - [reporters](#reporters)
     - [createWorld](#createworld)
+    - [logFlutterProcessOutput](#logFlutterProcessOutput)
+    - [flutterBuildTimeout](#flutterBuildTimeout)
     - [exitAfterTestRun](#exitaftertestrun)
   - [Flutter specific configuration options](#flutter-specific-configuration-options)
     - [restartAppBetweenScenarios](#restartappbetweenscenarios)
@@ -431,6 +433,18 @@ Future<void> main() {
   return GherkinRunner().execute(config);
 }
 ```
+
+#### logFlutterProcessOutput
+
+Defaults to `false`
+
+If `true` the output from the flutter process is logged to the stdout / stderr streams.  Useful when debugging app build or start failures
+
+#### flutterBuildTimeout
+
+Defaults to `90 seconds`
+
+Specifies the period of time to wait for the Flutter build to complete and the app to be installed and in a state to be tested.  Slower machines may need longer than the default 90 seconds to complete this process.
 
 #### exitAfterTestRun
 

@@ -1,3 +1,7 @@
+## [1.1.4] - 26/09/2019
+* Added configuration parameter `flutterBuildTimeout` to allow setting the app build wait timeout.  Slower machine may need longer to build and start a Flutter app under test.
+* Now logging the flutter driver command used when the configuration setting `logFlutterProcessOutput` is true
+
 ## [1.1.3] - 25/09/2019
 * Added Flutter driver reporter - the Flutter Driver logs all messages (even non-error ones) to stderr and will cause the process to be marked as failed by a CI server becuase of this.  So this reporter redirects the messages to the appropiate output stream (stdout / stderr).
 * FlutterWorld - added missing `super.dispose()` call

@@ -72,8 +72,18 @@ class FlutterRunProcessHandler extends ProcessHandler {
       arguments.add("--device-id=$_deviceTargetId");
     }
 
-    _runningProcess = await Process.start("flutter", arguments,
-        workingDirectory: _workingDirectory, runInShell: true);
+    if (_logFlutterProcessOutput) {
+      stdout.writeln(
+          'Invoking from working directory `${_workingDirectory ?? './'}` command: `flutter ${arguments.join(' ')}`');
+    }
+
+    _runningProcess = await Process.start(
+      "flutter",
+      arguments,
+      workingDirectory: _workingDirectory,
+      runInShell: true,
+    );
+
     _processStdoutStream =
         _runningProcess.stdout.transform(utf8.decoder).asBroadcastStream();
 
@@ -123,10 +133,13 @@ class FlutterRunProcessHandler extends ProcessHandler {
     return Future.value(true);
   }
 
-  Future<String> waitForObservatoryDebuggerUri() async {
+  Future<String> waitForObservatoryDebuggerUri(
+      [Duration timeout = const Duration(seconds: 90)]) async {
     currentObservatoryUri = await _waitForStdOutMessage(
-        _observatoryDebuggerUriRegex,
-        "Timeout while waiting for observatory debugger uri");
+      _observatoryDebuggerUriRegex,
+      "Timeout while waiting for observatory debugger uri",
+      timeout,
+    );
 
     return currentObservatoryUri;
   }

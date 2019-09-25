@@ -25,7 +25,9 @@ class FlutterAppRunnerHook extends Hook {
 
   @override
   Future<void> onBeforeScenario(
-      TestConfiguration config, String scenario) async {
+    TestConfiguration config,
+    String scenario,
+  ) async {
     final flutterConfig = _castConfig(config);
     if (_flutterRunProcessHandler == null) {
       await _runApp(flutterConfig);
@@ -34,7 +36,9 @@ class FlutterAppRunnerHook extends Hook {
 
   @override
   Future<void> onAfterScenario(
-      TestConfiguration config, String scenario) async {
+    TestConfiguration config,
+    String scenario,
+  ) async {
     final flutterConfig = _castConfig(config);
     haveRunFirstScenario = true;
     if (_flutterRunProcessHandler != null &&
@@ -44,7 +48,10 @@ class FlutterAppRunnerHook extends Hook {
   }
 
   @override
-  Future<void> onAfterScenarioWorldCreated(World world, String scenario) async {
+  Future<void> onAfterScenarioWorldCreated(
+    World world,
+    String scenario,
+  ) async {
     if (world is FlutterWorld) {
       world.setFlutterProccessHandler(_flutterRunProcessHandler);
     }
@@ -64,8 +71,8 @@ class FlutterAppRunnerHook extends Hook {
     stdout.writeln(
         "Starting Flutter app under test '${config.targetAppPath}', this might take a few moments");
     await _flutterRunProcessHandler.run();
-    final observatoryUri =
-        await _flutterRunProcessHandler.waitForObservatoryDebuggerUri();
+    final observatoryUri = await _flutterRunProcessHandler
+        .waitForObservatoryDebuggerUri(config.flutterBuildTimeout);
     config.setObservatoryDebuggerUri(observatoryUri);
   }
 
