@@ -42,7 +42,12 @@ class FlutterTestConfiguration extends TestConfiguration {
   /// Logs Flutter process output to stdout
   /// The Flutter process is use to start and driver the app under test.
   /// The output may contain build and run information
+  /// Defaults to false
   bool logFlutterProcessOutput = false;
+
+  /// Sets the --verbose flag on the flutter process
+  /// Defaults to false
+  bool verboseFlutterProcessLogs = false;
 
   /// Duration to wait for Flutter to build and start the app on the target device
   /// Slower machine may take longer to build and run a large app

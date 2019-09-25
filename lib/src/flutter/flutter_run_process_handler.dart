@@ -26,6 +26,7 @@ class FlutterRunProcessHandler extends ProcessHandler {
   List<StreamSubscription> _openSubscriptions = <StreamSubscription>[];
   bool _buildApp = true;
   bool _logFlutterProcessOutput = false;
+  bool _verboseFlutterLogs = false;
   String _workingDirectory;
   String _appTarget;
   String _buildFlavor;
@@ -56,6 +57,10 @@ class FlutterRunProcessHandler extends ProcessHandler {
     _buildApp = build;
   }
 
+  void setVerboseFluterlogs(bool verbose) {
+    _verboseFlutterLogs = verbose;
+  }
+
   @override
   Future<void> run() async {
     final arguments = ["run", "--target=$_appTarget"];
@@ -70,6 +75,10 @@ class FlutterRunProcessHandler extends ProcessHandler {
 
     if (_deviceTargetId.isNotEmpty) {
       arguments.add("--device-id=$_deviceTargetId");
+    }
+
+    if (_verboseFlutterLogs) {
+      arguments.add("--verbose");
     }
 
     if (_logFlutterProcessOutput) {
