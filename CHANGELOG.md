@@ -1,4 +1,4 @@
-## [1.1.3] - 24/09/2019
+## [1.1.3] - 25/09/2019
 * Added Flutter driver reporter - the Flutter Driver logs all messages (even non-error ones) to stderr and will cause the process to be marked as failed by a CI server becuase of this.  So this reporter redirects the messages to the appropiate output stream (stdout / stderr).
 * FlutterWorld - added missing `super.dispose()` call
 
