@@ -9,7 +9,7 @@ class FlutterRunProcessHandler extends ProcessHandler {
   static const String RESET_COLOR = "\u001b[33;0m";
 
   static RegExp _observatoryDebuggerUriRegex = RegExp(
-      r"observatory debugger .*[:]? (http[s]?:.*\/).*",
+      r"observatory (?:debugger|url) .*[:]? (http[s]?:.*\/).*",
       caseSensitive: false,
       multiLine: false);
 
@@ -69,11 +69,11 @@ class FlutterRunProcessHandler extends ProcessHandler {
       arguments.add("--no-build");
     }
 
-    if (_buildFlavor.isNotEmpty) {
+    if (_buildFlavor != null && _buildFlavor.isNotEmpty) {
       arguments.add("--flavor=$_buildFlavor");
     }
 
-    if (_deviceTargetId.isNotEmpty) {
+    if (_deviceTargetId != null && _deviceTargetId.isNotEmpty) {
       arguments.add("--device-id=$_deviceTargetId");
     }
 
