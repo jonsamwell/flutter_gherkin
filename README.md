@@ -40,6 +40,8 @@ Available as a Dart package https://pub.dartlang.org/packages/flutter_gherkin
     - [hooks](#hooks)
     - [reporters](#reporters)
     - [createWorld](#createworld)
+    - [logFlutterProcessOutput](#logFlutterProcessOutput)
+    - [flutterBuildTimeout](#flutterBuildTimeout)
     - [exitAfterTestRun](#exitaftertestrun)
   - [Flutter specific configuration options](#flutter-specific-configuration-options)
     - [restartAppBetweenScenarios](#restartappbetweenscenarios)
@@ -431,6 +433,18 @@ Future<void> main() {
   return GherkinRunner().execute(config);
 }
 ```
+
+#### logFlutterProcessOutput
+
+Defaults to `false`
+
+If `true` the output from the flutter process is logged to the stdout / stderr streams.  Useful when debugging app build or start failures
+
+#### flutterBuildTimeout
+
+Defaults to `90 seconds`
+
+Specifies the period of time to wait for the Flutter build to complete and the app to be installed and in a state to be tested.  Slower machines may need longer than the default 90 seconds to complete this process.
 
 #### exitAfterTestRun
 
@@ -913,7 +927,7 @@ For convenience the library defines a number of pre-defined steps so you can get
 
 #### Flutter Driver Utilities
 
-For convenience the library provides a static `FlutterDriverUtils` class that abstracts away some common Flutter driver functionality like tapping a button, getting and entering text, checking if an element is present or absent.  See [lib/src/flutter/utils/driver_utils.dart](lib/src/flutter/utils/driver_utils.dart).
+For convenience the library provides a static `FlutterDriverUtils` class that abstracts away some common Flutter driver functionality like tapping a button, getting and entering text, checking if an element is present or absent, waiting for a condition to become true.  See [lib/src/flutter/utils/driver_utils.dart](lib/src/flutter/utils/driver_utils.dart).
 
 ### Debugging
 

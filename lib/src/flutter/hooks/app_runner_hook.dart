@@ -25,7 +25,9 @@ class FlutterAppRunnerHook extends Hook {
 
   @override
   Future<void> onBeforeScenario(
-      TestConfiguration config, String scenario) async {
+    TestConfiguration config,
+    String scenario,
+  ) async {
     final flutterConfig = _castConfig(config);
     if (_flutterRunProcessHandler == null) {
       await _runApp(flutterConfig);
@@ -34,7 +36,9 @@ class FlutterAppRunnerHook extends Hook {
 
   @override
   Future<void> onAfterScenario(
-      TestConfiguration config, String scenario) async {
+    TestConfiguration config,
+    String scenario,
+  ) async {
     final flutterConfig = _castConfig(config);
     haveRunFirstScenario = true;
     if (_flutterRunProcessHandler != null &&
@@ -44,28 +48,30 @@ class FlutterAppRunnerHook extends Hook {
   }
 
   @override
-  Future<void> onAfterScenarioWorldCreated(World world, String scenario) async {
+  Future<void> onAfterScenarioWorldCreated(
+    World world,
+    String scenario,
+  ) async {
     if (world is FlutterWorld) {
       world.setFlutterProccessHandler(_flutterRunProcessHandler);
     }
   }
 
   Future<void> _runApp(FlutterTestConfiguration config) async {
-    _flutterRunProcessHandler = FlutterRunProcessHandler();
-    _flutterRunProcessHandler
-        .setLogFlutterProcessOutput(config.logFlutterProcessOutput);
-    _flutterRunProcessHandler.setApplicationTargetFile(config.targetAppPath);
-    _flutterRunProcessHandler
-        .setWorkingDirectory(config.targetAppWorkingDirecotry);
-    _flutterRunProcessHandler
-        .setBuildRequired(haveRunFirstScenario ? false : config.build);
-    _flutterRunProcessHandler.setBuildFlavor(config.buildFlavor);
-    _flutterRunProcessHandler.setDeviceTargetId(config.targetDeviceId);
+    _flutterRunProcessHandler = FlutterRunProcessHandler()
+      ..setLogFlutterProcessOutput(config.logFlutterProcessOutput)
+      ..setVerboseFluterlogs(config.verboseFlutterProcessLogs)
+      ..setApplicationTargetFile(config.targetAppPath)
+      ..setWorkingDirectory(config.targetAppWorkingDirecotry)
+      ..setBuildRequired(haveRunFirstScenario ? false : config.build)
+      ..setBuildFlavor(config.buildFlavor)
+      ..setDeviceTargetId(config.targetDeviceId);
+
     stdout.writeln(
         "Starting Flutter app under test '${config.targetAppPath}', this might take a few moments");
     await _flutterRunProcessHandler.run();
-    final observatoryUri =
-        await _flutterRunProcessHandler.waitForObservatoryDebuggerUri();
+    final observatoryUri = await _flutterRunProcessHandler
+        .waitForObservatoryDebuggerUri(config.flutterBuildTimeout);
     config.setObservatoryDebuggerUri(observatoryUri);
   }
 

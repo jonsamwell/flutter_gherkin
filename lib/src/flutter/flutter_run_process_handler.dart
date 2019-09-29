@@ -9,7 +9,7 @@ class FlutterRunProcessHandler extends ProcessHandler {
   static const String RESET_COLOR = "\u001b[33;0m";
 
   static RegExp _observatoryDebuggerUriRegex = RegExp(
-      r"observatory debugger .*[:]? (http[s]?:.*\/).*",
+      r"observatory (?:debugger|url) .*[:]? (http[s]?:.*\/).*",
       caseSensitive: false,
       multiLine: false);
 
@@ -26,6 +26,7 @@ class FlutterRunProcessHandler extends ProcessHandler {
   List<StreamSubscription> _openSubscriptions = <StreamSubscription>[];
   bool _buildApp = true;
   bool _logFlutterProcessOutput = false;
+  bool _verboseFlutterLogs = false;
   String _workingDirectory;
   String _appTarget;
   String _buildFlavor;
@@ -56,6 +57,10 @@ class FlutterRunProcessHandler extends ProcessHandler {
     _buildApp = build;
   }
 
+  void setVerboseFluterlogs(bool verbose) {
+    _verboseFlutterLogs = verbose;
+  }
+
   @override
   Future<void> run() async {
     final arguments = ["run", "--target=$_appTarget"];
@@ -64,16 +69,30 @@ class FlutterRunProcessHandler extends ProcessHandler {
       arguments.add("--no-build");
     }
 
-    if (_buildFlavor.isNotEmpty) {
+    if (_buildFlavor != null && _buildFlavor.isNotEmpty) {
       arguments.add("--flavor=$_buildFlavor");
     }
 
-    if (_deviceTargetId.isNotEmpty) {
+    if (_deviceTargetId != null && _deviceTargetId.isNotEmpty) {
       arguments.add("--device-id=$_deviceTargetId");
     }
 
-    _runningProcess = await Process.start("flutter", arguments,
-        workingDirectory: _workingDirectory, runInShell: true);
+    if (_verboseFlutterLogs) {
+      arguments.add("--verbose");
+    }
+
+    if (_logFlutterProcessOutput) {
+      stdout.writeln(
+          'Invoking from working directory `${_workingDirectory ?? './'}` command: `flutter ${arguments.join(' ')}`');
+    }
+
+    _runningProcess = await Process.start(
+      "flutter",
+      arguments,
+      workingDirectory: _workingDirectory,
+      runInShell: true,
+    );
+
     _processStdoutStream =
         _runningProcess.stdout.transform(utf8.decoder).asBroadcastStream();
 
@@ -123,10 +142,13 @@ class FlutterRunProcessHandler extends ProcessHandler {
     return Future.value(true);
   }
 
-  Future<String> waitForObservatoryDebuggerUri() async {
+  Future<String> waitForObservatoryDebuggerUri(
+      [Duration timeout = const Duration(seconds: 90)]) async {
     currentObservatoryUri = await _waitForStdOutMessage(
-        _observatoryDebuggerUriRegex,
-        "Timeout while waiting for observatory debugger uri");
+      _observatoryDebuggerUriRegex,
+      "Timeout while waiting for observatory debugger uri",
+      timeout,
+    );
 
     return currentObservatoryUri;
   }
