@@ -329,7 +329,7 @@ Attachments would typically be attached via a `Hook` for example `onAfterStep`.
 ```
 import 'package:gherkin/gherkin.dart';
 
-class AttachScreenhotOnFailedStepHook extends Hook {
+class AttachScreenshotOnFailedStepHook extends Hook {
   /// Run after a step has executed
   @override
   Future<void> onAfterStep(World world, String step, StepResult stepResult) async {
@@ -345,7 +345,7 @@ class AttachScreenhotOnFailedStepHook extends Hook {
 
 ##### screenshot
 
-To take a screenshot on a step failing you can used the pre-defined hook `AttachScreenhotOnFailedStepHook` and include it in the hook configuration of the tests config.  This hook will take a screenshot and add it as an attachment to the scenerio.  If the `JsonReporter` is being used the screenshot will be embedded in the report which can be used to generate a HTML report which will ultimately display the screenshot under the failed step.
+To take a screenshot on a step failing you can used the pre-defined hook `AttachScreenshotOnFailedStepHook` and include it in the hook configuration of the tests config.  This hook will take a screenshot and add it as an attachment to the scenerio.  If the `JsonReporter` is being used the screenshot will be embedded in the report which can be used to generate a HTML report which will ultimately display the screenshot under the failed step.
 
 ```
 import 'dart:async';
@@ -365,7 +365,7 @@ Future<void> main() {
       TestRunSummaryReporter(),
       JsonReporter(path: './report.json')
     ]
-    ..hooks = [HookExample(), AttachScreenhotOnFailedStepHook()]
+    ..hooks = [HookExample(), AttachScreenshotOnFailedStepHook()]
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..customStepParameterDefinitions = [ColourParameter()]
     ..restartAppBetweenScenarios = true

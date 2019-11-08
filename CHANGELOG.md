@@ -17,7 +17,7 @@
 
 ## [1.1.0] - 20/09/2019
 * Updated to latest Gherkin lib which implements langauges - features can now be written in different languages / dialects! See https://cucumber.io/docs/gherkin/reference/#overview for supported dialects.
-* Ensured the hook to take a screenshot `AttachScreenhotOnFailedStepHook` works for steps that error or timeout as well as fail.
+* Ensured the hook to take a screenshot `AttachScreenshotOnFailedStepHook` works for steps that error or timeout as well as fail.
 * Fix missing await in `FlutterDriverUtils` when getting text of a widget.
 
 ## [1.0.12] - 18/09/2019
@@ -50,7 +50,7 @@
 * Fixed analysis suggestions
 
 ## [1.0.3] - 21/06/2019
-* Added ability to include a hook (see `AttachScreenhotOnFailedStepHook`) that takes a screenshot after a failed step. If using the json reporter it include the screenshot in the report that can then be used to generate a HTML report.
+* Added ability to include a hook (see `AttachScreenshotOnFailedStepHook`) that takes a screenshot after a failed step. If using the json reporter it include the screenshot in the report that can then be used to generate a HTML report.
 * Updated to latest dart_gherkin lib
 
 ## [1.0.2] - 05/06/2019
