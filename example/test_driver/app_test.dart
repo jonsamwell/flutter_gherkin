@@ -18,7 +18,7 @@ Future<void> main() {
     ] // you can include the "StdoutReporter()" without the message level parameter for verbose log information
     ..hooks = [
       HookExample()
-    ] // you can include "AttachScreenhotOnFailedStepHook()" to take a screenshot of each step failure and attach it to the world object
+    ] // you can include "AttachScreenshotOnFailedStepHook()" to take a screenshot of each step failure and attach it to the world object
     ..stepDefinitions = [
       TapButtonNTimesStep(),
       GivenIPickAColour(),

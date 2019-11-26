@@ -4,7 +4,7 @@ import 'package:gherkin/gherkin.dart';
 import 'package:meta/meta.dart';
 import '../flutter_world.dart';
 
-class AttachScreenhotOnFailedStepHook extends Hook {
+class AttachScreenshotOnFailedStepHook extends Hook {
   @override
   Future<void> onAfterStep(
       World world, String step, StepResult stepResult) async {
