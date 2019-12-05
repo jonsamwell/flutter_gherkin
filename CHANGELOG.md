@@ -1,3 +1,6 @@
+## [1.1.5] - 05/12/2019
+* Updated to latest Gherkin library (see https://github.com/jonsamwell/dart_gherkin/blob/master/CHANGELOG.md#115---05122019)
+
 ## [1.1.4] - 27/09/2019
 * Added configuration parameter `flutterBuildTimeout` to allow setting the app build wait timeout.  Slower machines may need longer to build and start the Flutter app under test.
 * Now logging the flutter driver command used when the configuration setting `logFlutterProcessOutput` is true

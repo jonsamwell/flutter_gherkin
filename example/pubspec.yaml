@@ -15,8 +15,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  path: ^1.6.2
-  glob: ^1.1.7
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -30,6 +28,8 @@ dev_dependencies:
     sdk: flutter
   flutter_gherkin:
     path: ../
+  path:
+  glob:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
