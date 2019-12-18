@@ -1,3 +1,6 @@
+## [1.1.6-rc.2] - 18/12/2019
+* Fixed analyzer issue
+
 ## [1.1.6-rc.1] - 18/12/2019
 * FlutterDriverReporter - Update to fix the breaking change in the way flutter_driver logs messages (https://github.com/flutter/flutter/pull/45945 - currently in the dev and above branches) 
 
