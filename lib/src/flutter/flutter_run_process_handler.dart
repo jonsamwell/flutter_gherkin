@@ -100,11 +100,11 @@ class FlutterRunProcessHandler extends ProcessHandler {
         .map((events) => String.fromCharCodes(events).trim())
         .where((event) => event.isNotEmpty)
         .listen((event) {
-      if (event.startsWith('Note:')) {
+      if (event.startsWith('Note:') ||
+          event.contains('warning: [deprecation]')) {
         // This is most likely a depricated api usage warnings (from Gradle) and should not
         // cause the test run to fail.
-        stdout
-            .writeln("${WARN_COLOR}Flutter build warning: $event$RESET_COLOR");
+        stdout.writeln("$WARN_COLOR$event$RESET_COLOR");
       } else {
         stderr.writeln("${FAIL_COLOR}Flutter build error: $event$RESET_COLOR");
       }

@@ -1,3 +1,6 @@
+## [1.1.6-rc.3] - 19/12/2019
+* Fixed issue where depricated api warnings when build a flutter app were written to the stderr stream
+
 ## [1.1.6-rc.2] - 18/12/2019
 * Fixed analyzer issue
 
