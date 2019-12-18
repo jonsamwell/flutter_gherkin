@@ -6,9 +6,9 @@ To run this example:
 2. Ensure an emulator or device is connected
 3. In a command prompt (from the root of this library):
     ```bash
-    cd example
+    cd example/test_driver
 
-    dart test_driver/app_test.dart
+    dart app_test.dart
     ```
 This will run the features files found in the folder `test_driver/features` against this example app.
 

@@ -1,3 +1,6 @@
+## [1.1.5+1] - 18/12/2019
+* Migrated example to AndroidX
+
 ## [1.1.5] - 05/12/2019
 * Updated to latest Gherkin library (see https://github.com/jonsamwell/dart_gherkin/blob/master/CHANGELOG.md#115---05122019)
 

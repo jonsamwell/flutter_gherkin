@@ -9,12 +9,15 @@ import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/**.feature")]
+    ..features = [Glob(r"features/**.feature")]
     ..reporters = [
       ProgressReporter(),
       TestRunSummaryReporter(),
+      FlutterDriverReporter(
+          logErrorMessages: true,
+          logInfoMessages: true,
+          logWarningMessages: true),
       JsonReporter(path: './report.json'),
-      FlutterDriverReporter() // include this reporter if running on a CI server as Flutter driver logs all output to stderr
     ] // you can include the "StdoutReporter()" without the message level parameter for verbose log information
     ..hooks = [
       HookExample()
@@ -27,6 +30,7 @@ Future<void> main() {
       ColourParameter(),
     ]
     ..restartAppBetweenScenarios = true
+    ..targetAppWorkingDirecotry = "../"
     ..targetAppPath = "test_driver/app.dart"
     // ..buildFlavor = "staging" // uncomment when using build flavor and check android/ios flavor setup see android file android\app\build.gradle
     // ..targetDeviceId = "all" // uncomment to run tests on all connected devices or set specific device target id

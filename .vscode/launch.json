@@ -10,11 +10,11 @@
       "type": "dart"
     },
     {
-      "name": "Debug example",
+      "name": "Debug example tests",
+      "program": "app_test.dart",
+      "cwd": "example/test_driver",
       "request": "launch",
       "type": "dart",
-      "program": "example/test_driver/app_test.dart",
-      "flutterMode": "debug"
     }
   ]
 }
