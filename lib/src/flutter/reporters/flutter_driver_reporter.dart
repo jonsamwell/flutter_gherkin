@@ -4,8 +4,6 @@ import 'dart:io';
 import 'package:gherkin/gherkin.dart';
 import 'package:flutter_driver/flutter_driver.dart';
 
-enum _FlutterDriverMessageLogLevel { info, warning, error }
-
 /// The Flutter driver helpfully logs ALL messages to the stderr output
 /// useless something is listening to the messages.
 /// This reporter listens to the messages from the driver so nothing is logged
@@ -17,6 +15,7 @@ class FlutterDriverReporter extends Reporter {
   final bool logErrorMessages;
   final bool logWarningMessages;
   final bool logInfoMessages;
+  final List<StreamSubscription> subscriptions = List<StreamSubscription>();
 
   FlutterDriverReporter({
     this.logErrorMessages = true,
@@ -25,37 +24,37 @@ class FlutterDriverReporter extends Reporter {
   });
 
   Future<void> onTestRunStarted() async {
-    driverLog = _driverLogMessageHandler;
+    if (logInfoMessages) {
+      subscriptions.add(flutterDriverLog
+          .where((log) => _isLevel(log.level, [LogLevel.info, LogLevel.trace]))
+          .listen((log) {
+        stdout.writeln(log.toString());
+      }));
+    }
+
+    if (logWarningMessages) {
+      subscriptions.add(flutterDriverLog
+          .where((log) => _isLevel(log.level, [LogLevel.warning]))
+          .listen((log) {
+        stdout.writeln(log.toString());
+      }));
+    }
+
+    if (logErrorMessages) {
+      subscriptions.add(flutterDriverLog
+          .where(
+              (log) => _isLevel(log.level, [LogLevel.critical, LogLevel.error]))
+          .listen((log) {
+        stderr.writeln(log.toString());
+      }));
+    }
   }
 
   Future<void> dispose() async {
-    driverLog = null;
+    subscriptions.forEach((s) => s.cancel());
+    subscriptions.clear();
   }
 
-  void _driverLogMessageHandler(String source, String message) {
-    final level = _getMessageLevel(message);
-    final log = '$source $message';
-
-    if (logInfoMessages && level == _FlutterDriverMessageLogLevel.info) {
-      stdout.writeln(log);
-    }
-
-    if (logWarningMessages && level == _FlutterDriverMessageLogLevel.warning) {
-      stdout.writeln(log);
-    }
-
-    if (logErrorMessages && level == _FlutterDriverMessageLogLevel.error) {
-      stderr.writeln(log);
-    }
-  }
-
-  _FlutterDriverMessageLogLevel _getMessageLevel(String message) {
-    if (message.contains('warning')) {
-      return _FlutterDriverMessageLogLevel.warning;
-    } else if (message.contains('error')) {
-      return _FlutterDriverMessageLogLevel.error;
-    } else {
-      return _FlutterDriverMessageLogLevel.info;
-    }
-  }
+  bool _isLevel(LogLevel level, Iterable<LogLevel> levels) =>
+      levels.contains(level);
 }

@@ -13,11 +13,12 @@ Future<void> main() {
     ..reporters = [
       ProgressReporter(),
       TestRunSummaryReporter(),
-      FlutterDriverReporter(
-          logErrorMessages: true,
-          logInfoMessages: true,
-          logWarningMessages: true),
       JsonReporter(path: './report.json'),
+      FlutterDriverReporter(
+        logErrorMessages: true,
+        logInfoMessages: true,
+        logWarningMessages: true,
+      ),
     ] // you can include the "StdoutReporter()" without the message level parameter for verbose log information
     ..hooks = [
       HookExample()
