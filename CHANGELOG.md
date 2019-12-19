@@ -1,3 +1,6 @@
+## [1.1.6-rc.4] - 19/12/2019
+* When then was more than one connected device the device to run against was unknown causing a failure, now a message is logged
+
 ## [1.1.6-rc.3] - 19/12/2019
 * Fixed issue where depricated api warnings when build a flutter app were written to the stderr stream
 
