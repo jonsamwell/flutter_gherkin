@@ -1,3 +1,7 @@
+## [1.1.5+2] - 19/12/2019
+* When more than one connected device is present the device to run against was unknown causing a failure, now a message is logged saying the --device-id argument needs to be set
+* Fixed issue where depricated api warnings when build a flutter app were written to the stderr stream
+
 ## [1.1.5+1] - 18/12/2019
 * Migrated example to AndroidX
 

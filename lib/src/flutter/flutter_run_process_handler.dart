@@ -16,6 +16,16 @@ class FlutterRunProcessHandler extends ProcessHandler {
   static RegExp _noConnectedDeviceRegex =
       RegExp(r"no connected device", caseSensitive: false, multiLine: false);
 
+  static RegExp _moreThanOneDeviceConnectedDeviceRegex = RegExp(
+      r"more than one device connected",
+      caseSensitive: false,
+      multiLine: false);
+
+  static RegExp _errorMessageRegex = RegExp(
+      r"aborted|error|failure|unexpected|failed|exception",
+      caseSensitive: false,
+      multiLine: false);
+
   static RegExp _restartedApplicationSuccessRegex = RegExp(
       r"Restarted application (.*)ms.",
       caseSensitive: false,
@@ -100,13 +110,12 @@ class FlutterRunProcessHandler extends ProcessHandler {
         .map((events) => String.fromCharCodes(events).trim())
         .where((event) => event.isNotEmpty)
         .listen((event) {
-      if (event.startsWith('Note:')) {
+      if (event.contains(_errorMessageRegex)) {
+        stderr.writeln("${FAIL_COLOR}Flutter build error: $event$RESET_COLOR");
+      } else {
         // This is most likely a depricated api usage warnings (from Gradle) and should not
         // cause the test run to fail.
-        stdout
-            .writeln("${WARN_COLOR}Flutter build warning: $event$RESET_COLOR");
-      } else {
-        stderr.writeln("${FAIL_COLOR}Flutter build error: $event$RESET_COLOR");
+        stdout.writeln("$WARN_COLOR$event$RESET_COLOR");
       }
     }));
   }
@@ -178,6 +187,11 @@ class FlutterRunProcessHandler extends ProcessHandler {
           if (!completer.isCompleted) {
             stderr.writeln(
                 "${FAIL_COLOR}No connected devices found to run app on and tests against$RESET_COLOR");
+          }
+        } else if (_moreThanOneDeviceConnectedDeviceRegex.hasMatch(logLine)) {
+          sub?.cancel();
+          if (!completer.isCompleted) {
+            stderr.writeln("${FAIL_COLOR}$logLine$RESET_COLOR");
           }
         }
       },
