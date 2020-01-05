@@ -1,3 +1,7 @@
+## [1.1.6] - 06/01/2019
+* `WhenFillFieldStep` Ensure widget is scrolled into view before setting it's value
+* Fixed lint warnings
+
 ## [1.1.5+2] - 19/12/2019
 * When more than one connected device is present the device to run against was unknown causing a failure, now a message is logged saying the --device-id argument needs to be set
 * Fixed issue where depricated api warnings when build a flutter app were written to the stderr stream

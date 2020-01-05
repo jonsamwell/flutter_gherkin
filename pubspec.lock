@@ -118,7 +118,7 @@ packages:
       name: gherkin
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.5"
+    version: "1.1.5+1"
   glob:
     dependency: "direct main"
     description:
@@ -139,7 +139,7 @@ packages:
       name: http
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.0+2"
+    version: "0.12.0+3"
   http_multi_server:
     dependency: transitive
     description:
@@ -438,7 +438,7 @@ packages:
       name: vm_service
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.4"
+    version: "2.3.1"
   vm_service_client:
     dependency: transitive
     description:
@@ -475,4 +475,4 @@ packages:
     source: hosted
     version: "2.2.0"
 sdks:
-  dart: ">=2.4.0 <3.0.0"
+  dart: ">=2.6.0 <3.0.0"

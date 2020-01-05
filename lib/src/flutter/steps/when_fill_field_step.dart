@@ -11,9 +11,14 @@ import 'package:gherkin/gherkin.dart';
 class WhenFillFieldStep extends When2WithWorld<String, String, FlutterWorld> {
   @override
   Future<void> executeStep(String key, String input2) async {
+    final finder = find.byValueKey(key);
+    await world.driver.scrollIntoView(finder);
     await FlutterDriverUtils.enterText(
-        world.driver, find.byValueKey(key), input2,
-        timeout: timeout * .9);
+      world.driver,
+      finder,
+      input2,
+      timeout: timeout * .9,
+    );
   }
 
   @override
