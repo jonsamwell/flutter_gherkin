@@ -1,4 +1,4 @@
-## [1.1.6+2] - 06/01/2019
+## [1.1.7] - 06/01/2019
 * `WhenFillFieldStep` Ensure widget is scrolled into view before setting it's value
 * Fixed lint warnings
 
