@@ -191,7 +191,7 @@ class FlutterRunProcessHandler extends ProcessHandler {
         } else if (_moreThanOneDeviceConnectedDeviceRegex.hasMatch(logLine)) {
           sub?.cancel();
           if (!completer.isCompleted) {
-            stderr.writeln("${FAIL_COLOR}$logLine$RESET_COLOR");
+            stderr.writeln("$FAIL_COLOR$logLine$RESET_COLOR");
           }
         }
       },

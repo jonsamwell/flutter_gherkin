@@ -1,3 +1,7 @@
+## [1.1.6+1-rc.4] - 06/01/2019
+* `WhenFillFieldStep` Ensure widget is scrolled into view before setting it's value
+* Fixed lint warnings
+
 ## [1.1.6-rc.4] - 19/12/2019
 * When then was more than one connected device the device to run against was unknown causing a failure, now a message is logged
 
