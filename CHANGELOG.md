@@ -1,3 +1,7 @@
+## [1.1.8-rc.2] - 07/01/2019
+* Ensured when the Flutter driver is closed it cannot throw an unhandled exception causing the test run the stop
+* Updated Gherkin library version
+
 ## [1.1.8-rc.1] - 06/01/2019
 * `WhenFillFieldStep` Ensure widget is scrolled into view before setting it's value
 * Fixed lint warnings

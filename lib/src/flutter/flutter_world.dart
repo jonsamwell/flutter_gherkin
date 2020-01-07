@@ -18,10 +18,10 @@ class FlutterWorld extends World {
     _flutterRunProcessHandler = flutterRunProcessHandler;
   }
 
-  Future<bool> restartApp(
-      {Duration timeout = const Duration(seconds: 60)}) async {
-    await _driver.waitUntilNoTransientCallbacks();
-    await _driver.close();
+  Future<bool> restartApp({
+    Duration timeout = const Duration(seconds: 60),
+  }) async {
+    await _closeDriver(timeout: timeout);
     final result = await _flutterRunProcessHandler?.restart(
       timeout: timeout,
     );
@@ -37,6 +37,21 @@ class FlutterWorld extends World {
   void dispose() async {
     super.dispose();
     _flutterRunProcessHandler = null;
-    await _driver?.close();
+    await _closeDriver(timeout: const Duration(seconds: 5));
+  }
+
+  Future<void> _closeDriver({
+    Duration timeout = const Duration(seconds: 60),
+  }) async {
+    try {
+      if (_driver != null) {
+        await _driver.waitUntilNoTransientCallbacks(timeout: timeout);
+        await _driver.close();
+      }
+    } catch (e, st) {
+      print('Error closing Flutter driver:\n\n`${e}`\n\n${st}');
+    } finally {
+      _driver = null;
+    }
   }
 }
