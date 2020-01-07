@@ -52,7 +52,12 @@ class FlutterTestConfiguration extends TestConfiguration {
   /// Duration to wait for Flutter to build and start the app on the target device
   /// Slower machine may take longer to build and run a large app
   /// Defaults to 90 seconds
-  Duration flutterBuildTimeout = Duration(seconds: 90);
+  Duration flutterBuildTimeout = const Duration(seconds: 90);
+
+  /// Duration to wait before reconnecting the Flutter driver to the app.
+  /// On slower machines the app might not be in a state where the driver can successfully connect immediately
+  /// Defaults to 2 seconds
+  Duration flutterDriverReconnectionDelay = const Duration(seconds: 2);
 
   void setObservatoryDebuggerUri(String uri) => _observatoryDebuggerUri = uri;
 

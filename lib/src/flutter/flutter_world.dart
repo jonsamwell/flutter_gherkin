@@ -49,7 +49,7 @@ class FlutterWorld extends World {
         await _driver.close();
       }
     } catch (e, st) {
-      print('Error closing Flutter driver:\n\n`${e}`\n\n${st}');
+      print('Error closing Flutter driver:\n\n`$e`\n\n$st');
     } finally {
       _driver = null;
     }

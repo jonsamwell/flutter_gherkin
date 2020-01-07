@@ -41,6 +41,7 @@ class FlutterRunProcessHandler extends ProcessHandler {
   String _appTarget;
   String _buildFlavor;
   String _deviceTargetId;
+  Duration _driverConnectionDelay = const Duration(seconds: 2);
   String currentObservatoryUri;
 
   void setLogFlutterProcessOutput(bool logFlutterProcessOutput) {
@@ -49,6 +50,10 @@ class FlutterRunProcessHandler extends ProcessHandler {
 
   void setApplicationTargetFile(String targetPath) {
     _appTarget = targetPath;
+  }
+
+  void setDriverConnectionDelay(Duration duration) {
+    _driverConnectionDelay = duration ?? _driverConnectionDelay;
   }
 
   void setWorkingDirectory(String workingDirectory) {
@@ -146,7 +151,7 @@ class FlutterRunProcessHandler extends ProcessHandler {
 
     // it seems we need a small delay here otherwise the flutter driver fails to
     // consistently connect
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(_driverConnectionDelay);
 
     return Future.value(true);
   }

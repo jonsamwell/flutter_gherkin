@@ -1,3 +1,6 @@
+## [1.1.7+2] - 07/01/2019
+* Increased the Flutter driver reconnection delay to try and overcome some driver to app connection issues on slower machines
+
 ## [1.1.7+1] - 07/01/2019
 * Ensured when the Flutter driver is closed it cannot throw an unhandled exception causing the test run the stop
 * Updated Gherkin library version

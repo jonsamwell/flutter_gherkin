@@ -62,6 +62,7 @@ class FlutterAppRunnerHook extends Hook {
       ..setLogFlutterProcessOutput(config.logFlutterProcessOutput)
       ..setVerboseFluterlogs(config.verboseFlutterProcessLogs)
       ..setApplicationTargetFile(config.targetAppPath)
+      ..setDriverConnectionDelay(config.flutterDriverReconnectionDelay)
       ..setWorkingDirectory(config.targetAppWorkingDirecotry)
       ..setBuildRequired(haveRunFirstScenario ? false : config.build)
       ..setBuildFlavor(config.buildFlavor)
