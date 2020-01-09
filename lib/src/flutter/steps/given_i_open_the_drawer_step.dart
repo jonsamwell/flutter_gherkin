@@ -24,8 +24,10 @@ class GivenOpenDrawer extends Given1WithWorld<String, FlutterWorld> {
           .scroll(drawerFinder, -300.0, 0.0, const Duration(milliseconds: 300));
     } else if (!isOpen && action == "open") {
       await FlutterDriverUtils.tap(
-          world.driver, find.byTooltip("Open navigation menu"),
-          timeout: timeout);
+        world.driver,
+        find.byTooltip("Open navigation menu"),
+        timeout: timeout,
+      );
     }
   }
 }

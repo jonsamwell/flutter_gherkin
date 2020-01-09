@@ -52,6 +52,7 @@ class FlutterWorld extends World {
           print(
               'Error waiting for no transient callbacks from Flutter driver:\n\n`$e`\n\n$st');
         });
+
         await _driver.close().catchError((e, st) {
           // Avoid an unhandled error.
           print('Error closing Flutter driver:\n\n`$e`\n\n$st');

@@ -118,7 +118,7 @@ packages:
       name: gherkin
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.5+2"
+    version: "1.1.6+1"
   glob:
     dependency: "direct main"
     description:
