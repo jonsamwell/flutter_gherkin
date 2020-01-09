@@ -8,6 +8,7 @@ import 'package:flutter_gherkin/src/flutter/steps/then_expect_element_to_have_va
 import 'package:flutter_gherkin/src/flutter/steps/when_fill_field_step.dart';
 import 'package:flutter_gherkin/src/flutter/steps/when_pause_step.dart';
 import 'package:flutter_gherkin/src/flutter/steps/when_tap_widget_step.dart';
+import 'package:flutter_gherkin/src/flutter/steps/when_tap_the_back_button_step.dart';
 import 'package:flutter_driver/flutter_driver.dart';
 import 'package:gherkin/gherkin.dart';
 
@@ -97,6 +98,7 @@ class FlutterTestConfiguration extends TestConfiguration {
       ..addAll([
         ThenExpectElementToHaveValue(),
         WhenTapWidget(),
+        WhenTapBackButtonWidget(),
         GivenOpenDrawer(),
         WhenPauseStep(),
         WhenFillFieldStep(),
