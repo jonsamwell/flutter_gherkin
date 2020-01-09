@@ -24,7 +24,10 @@ class WhenTapWidget extends When1WithWorld<String, FlutterWorld> {
 
   @override
   Future<void> executeStep(String key) async {
-    await FlutterDriverUtils.tap(world.driver, find.byValueKey(key),
-        timeout: timeout * .9);
+    await FlutterDriverUtils.tap(
+      world.driver,
+      find.byValueKey(key),
+      timeout: timeout * .9,
+    );
   }
 }

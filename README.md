@@ -924,6 +924,7 @@ For convenience the library defines a number of pre-defined steps so you can get
 | I (open\|close) the drawer                              | Opens or closes the application default drawer    | `When I open the drawer`, `And I close the drawer`|
 | I pause for {int} seconds                               | Pauses the test execution for the given seconds. Only use in debug scenarios or to inspect the state of the app | `Then I pause for 20 seconds`                                 |
 | I restart the app                                       | Restarts the app under test | `Then I restart the app` |
+| I tap the back button                                   | Taps the page default back button widget | `Then I tap the back button` |
 
 #### Flutter Driver Utilities
 
