@@ -12,6 +12,8 @@ import 'package:flutter_gherkin/src/flutter/steps/when_tap_the_back_button_step.
 import 'package:flutter_driver/flutter_driver.dart';
 import 'package:gherkin/gherkin.dart';
 
+import 'steps/then_expect_widget_to_be_present_step.dart';
+
 class FlutterTestConfiguration extends TestConfiguration {
   String _observatoryDebuggerUri;
 
@@ -102,6 +104,7 @@ class FlutterTestConfiguration extends TestConfiguration {
         GivenOpenDrawer(),
         WhenPauseStep(),
         WhenFillFieldStep(),
+        ThenExpectWidgetToBePresent(),
         RestartAppStep()
       ]);
   }
