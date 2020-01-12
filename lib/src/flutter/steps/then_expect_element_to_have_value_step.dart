@@ -11,8 +11,8 @@ import 'package:gherkin/gherkin.dart';
 ///
 /// Examples:
 ///
-///   `Then I expect "controlKey" to be "Hello World"`
-///   `And I expect "controlKey" to be "Hello World"`
+///   `Then I expect the "controlKey" to be "Hello World"`
+///   `And I expect the "controlKey" to be "Hello World"`
 class ThenExpectElementToHaveValue
     extends Then2WithWorld<String, String, FlutterWorld> {
   @override

@@ -2,7 +2,7 @@
 * Added retry logic to the Futter driver connect call to handle the seemingly random connection failures
 * Ensured `AttachScreenshotOnFailedStepHook` cannot throw an unhandled exception causing the test run to stop
 * Added new well known step `When I tap the back button` which finds and taps the default page back button
-* Added a new well known step `Then I expect the widget 'notification' to be present` which expects a widget with a given key to be present within 5 seconds
+* Added a new well known step `Then I expect the widget 'notification' to be present within 2 seconds` which expects a widget with a given key to be present within n seconds
 * Updated Gherkin library version
 
 ## [1.1.7+2] - 07/01/2019
