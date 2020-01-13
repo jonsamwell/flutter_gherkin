@@ -11,12 +11,12 @@ import 'package:gherkin/gherkin.dart';
 ///
 /// Examples:
 ///
-///   `Then I expect "controlKey" to be "Hello World"`
-///   `And I expect "controlKey" to be "Hello World"`
+///   `Then I expect the "controlKey" to be "Hello World"`
+///   `And I expect the "controlKey" to be "Hello World"`
 class ThenExpectElementToHaveValue
     extends Then2WithWorld<String, String, FlutterWorld> {
   @override
-  RegExp get pattern => RegExp(r"I expect the {string} to be {string}");
+  RegExp get pattern => RegExp(r"I expect the {string} to be {string}$");
 
   @override
   Future<void> executeStep(String key, String value) async {

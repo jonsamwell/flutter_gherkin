@@ -8,8 +8,11 @@ import 'package:flutter_gherkin/src/flutter/steps/then_expect_element_to_have_va
 import 'package:flutter_gherkin/src/flutter/steps/when_fill_field_step.dart';
 import 'package:flutter_gherkin/src/flutter/steps/when_pause_step.dart';
 import 'package:flutter_gherkin/src/flutter/steps/when_tap_widget_step.dart';
+import 'package:flutter_gherkin/src/flutter/steps/when_tap_the_back_button_step.dart';
 import 'package:flutter_driver/flutter_driver.dart';
 import 'package:gherkin/gherkin.dart';
+
+import 'steps/then_expect_widget_to_be_present_step.dart';
 
 class FlutterTestConfiguration extends TestConfiguration {
   String _observatoryDebuggerUri;
@@ -59,15 +62,17 @@ class FlutterTestConfiguration extends TestConfiguration {
   /// Defaults to 2 seconds
   Duration flutterDriverReconnectionDelay = const Duration(seconds: 2);
 
+  /// The maximum times the flutter driver can try and connect to the running app
+  /// Defaults to 3
+  int flutterDriverMaxConnectionAttemps = 3;
+
   void setObservatoryDebuggerUri(String uri) => _observatoryDebuggerUri = uri;
 
   Future<FlutterDriver> createFlutterDriver([String dartVmServiceUrl]) async {
     dartVmServiceUrl = (dartVmServiceUrl ?? _observatoryDebuggerUri) ??
         Platform.environment['VM_SERVICE_URL'];
 
-    return await FlutterDriver.connect(
-      dartVmServiceUrl: dartVmServiceUrl,
-    );
+    return await _attemptDriverConnection(dartVmServiceUrl, 1, 3);
   }
 
   Future<FlutterWorld> createFlutterWorld(
@@ -95,10 +100,37 @@ class FlutterTestConfiguration extends TestConfiguration {
       ..addAll([
         ThenExpectElementToHaveValue(),
         WhenTapWidget(),
+        WhenTapBackButtonWidget(),
         GivenOpenDrawer(),
         WhenPauseStep(),
         WhenFillFieldStep(),
+        ThenExpectWidgetToBePresent(),
         RestartAppStep()
       ]);
+  }
+
+  Future<FlutterDriver> _attemptDriverConnection(
+    String dartVmServiceUrl,
+    int attempt,
+    int maxAttemps,
+  ) async {
+    try {
+      return await FlutterDriver.connect(
+        dartVmServiceUrl: dartVmServiceUrl,
+      );
+    } catch (e) {
+      if (attempt > maxAttemps) {
+        rethrow;
+      } else {
+        print(e);
+        await Future<void>.delayed(flutterDriverReconnectionDelay);
+
+        return _attemptDriverConnection(
+          dartVmServiceUrl,
+          attempt + 1,
+          maxAttemps,
+        );
+      }
+    }
   }
 }
