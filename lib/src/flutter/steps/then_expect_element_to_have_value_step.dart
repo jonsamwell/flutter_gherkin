@@ -16,7 +16,7 @@ import 'package:gherkin/gherkin.dart';
 class ThenExpectElementToHaveValue
     extends Then2WithWorld<String, String, FlutterWorld> {
   @override
-  RegExp get pattern => RegExp(r"I expect the {string} to be {string}");
+  RegExp get pattern => RegExp(r"I expect the {string} to be {string}$");
 
   @override
   Future<void> executeStep(String key, String value) async {

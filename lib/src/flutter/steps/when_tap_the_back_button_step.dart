@@ -12,7 +12,7 @@ import 'package:gherkin/gherkin.dart';
 ///   `When I tap the back widget"`
 class WhenTapBackButtonWidget extends WhenWithWorld<FlutterWorld> {
   @override
-  RegExp get pattern => RegExp(r"I tap the back button|element|widget");
+  RegExp get pattern => RegExp(r"I tap the back button|element|widget$");
 
   @override
   Future<void> executeStep() async {

@@ -20,7 +20,7 @@ import 'package:gherkin/gherkin.dart';
 class WhenTapWidget extends When1WithWorld<String, FlutterWorld> {
   @override
   RegExp get pattern =>
-      RegExp(r"I tap the {string} button|element|label|icon|field|text|widget");
+      RegExp(r"I tap the {string} (?:button|element|label|icon|field|text|widget)$");
 
   @override
   Future<void> executeStep(String key) async {
