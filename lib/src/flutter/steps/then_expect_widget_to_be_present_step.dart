@@ -16,7 +16,7 @@ class ThenExpectWidgetToBePresent
     extends When2WithWorld<String, int, FlutterWorld> {
   @override
   RegExp get pattern => RegExp(
-      r"I expect the (?:button|element|label|icon|field|text|widget) {string} to be present within {int} second(s)$");
+      r"I expect the (?:button|element|label|icon|field|text|widget|dialog|popup) {string} to be present within {int} second(s)$");
 
   @override
   Future<void> executeStep(String key, int seconds) async {
