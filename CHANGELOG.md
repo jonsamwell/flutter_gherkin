@@ -1,3 +1,7 @@
+## [1.1.7+4] - 31/01/2019
+* Update check to determine if any devices are connected to run tests against
+* When the flag `verboseFlutterProcessLogs` was true Flutter driver was preemptively connecting to the app when it was not ready
+
 ## [1.1.7+3] - 08/01/2019
 * Added retry logic to the Futter driver connect call to handle the seemingly random connection failures
 * Ensured `AttachScreenshotOnFailedStepHook` cannot throw an unhandled exception causing the test run to stop
