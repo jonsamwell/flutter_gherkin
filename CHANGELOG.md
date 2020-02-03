@@ -1,3 +1,6 @@
+## [1.1.7+5] - 03/02/2019
+* Updated to latest Gherkin library (see https://github.com/jonsamwell/dart_gherkin/blob/master/CHANGELOG.md#1163---03022019)
+
 ## [1.1.7+4] - 31/01/2019
 * Update check to determine if any devices are connected to run tests against
 * When the flag `verboseFlutterProcessLogs` was true Flutter driver was preemptively connecting to the app when it was not ready
