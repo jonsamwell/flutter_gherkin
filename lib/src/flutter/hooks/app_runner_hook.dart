@@ -27,6 +27,7 @@ class FlutterAppRunnerHook extends Hook {
   Future<void> onBeforeScenario(
     TestConfiguration config,
     String scenario,
+    Iterable<Tag> tags,
   ) async {
     final flutterConfig = _castConfig(config);
     if (_flutterRunProcessHandler == null) {
@@ -38,6 +39,7 @@ class FlutterAppRunnerHook extends Hook {
   Future<void> onAfterScenario(
     TestConfiguration config,
     String scenario,
+    Iterable<Tag> tags,
   ) async {
     final flutterConfig = _castConfig(config);
     haveRunFirstScenario = true;
@@ -51,6 +53,7 @@ class FlutterAppRunnerHook extends Hook {
   Future<void> onAfterScenarioWorldCreated(
     World world,
     String scenario,
+    Iterable<Tag> tags,
   ) async {
     if (world is FlutterWorld) {
       world.setFlutterProccessHandler(_flutterRunProcessHandler);

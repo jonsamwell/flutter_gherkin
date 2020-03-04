@@ -1,5 +1,9 @@
+## [1.1.7+6] - 04/03/2019
+* Updated to latest Gherkin library (see https://github.com/jonsamwell/dart_gherkin/blob/master/CHANGELOG.md#117---04032020) - this includes a breaking change to the `Hook` inteface that will need to be updated if any of the `Scenerio` level methods are implemented
+* Ensured the well known step `I tap the ".." button` scroll the element into view first
+
 ## [1.1.7+5] - 03/02/2019
-* Updated to latest Gherkin library (see https://github.com/jonsamwell/dart_gherkin/blob/master/CHANGELOG.md#1163---03022019)
+* Updated to latest Gherkin library (see https://github.com/jonsamwell/dart_gherkin/blob/master/CHANGELOG.md#1164---03022020)
 
 ## [1.1.7+4] - 31/01/2019
 * Update check to determine if any devices are connected to run tests against

@@ -26,6 +26,8 @@ Available as a Dart package https://pub.dartlang.org/packages/flutter_gherkin
       Then I end up with 2
 ```
 
+NOTE: If you are using a Flutter branch other than the current stable version 1.12.x you will need to use the release candiate version of this library due to a breaking change with the way the flutter driver logs output.
+
 ## Table of Contents
 
 <!-- TOC -->
