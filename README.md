@@ -26,6 +26,8 @@ Available as a Dart package https://pub.dartlang.org/packages/flutter_gherkin
       Then I end up with 2
 ```
 
+NOTE: If you are using a Flutter branch other than the current stable version 1.12.x you will need to use the release candiate version of this library due to a breaking change with the way the flutter driver logs output.
+
 ## Table of Contents
 
 <!-- TOC -->
@@ -918,12 +920,14 @@ For convenience the library defines a number of pre-defined steps so you can get
 
 | Step Text                                                               | Description                                                                                                     | Examples                                                      |
 | ----------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
-| I tap the {string} [button\|element\|label\|icon\|field\|text\|\widget] | Taps the element with the provided key ( given by the first input parameter)                                    | `When I tap the "login" button`, `Then I tap the "save" icon` |
+| I tap the {string} [button\|element\|label\|icon\|field\|text\|widget] | Taps the element with the provided key ( given by the first input parameter)                                    | `When I tap the "login" button`, `Then I tap the "save" icon` |
 | I fill the {string} field with {string}                 | Fills the element with the provided key with the given value (given by the second input parameter)          | `When I fill the "email" field with "someone@gmail.com"`      |
 | I expect the {string} to be {string}                                    | Asserts that the element with the given key has the given string value                                        | `Then I expect the "cost" to be "£10.95"`                     |
 | I (open\|close) the drawer                              | Opens or closes the application default drawer    | `When I open the drawer`, `And I close the drawer`|
+| I expect the [button\|element\|label\|icon\|field\|text\|widget] {string} to be present within {int} second(s) | Expects a widget with the given key to be present within n secondss                                    | `Then I expect the widget 'notification' to be present within 10 seconds`, `Then I expect the icon 'notification' to be present within 1 second` |
 | I pause for {int} seconds                               | Pauses the test execution for the given seconds. Only use in debug scenarios or to inspect the state of the app | `Then I pause for 20 seconds`                                 |
 | I restart the app                                       | Restarts the app under test | `Then I restart the app` |
+| I tap the back button                                   | Taps the page default back button widget | `Then I tap the back button` |
 
 #### Flutter Driver Utilities
 

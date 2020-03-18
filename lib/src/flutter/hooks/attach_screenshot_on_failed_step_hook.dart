@@ -7,12 +7,19 @@ import '../flutter_world.dart';
 class AttachScreenshotOnFailedStepHook extends Hook {
   @override
   Future<void> onAfterStep(
-      World world, String step, StepResult stepResult) async {
+    World world,
+    String step,
+    StepResult stepResult,
+  ) async {
     if (stepResult.result == StepExecutionResult.fail ||
         stepResult.result == StepExecutionResult.error ||
         stepResult.result == StepExecutionResult.timeout) {
-      final screenshotData = await takeScreenshot(world);
-      world.attach(screenshotData, 'image/png', step);
+      try {
+        final screenshotData = await takeScreenshot(world);
+        world.attach(screenshotData, 'image/png', step);
+      } catch (e, st) {
+        world.attach('Failed to take screenshot\n$e\n$st', 'text/plain', step);
+      }
     }
   }
 

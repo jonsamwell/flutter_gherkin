@@ -20,11 +20,20 @@ import 'package:gherkin/gherkin.dart';
 class WhenTapWidget extends When1WithWorld<String, FlutterWorld> {
   @override
   RegExp get pattern => RegExp(
-      r"I tap the {string} [button|element|label|icon|field|text|widget]");
+      r"I tap the {string} (?:button|element|label|icon|field|text|widget)$");
 
   @override
   Future<void> executeStep(String key) async {
-    await FlutterDriverUtils.tap(world.driver, find.byValueKey(key),
-        timeout: timeout * .9);
+    final finder = find.byValueKey(key);
+
+    await world.driver.scrollIntoView(
+      finder,
+      timeout: timeout * .45,
+    );
+    await FlutterDriverUtils.tap(
+      world.driver,
+      finder,
+      timeout: timeout * .45,
+    );
   }
 }

@@ -45,11 +45,21 @@ class FlutterWorld extends World {
   }) async {
     try {
       if (_driver != null) {
-        await _driver.waitUntilNoTransientCallbacks(timeout: timeout);
-        await _driver.close();
+        await _driver
+            .waitUntilNoTransientCallbacks(timeout: timeout)
+            .catchError((e, st) {
+          // Avoid an unhandled error.
+          print(
+              'Error waiting for no transient callbacks from Flutter driver:\n\n`$e`\n\n$st');
+        });
+
+        await _driver.close().catchError((e, st) {
+          // Avoid an unhandled error.
+          print('Error closing Flutter driver:\n\n`$e`\n\n$st');
+        });
       }
     } catch (e, st) {
-      print('Error closing Flutter driver:\n\n`${e}`\n\n${st}');
+      print('Error closing Flutter driver:\n\n`$e`\n\n$st');
     } finally {
       _driver = null;
     }

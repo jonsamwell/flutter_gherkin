@@ -8,13 +8,31 @@ class FlutterRunProcessHandler extends ProcessHandler {
   static const String WARN_COLOR = "\u001b[33;10m"; // yellow
   static const String RESET_COLOR = "\u001b[33;0m";
 
+  // the flutter process usually outputs something like the below to indicate the app is ready to be connected to
+  // `An Observatory debugger and profiler on AOSP on IA Emulator is available at: http://127.0.0.1:51322/BI_fyYaeoCE=/`
   static RegExp _observatoryDebuggerUriRegex = RegExp(
-      r"observatory (?:debugger|url) .*[:]? (http[s]?:.*\/).*",
-      caseSensitive: false,
-      multiLine: false);
+    r"observatory (?:debugger|url) .* available .*[:]? (http[s]?:.*\/).*",
+    caseSensitive: false,
+    multiLine: false,
+  );
 
-  static RegExp _noConnectedDeviceRegex =
-      RegExp(r"no connected device", caseSensitive: false, multiLine: false);
+  static RegExp _noConnectedDeviceRegex = RegExp(
+    r"no connected device|no supported devices connected",
+    caseSensitive: false,
+    multiLine: false,
+  );
+
+  static RegExp _moreThanOneDeviceConnectedDeviceRegex = RegExp(
+    r"more than one device connected",
+    caseSensitive: false,
+    multiLine: false,
+  );
+
+  static RegExp _errorMessageRegex = RegExp(
+    r"aborted|error|failure|unexpected|failed|exception",
+    caseSensitive: false,
+    multiLine: false,
+  );
 
   static RegExp _moreThanOneDeviceConnectedDeviceRegex = RegExp(
       r"more than one device connected",
@@ -27,9 +45,10 @@ class FlutterRunProcessHandler extends ProcessHandler {
       multiLine: false);
 
   static RegExp _restartedApplicationSuccessRegex = RegExp(
-      r"Restarted application (.*)ms.",
-      caseSensitive: false,
-      multiLine: false);
+    r"Restarted application (.*)ms.",
+    caseSensitive: false,
+    multiLine: false,
+  );
 
   Process _runningProcess;
   Stream<String> _processStdoutStream;
@@ -41,6 +60,7 @@ class FlutterRunProcessHandler extends ProcessHandler {
   String _appTarget;
   String _buildFlavor;
   String _deviceTargetId;
+  Duration _driverConnectionDelay = const Duration(seconds: 2);
   String currentObservatoryUri;
 
   void setLogFlutterProcessOutput(bool logFlutterProcessOutput) {
@@ -49,6 +69,10 @@ class FlutterRunProcessHandler extends ProcessHandler {
 
   void setApplicationTargetFile(String targetPath) {
     _appTarget = targetPath;
+  }
+
+  void setDriverConnectionDelay(Duration duration) {
+    _driverConnectionDelay = duration ?? _driverConnectionDelay;
   }
 
   void setWorkingDirectory(String workingDirectory) {
@@ -93,7 +117,8 @@ class FlutterRunProcessHandler extends ProcessHandler {
 
     if (_logFlutterProcessOutput) {
       stdout.writeln(
-          'Invoking from working directory `${_workingDirectory ?? './'}` command: `flutter ${arguments.join(' ')}`');
+        'Invoking from working directory `${_workingDirectory ?? './'}` command: `flutter ${arguments.join(' ')}`',
+      );
     }
 
     _runningProcess = await Process.start(
@@ -146,13 +171,14 @@ class FlutterRunProcessHandler extends ProcessHandler {
 
     // it seems we need a small delay here otherwise the flutter driver fails to
     // consistently connect
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(_driverConnectionDelay);
 
     return Future.value(true);
   }
 
-  Future<String> waitForObservatoryDebuggerUri(
-      [Duration timeout = const Duration(seconds: 90)]) async {
+  Future<String> waitForObservatoryDebuggerUri([
+    Duration timeout = const Duration(seconds: 90),
+  ]) async {
     currentObservatoryUri = await _waitForStdOutMessage(
       _observatoryDebuggerUriRegex,
       "Timeout while waiting for observatory debugger uri",
@@ -162,17 +188,23 @@ class FlutterRunProcessHandler extends ProcessHandler {
     return currentObservatoryUri;
   }
 
-  Future<String> _waitForStdOutMessage(RegExp matcher, String timeoutMessage,
-      [Duration timeout = const Duration(seconds: 90)]) {
+  Future<String> _waitForStdOutMessage(
+    RegExp matcher,
+    String timeoutMessage, [
+    Duration timeout = const Duration(seconds: 90),
+  ]) {
     _ensureRunningProcess();
     final completer = Completer<String>();
     StreamSubscription sub;
-    sub = _processStdoutStream.timeout(timeout, onTimeout: (_) {
-      sub?.cancel();
-      if (!completer.isCompleted) {
-        completer.completeError(TimeoutException(timeoutMessage, timeout));
-      }
-    }).listen(
+    sub = _processStdoutStream.timeout(
+      timeout,
+      onTimeout: (_) {
+        sub?.cancel();
+        if (!completer.isCompleted) {
+          completer.completeError(TimeoutException(timeoutMessage, timeout));
+        }
+      },
+    ).listen(
       (logLine) {
         if (_logFlutterProcessOutput) {
           stdout.write(logLine);

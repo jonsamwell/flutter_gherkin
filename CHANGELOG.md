@@ -1,22 +1,39 @@
+## [1.1.7+6] - 04/03/2019
+* Updated to latest Gherkin library (see https://github.com/jonsamwell/dart_gherkin/blob/master/CHANGELOG.md#117---04032020) - this includes a breaking change to the `Hook` inteface that will need to be updated if any of the `Scenerio` level methods are implemented
+* Ensured the well known step `I tap the ".." button` scroll the element into view first
+
+## [1.1.7+5] - 03/02/2019
+* Updated to latest Gherkin library (see https://github.com/jonsamwell/dart_gherkin/blob/master/CHANGELOG.md#1164---03022020)
+
+## [1.1.7+4] - 31/01/2019
+* Update check to determine if any devices are connected to run tests against
+* When the flag `verboseFlutterProcessLogs` was true Flutter driver was preemptively connecting to the app when it was not ready
+
+## [1.1.7+3] - 08/01/2019
+* Added retry logic to the Futter driver connect call to handle the seemingly random connection failures
+* Ensured `AttachScreenshotOnFailedStepHook` cannot throw an unhandled exception causing the test run to stop
+* Added new well known step `When I tap the back button` which finds and taps the default page back button
+* Added a new well known step `Then I expect the widget 'notification' to be present within 2 seconds` which expects a widget with a given key to be present within n seconds
+* Updated Gherkin library version
+
+## [1.1.7+2] - 07/01/2019
+* Increased the Flutter driver reconnection delay to try and overcome some driver to app connection issues on slower machines
+
+## [1.1.7+1] - 07/01/2019
+* Ensured when the Flutter driver is closed it cannot throw an unhandled exception causing the test run the stop
+* Updated Gherkin library version
+
 ## [1.1.8-rc.2] - 07/01/2019
 * Ensured when the Flutter driver is closed it cannot throw an unhandled exception causing the test run the stop
 * Updated Gherkin library version
 
-## [1.1.8-rc.1] - 06/01/2019
+## [1.1.7] - 06/01/2019
 * `WhenFillFieldStep` Ensure widget is scrolled into view before setting it's value
 * Fixed lint warnings
 
-## [1.1.6-rc.4] - 19/12/2019
-* When then was more than one connected device the device to run against was unknown causing a failure, now a message is logged
-
-## [1.1.6-rc.3] - 19/12/2019
+## [1.1.5+2] - 19/12/2019
+* When more than one connected device is present the device to run against was unknown causing a failure, now a message is logged saying the --device-id argument needs to be set
 * Fixed issue where depricated api warnings when build a flutter app were written to the stderr stream
-
-## [1.1.6-rc.2] - 18/12/2019
-* Fixed analyzer issue
-
-## [1.1.6-rc.1] - 18/12/2019
-* FlutterDriverReporter - Update to fix the breaking change in the way flutter_driver logs messages (https://github.com/flutter/flutter/pull/45945 - currently in the dev and above branches) 
 
 ## [1.1.5+1] - 18/12/2019
 * Migrated example to AndroidX
