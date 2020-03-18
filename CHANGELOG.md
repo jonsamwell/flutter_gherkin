@@ -1,3 +1,6 @@
+## [1.1.8-rc.2] - 18/03/2019
+* Update to include all changes in main library from version 1.1.7+2.  Note the breaking change in v1.1.7+6
+
 ## [1.1.7+6] - 04/03/2019
 * Updated to latest Gherkin library (see https://github.com/jonsamwell/dart_gherkin/blob/master/CHANGELOG.md#117---04032020) - this includes a breaking change to the `Hook` inteface that will need to be updated if any of the `Scenerio` level methods are implemented
 * Ensured the well known step `I tap the ".." button` scroll the element into view first
@@ -23,7 +26,7 @@
 * Ensured when the Flutter driver is closed it cannot throw an unhandled exception causing the test run the stop
 * Updated Gherkin library version
 
-## [1.1.8-rc.2] - 07/01/2019
+## [1.1.8-rc.1] - 07/01/2019
 * Ensured when the Flutter driver is closed it cannot throw an unhandled exception causing the test run the stop
 * Updated Gherkin library version
 

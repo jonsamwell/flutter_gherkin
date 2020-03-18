@@ -34,16 +34,6 @@ class FlutterRunProcessHandler extends ProcessHandler {
     multiLine: false,
   );
 
-  static RegExp _moreThanOneDeviceConnectedDeviceRegex = RegExp(
-      r"more than one device connected",
-      caseSensitive: false,
-      multiLine: false);
-
-  static RegExp _errorMessageRegex = RegExp(
-      r"aborted|error|failure|unexpected|failed|exception",
-      caseSensitive: false,
-      multiLine: false);
-
   static RegExp _restartedApplicationSuccessRegex = RegExp(
     r"Restarted application (.*)ms.",
     caseSensitive: false,
