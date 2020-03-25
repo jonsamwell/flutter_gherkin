@@ -61,22 +61,29 @@ class FlutterAppRunnerHook extends Hook {
   }
 
   Future<void> _runApp(FlutterTestConfiguration config) async {
-    _flutterRunProcessHandler = FlutterRunProcessHandler()
-      ..setLogFlutterProcessOutput(config.logFlutterProcessOutput)
-      ..setVerboseFluterlogs(config.verboseFlutterProcessLogs)
-      ..setApplicationTargetFile(config.targetAppPath)
-      ..setDriverConnectionDelay(config.flutterDriverReconnectionDelay)
-      ..setWorkingDirectory(config.targetAppWorkingDirecotry)
-      ..setBuildRequired(haveRunFirstScenario ? false : config.build)
-      ..setBuildFlavor(config.buildFlavor)
-      ..setDeviceTargetId(config.targetDeviceId);
+    if (config.runningAppProtocolEndpointUri != null &&
+        config.runningAppProtocolEndpointUri.isNotEmpty) {
+      stdout.writeln(
+          "Connecting to running Flutter app under test at '${config.runningAppProtocolEndpointUri}', this might take a few moments");
+      config.setObservatoryDebuggerUri(config.runningAppProtocolEndpointUri);
+    } else {
+      _flutterRunProcessHandler = FlutterRunProcessHandler()
+        ..setLogFlutterProcessOutput(config.logFlutterProcessOutput)
+        ..setVerboseFluterlogs(config.verboseFlutterProcessLogs)
+        ..setApplicationTargetFile(config.targetAppPath)
+        ..setDriverConnectionDelay(config.flutterDriverReconnectionDelay)
+        ..setWorkingDirectory(config.targetAppWorkingDirecotry)
+        ..setBuildRequired(haveRunFirstScenario ? false : config.build)
+        ..setBuildFlavor(config.buildFlavor)
+        ..setDeviceTargetId(config.targetDeviceId);
 
-    stdout.writeln(
-        "Starting Flutter app under test '${config.targetAppPath}', this might take a few moments");
-    await _flutterRunProcessHandler.run();
-    final observatoryUri = await _flutterRunProcessHandler
-        .waitForObservatoryDebuggerUri(config.flutterBuildTimeout);
-    config.setObservatoryDebuggerUri(observatoryUri);
+      stdout.writeln(
+          "Starting Flutter app under test '${config.targetAppPath}', this might take a few moments");
+      await _flutterRunProcessHandler.run();
+      final observatoryUri = await _flutterRunProcessHandler
+          .waitForObservatoryDebuggerUri(config.flutterBuildTimeout);
+      config.setObservatoryDebuggerUri(observatoryUri);
+    }
   }
 
   Future<void> _terminateApp() async {

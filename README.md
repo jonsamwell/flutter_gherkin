@@ -75,6 +75,7 @@ NOTE: If you are using a Flutter branch other than the current stable version 1.
   - [Pre-defined Steps](#pre-defined-steps)
     - [Flutter Driver Utilities](#flutter-driver-utilities)
   - [Debugging](#debugging)
+    - [Debugging the app under test](#debugging-the-app-under-test)
 
 <!-- /TOC -->
 
@@ -487,6 +488,12 @@ This optional argument lets you specify which flutter flavor you want to test ag
 Defaults to empty string
 
 This optional argument lets you specify device target id as `flutter run --device-id` command. To show list of connected devices, run `flutter devices`. If you only have one device connected, no need to provide this argument.
+
+#### runningAppProtocolEndpointUri
+
+An observatory url that the test runner can connect to instead of creating a new running instance of the target application
+The url takes the form of `http://127.0.0.1:51540/EM72VtRsUV0=/` and usually printed to stdout in the form `Connecting to service protocol: http://127.0.0.1:51540/EM72VtRsUV0=/`
+You will have to add the `--verbose` flag to the command to start your flutter app to see this output and ensure `enableFlutterDriverExtension()` is called by the running app
 
 ## Features Files
 
@@ -971,3 +978,11 @@ After which the file will most likely look like this
   ]
 }
 ```
+
+#### Debugging the app under test
+
+Setting the configuration property `runningAppProtocolEndpointUri` to the service protocol endpoint (found in stdout when an app has `--verbose` logging turrned on) will ensure that the existing app is connected to rather than starting a new instance of the app.
+
+NOTE: ensure the app you are trying to connect to calls `enableFlutterDriverExtension()` when it starts up otherwise the Flutter Driver will not be able to connect to it.
+
+Also ensure that the `--verbose` flag is set when starting the app to test, this will then log the service protocol endpoint out to the console which is the uri you will need to set this property to.  It usually takes the form of `Connecting to service protocol: http://127.0.0.1:51540/EM72VtRsUV0=/` so set the `runningAppProtocolEndpointUri` to `http://127.0.0.1:51540/EM72VtRsUV0=/` and then start the tests.

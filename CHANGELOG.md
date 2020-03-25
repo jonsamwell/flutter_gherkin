@@ -1,3 +1,6 @@
+## [1.1.7+7] - 25/03/2019
+* Added the ability to test against an already running app; enabling you to debug a running application while it has tests executed against it.  Setting the configuration property `runningAppProtocolEndpointUri` to the service protocol endpoint (found in stdout when an app has `--verbose` logging turrned on) will ensure that the existing app is connected to rather than starting a new instance of the app.  NOTE: ensure the app you are trying to connect to calls `enableFlutterDriverExtension()` when it starts up otherwise the Flutter Driver will not be able to connect to it.
+
 ## [1.1.7+6] - 04/03/2019
 * Updated to latest Gherkin library (see https://github.com/jonsamwell/dart_gherkin/blob/master/CHANGELOG.md#117---04032020) - this includes a breaking change to the `Hook` inteface that will need to be updated if any of the `Scenerio` level methods are implemented
 * Ensured the well known step `I tap the ".." button` scroll the element into view first

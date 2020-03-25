@@ -66,6 +66,11 @@ class FlutterTestConfiguration extends TestConfiguration {
   /// Defaults to 3
   int flutterDriverMaxConnectionAttemps = 3;
 
+  /// An observatory url that the test runner can connect to instead of creating a new running instance of the target application
+  /// Url takes the form of `http://127.0.0.1:51540/EM72VtRsUV0=/` and usually printed to stdout in the form `Connecting to service protocol: http://127.0.0.1:51540/EM72VtRsUV0=/`
+  /// You will have to add the `--verbose` flag to the command to start your flutter app to see this output and ensure `enableFlutterDriverExtension()` is called by the running app
+  String runningAppProtocolEndpointUri;
+
   void setObservatoryDebuggerUri(String uri) => _observatoryDebuggerUri = uri;
 
   Future<FlutterDriver> createFlutterDriver([String dartVmServiceUrl]) async {
@@ -76,15 +81,26 @@ class FlutterTestConfiguration extends TestConfiguration {
   }
 
   Future<FlutterWorld> createFlutterWorld(
-      TestConfiguration config, FlutterWorld world) async {
+    TestConfiguration config,
+    FlutterWorld world,
+  ) async {
+    FlutterTestConfiguration flutterConfig = config as FlutterTestConfiguration;
     world = world ?? FlutterWorld();
-    final driver = await createFlutterDriver();
+
+    final driver = await createFlutterDriver(
+      flutterConfig.runningAppProtocolEndpointUri != null &&
+              flutterConfig.runningAppProtocolEndpointUri.isNotEmpty
+          ? flutterConfig.runningAppProtocolEndpointUri
+          : null,
+    );
     world.setFlutterDriver(driver);
+
     return world;
   }
 
   @override
   void prepare() {
+    _ensureCorrectConfiguration();
     final providedCreateWorld = createWorld;
     createWorld = (config) async {
       FlutterWorld world;
@@ -130,6 +146,21 @@ class FlutterTestConfiguration extends TestConfiguration {
           attempt + 1,
           maxAttemps,
         );
+      }
+    }
+  }
+
+  void _ensureCorrectConfiguration() {
+    if (runningAppProtocolEndpointUri != null &&
+        runningAppProtocolEndpointUri.isNotEmpty) {
+      if (restartAppBetweenScenarios) {
+        throw AssertionError(
+            'Cannot restart app between scenarios if using runningAppProtocolEndpointUri');
+      }
+
+      if (targetDeviceId != null && targetDeviceId.isNotEmpty) {
+        throw AssertionError(
+            'Cannot target specific device id if using runningAppProtocolEndpointUri');
       }
     }
   }
