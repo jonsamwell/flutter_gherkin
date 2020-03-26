@@ -1,3 +1,7 @@
+## Unreleased
+* **BREAKING CHANGE** reverse order of `driver` and `finder` in `FlutterDriverUtils#isPresent`. This makes this method's arguments more consistent with all other instance methods in the class by including `driver` first.
+* `expect` the presence of `ThenExpectWidgetToBePresent`. If the widget was not present, the method would simply timeout and not report an error for the step.
+
 ## [1.1.7+7] - 25/03/2019
 * Added the ability to test against an already running app; enabling you to debug a running application while it has tests executed against it.  Setting the configuration property `runningAppProtocolEndpointUri` to the service protocol endpoint (found in stdout when an app has `--verbose` logging turrned on) will ensure that the existing app is connected to rather than starting a new instance of the app.  NOTE: ensure the app you are trying to connect to calls `enableFlutterDriverExtension()` when it starts up otherwise the Flutter Driver will not be able to connect to it.
 
