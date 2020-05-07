@@ -4,8 +4,8 @@ import 'package:flutter_driver/flutter_driver.dart';
 
 class FlutterDriverUtils {
   static Future<bool> isPresent(
-    SerializableFinder finder,
-    FlutterDriver driver, {
+    FlutterDriver driver,
+    SerializableFinder finder, {
     Duration timeout = const Duration(seconds: 1),
   }) async {
     try {

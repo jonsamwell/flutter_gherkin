@@ -16,7 +16,7 @@ class GivenOpenDrawer extends Given1WithWorld<String, FlutterWorld> {
   Future<void> executeStep(String action) async {
     final drawerFinder = find.byType('Drawer');
     final isOpen =
-        await FlutterDriverUtils.isPresent(drawerFinder, world.driver);
+        await FlutterDriverUtils.isPresent(world.driver, drawerFinder);
     // https://github.com/flutter/flutter/issues/9002#issuecomment-293660833
     if (isOpen && action == 'close') {
       // Swipe to the left across the whole app to close the drawer

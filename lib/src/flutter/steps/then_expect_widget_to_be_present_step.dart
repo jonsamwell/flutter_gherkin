@@ -20,10 +20,11 @@ class ThenExpectWidgetToBePresent
 
   @override
   Future<void> executeStep(String key, int seconds) async {
-    await FlutterDriverUtils.isPresent(
-      find.byValueKey(key),
+    final isPresent = await FlutterDriverUtils.isPresent(
       world.driver,
+      find.byValueKey(key),
       timeout: Duration(seconds: seconds),
     );
+    expect(isPresent, true);
   }
 }
