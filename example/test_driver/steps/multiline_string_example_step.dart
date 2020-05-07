@@ -15,5 +15,5 @@ class GivenIProvideAComment extends Given2<String, String> {
   }
 
   @override
-  RegExp get pattern => RegExp(r"I provide the following {string} comment");
+  RegExp get pattern => RegExp(r'I provide the following {string} comment');
 }

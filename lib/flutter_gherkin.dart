@@ -1,9 +1,9 @@
 library flutter_gherkin;
 
 // Flutter specific implementations
-export "src/flutter/flutter_world.dart";
-export "src/flutter/flutter_test_configuration.dart";
-export "src/flutter/utils/driver_utils.dart";
+export 'src/flutter/flutter_world.dart';
+export 'src/flutter/flutter_test_configuration.dart';
+export 'src/flutter/utils/driver_utils.dart';
 
 // Well known steps
 export 'src/flutter/steps/given_i_open_the_drawer_step.dart';

@@ -1,6 +1,6 @@
 import 'package:gherkin/gherkin.dart';
 
-typedef Future<void> OnRunCode(Iterable parameters);
+typedef OnRunCode = Future<void> Function(Iterable parameters);
 
 class MockStepDefinition extends StepDefinitionBase<World> {
   bool hasRun = false;

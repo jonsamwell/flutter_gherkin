@@ -24,15 +24,15 @@ class FlutterTestConfiguration extends TestConfiguration {
 
   /// The target app to run the tests against
   /// Defaults to "lib/test_driver/app.dart"
-  String targetAppPath = "lib/test_driver/app.dart";
+  String targetAppPath = 'lib/test_driver/app.dart';
 
   /// Option to define the working directory for the process that runs the app under test (optional)
-  /// Handy if your app is seperated from your tests as flutter needs to be able to find a pubspec file
-  String targetAppWorkingDirecotry;
+  /// Handy if your app is separated from your tests as flutter needs to be able to find a pubspec file
+  String targetAppWorkingDirectory;
 
   /// The build flavor to run the tests against (optional)
   /// Defaults to empty
-  String buildFlavor = "";
+  String buildFlavor = '';
 
   /// If the application should be built prior to running the tests
   /// Defaults to true
@@ -40,7 +40,7 @@ class FlutterTestConfiguration extends TestConfiguration {
 
   /// The target device id to run the tests against when multiple devices detected
   /// Defaults to empty
-  String targetDeviceId = "";
+  String targetDeviceId = '';
 
   /// Logs Flutter process output to stdout
   /// The Flutter process is use to start and driver the app under test.
@@ -64,7 +64,7 @@ class FlutterTestConfiguration extends TestConfiguration {
 
   /// The maximum times the flutter driver can try and connect to the running app
   /// Defaults to 3
-  int flutterDriverMaxConnectionAttemps = 3;
+  int flutterDriverMaxConnectionAttempts = 3;
 
   /// An observatory url that the test runner can connect to instead of creating a new running instance of the target application
   /// Url takes the form of `http://127.0.0.1:51540/EM72VtRsUV0=/` and usually printed to stdout in the form `Connecting to service protocol: http://127.0.0.1:51540/EM72VtRsUV0=/`
@@ -84,7 +84,7 @@ class FlutterTestConfiguration extends TestConfiguration {
     TestConfiguration config,
     FlutterWorld world,
   ) async {
-    FlutterTestConfiguration flutterConfig = config as FlutterTestConfiguration;
+    var flutterConfig = config as FlutterTestConfiguration;
     world = world ?? FlutterWorld();
 
     final driver = await createFlutterDriver(
@@ -116,6 +116,7 @@ class FlutterTestConfiguration extends TestConfiguration {
       ..addAll([
         ThenExpectElementToHaveValue(),
         WhenTapWidget(),
+        WhenTapWidgetWithoutScroll(),
         WhenTapBackButtonWidget(),
         GivenOpenDrawer(),
         WhenPauseStep(),
@@ -128,14 +129,14 @@ class FlutterTestConfiguration extends TestConfiguration {
   Future<FlutterDriver> _attemptDriverConnection(
     String dartVmServiceUrl,
     int attempt,
-    int maxAttemps,
+    int maxAttempts,
   ) async {
     try {
       return await FlutterDriver.connect(
         dartVmServiceUrl: dartVmServiceUrl,
       );
     } catch (e) {
-      if (attempt > maxAttemps) {
+      if (attempt > maxAttempts) {
         rethrow;
       } else {
         print(e);
@@ -144,7 +145,7 @@ class FlutterTestConfiguration extends TestConfiguration {
         return _attemptDriverConnection(
           dartVmServiceUrl,
           attempt + 1,
-          maxAttemps,
+          maxAttempts,
         );
       }
     }

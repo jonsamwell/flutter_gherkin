@@ -22,5 +22,5 @@ class WhenFillFieldStep extends When2WithWorld<String, String, FlutterWorld> {
   }
 
   @override
-  RegExp get pattern => RegExp(r"I fill the {string} field with {string}");
+  RegExp get pattern => RegExp(r'I fill the {string} field with {string}');
 }

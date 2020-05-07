@@ -75,15 +75,15 @@ class FlutterDriverUtils {
   /// condition does not return true with the timeout period.
   static Future<void> waitUntil(
     FlutterDriver driver,
-    Future<bool> condition(), {
+    Future<bool> Function() condition, {
     Duration timeout = const Duration(seconds: 10),
     Duration pollInterval = const Duration(milliseconds: 500),
   }) async {
     return Future.microtask(() async {
       final completer = Completer<void>();
-      int maxAttempts =
+      var maxAttempts =
           (timeout.inMilliseconds / pollInterval.inMilliseconds).round();
-      int attempts = 0;
+      var attempts = 0;
 
       while (attempts < maxAttempts) {
         final result = await condition();

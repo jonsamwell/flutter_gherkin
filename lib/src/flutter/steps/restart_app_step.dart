@@ -11,5 +11,5 @@ class RestartAppStep extends WhenWithWorld<FlutterWorld> {
   }
 
   @override
-  RegExp get pattern => RegExp(r"I restart the app");
+  RegExp get pattern => RegExp(r'I restart the app');
 }

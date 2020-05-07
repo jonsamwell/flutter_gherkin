@@ -4,45 +4,45 @@ import 'dart:io';
 import 'package:gherkin/gherkin.dart';
 
 class FlutterRunProcessHandler extends ProcessHandler {
-  static const String FAIL_COLOR = "\u001b[33;31m"; // red
-  static const String WARN_COLOR = "\u001b[33;10m"; // yellow
-  static const String RESET_COLOR = "\u001b[33;0m";
+  static const String FAIL_COLOR = '\u001b[33;31m'; // red
+  static const String WARN_COLOR = '\u001b[33;10m'; // yellow
+  static const String RESET_COLOR = '\u001b[33;0m';
 
   // the flutter process usually outputs something like the below to indicate the app is ready to be connected to
   // `An Observatory debugger and profiler on AOSP on IA Emulator is available at: http://127.0.0.1:51322/BI_fyYaeoCE=/`
-  static RegExp _observatoryDebuggerUriRegex = RegExp(
-    r"observatory (?:debugger|url) .* available .*[:]? (http[s]?:.*\/).*",
+  static final RegExp _observatoryDebuggerUriRegex = RegExp(
+    r'observatory (?:debugger|url) .* available .*[:]? (http[s]?:.*\/).*',
     caseSensitive: false,
     multiLine: false,
   );
 
-  static RegExp _noConnectedDeviceRegex = RegExp(
-    r"no connected device|no supported devices connected",
+  static final RegExp _noConnectedDeviceRegex = RegExp(
+    r'no connected device|no supported devices connected',
     caseSensitive: false,
     multiLine: false,
   );
 
-  static RegExp _moreThanOneDeviceConnectedDeviceRegex = RegExp(
-    r"more than one device connected",
+  static final RegExp _moreThanOneDeviceConnectedDeviceRegex = RegExp(
+    r'more than one device connected',
     caseSensitive: false,
     multiLine: false,
   );
 
-  static RegExp _errorMessageRegex = RegExp(
-    r"aborted|error|failure|unexpected|failed|exception",
+  static final RegExp _errorMessageRegex = RegExp(
+    r'aborted|error|failure|unexpected|failed|exception',
     caseSensitive: false,
     multiLine: false,
   );
 
-  static RegExp _restartedApplicationSuccessRegex = RegExp(
-    r"Restarted application (.*)ms.",
+  static final RegExp _restartedApplicationSuccessRegex = RegExp(
+    r'Restarted application (.*)ms.',
     caseSensitive: false,
     multiLine: false,
   );
 
   Process _runningProcess;
   Stream<String> _processStdoutStream;
-  List<StreamSubscription> _openSubscriptions = <StreamSubscription>[];
+  final List<StreamSubscription> _openSubscriptions = <StreamSubscription>[];
   bool _buildApp = true;
   bool _logFlutterProcessOutput = false;
   bool _verboseFlutterLogs = false;
@@ -81,28 +81,28 @@ class FlutterRunProcessHandler extends ProcessHandler {
     _buildApp = build;
   }
 
-  void setVerboseFluterlogs(bool verbose) {
+  void setVerboseFlutterLogs(bool verbose) {
     _verboseFlutterLogs = verbose;
   }
 
   @override
   Future<void> run() async {
-    final arguments = ["run", "--target=$_appTarget"];
+    final arguments = ['run', '--target=$_appTarget'];
 
     if (_buildApp == false) {
-      arguments.add("--no-build");
+      arguments.add('--no-build');
     }
 
     if (_buildFlavor != null && _buildFlavor.isNotEmpty) {
-      arguments.add("--flavor=$_buildFlavor");
+      arguments.add('--flavor=$_buildFlavor');
     }
 
     if (_deviceTargetId != null && _deviceTargetId.isNotEmpty) {
-      arguments.add("--device-id=$_deviceTargetId");
+      arguments.add('--device-id=$_deviceTargetId');
     }
 
     if (_verboseFlutterLogs) {
-      arguments.add("--verbose");
+      arguments.add('--verbose');
     }
 
     if (_logFlutterProcessOutput) {
@@ -112,7 +112,7 @@ class FlutterRunProcessHandler extends ProcessHandler {
     }
 
     _runningProcess = await Process.start(
-      "flutter",
+      'flutter',
       arguments,
       workingDirectory: _workingDirectory,
       runInShell: true,
@@ -126,21 +126,21 @@ class FlutterRunProcessHandler extends ProcessHandler {
         .where((event) => event.isNotEmpty)
         .listen((event) {
       if (event.contains(_errorMessageRegex)) {
-        stderr.writeln("${FAIL_COLOR}Flutter build error: $event$RESET_COLOR");
+        stderr.writeln('${FAIL_COLOR}Flutter build error: $event$RESET_COLOR');
       } else {
         // This is most likely a depricated api usage warnings (from Gradle) and should not
         // cause the test run to fail.
-        stdout.writeln("$WARN_COLOR$event$RESET_COLOR");
+        stdout.writeln('$WARN_COLOR$event$RESET_COLOR');
       }
     }));
   }
 
   @override
   Future<int> terminate() async {
-    int exitCode = -1;
+    var exitCode = -1;
     _ensureRunningProcess();
     if (_runningProcess != null) {
-      _runningProcess.stdin.write("q");
+      _runningProcess.stdin.write('q');
       _openSubscriptions.forEach((s) => s.cancel());
       _openSubscriptions.clear();
       exitCode = await _runningProcess.exitCode;
@@ -152,10 +152,10 @@ class FlutterRunProcessHandler extends ProcessHandler {
 
   Future<bool> restart({Duration timeout = const Duration(seconds: 90)}) async {
     _ensureRunningProcess();
-    _runningProcess.stdin.write("R");
+    _runningProcess.stdin.write('R');
     await _waitForStdOutMessage(
       _restartedApplicationSuccessRegex,
-      "Timeout waiting for app restart",
+      'Timeout waiting for app restart',
       timeout,
     );
 
@@ -171,7 +171,7 @@ class FlutterRunProcessHandler extends ProcessHandler {
   ]) async {
     currentObservatoryUri = await _waitForStdOutMessage(
       _observatoryDebuggerUriRegex,
-      "Timeout while waiting for observatory debugger uri",
+      'Timeout while waiting for observatory debugger uri',
       timeout,
     );
 
@@ -208,12 +208,12 @@ class FlutterRunProcessHandler extends ProcessHandler {
           sub?.cancel();
           if (!completer.isCompleted) {
             stderr.writeln(
-                "${FAIL_COLOR}No connected devices found to run app on and tests against$RESET_COLOR");
+                '${FAIL_COLOR}No connected devices found to run app on and tests against$RESET_COLOR');
           }
         } else if (_moreThanOneDeviceConnectedDeviceRegex.hasMatch(logLine)) {
           sub?.cancel();
           if (!completer.isCompleted) {
-            stderr.writeln("$FAIL_COLOR$logLine$RESET_COLOR");
+            stderr.writeln('$FAIL_COLOR$logLine$RESET_COLOR');
           }
         }
       },
@@ -226,7 +226,7 @@ class FlutterRunProcessHandler extends ProcessHandler {
   void _ensureRunningProcess() {
     if (_runningProcess == null) {
       throw Exception(
-          "FlutterRunProcessHandler: flutter run process is not active");
+          'FlutterRunProcessHandler: flutter run process is not active');
     }
   }
 }

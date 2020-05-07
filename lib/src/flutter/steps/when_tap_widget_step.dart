@@ -20,7 +20,7 @@ import 'package:gherkin/gherkin.dart';
 class WhenTapWidget extends When1WithWorld<String, FlutterWorld> {
   @override
   RegExp get pattern => RegExp(
-      r"I tap the {string} (?:button|element|label|icon|field|text|widget)$");
+      r'I tap the {string} (?:button|element|label|icon|field|text|widget)$');
 
   @override
   Future<void> executeStep(String key) async {
@@ -30,6 +30,23 @@ class WhenTapWidget extends When1WithWorld<String, FlutterWorld> {
       finder,
       timeout: timeout * .45,
     );
+    await FlutterDriverUtils.tap(
+      world.driver,
+      finder,
+      timeout: timeout * .45,
+    );
+  }
+}
+
+class WhenTapWidgetWithoutScroll extends When1WithWorld<String, FlutterWorld> {
+  @override
+  RegExp get pattern => RegExp(
+      r'I tap the {string} (?:button|element|label|icon|field|text|widget) without scrolling it into view$');
+
+  @override
+  Future<void> executeStep(String key) async {
+    final finder = find.byValueKey(key);
+
     await FlutterDriverUtils.tap(
       world.driver,
       finder,

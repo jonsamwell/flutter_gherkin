@@ -37,7 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       drawer: Drawer(
-        key: const Key("drawer"),
+        key: const Key('drawer'),
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
@@ -81,7 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
               // to identify this specific Widget from inside our test suite and
               // read the text.
               key: const Key('counter'),
-              style: Theme.of(context).textTheme.display1,
+              style: Theme.of(context).textTheme.headline4,
             ),
           ],
         ),

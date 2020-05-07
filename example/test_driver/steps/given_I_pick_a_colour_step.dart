@@ -8,5 +8,5 @@ class GivenIPickAColour extends Given1<Colour> {
   }
 
   @override
-  RegExp get pattern => RegExp(r"I pick the colour {colour}");
+  RegExp get pattern => RegExp(r'I pick the colour {colour}');
 }

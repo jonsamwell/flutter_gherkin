@@ -1,32 +1,34 @@
-## [1.1.7+7] - 25/03/2019
-* Added the ability to test against an already running app; enabling you to debug a running application while it has tests executed against it.  Setting the configuration property `runningAppProtocolEndpointUri` to the service protocol endpoint (found in stdout when an app has `--verbose` logging turrned on) will ensure that the existing app is connected to rather than starting a new instance of the app.  NOTE: ensure the app you are trying to connect to calls `enableFlutterDriverExtension()` when it starts up otherwise the Flutter Driver will not be able to connect to it.
+## [1.1.8] - 08/05/2020
+* Updated library to work with the new way the Flutter stable branch manages logging for Flutter driver
+* Fixed spelling mistake of `targetAppWorkingDirectory` & `flutterDriverMaxConnectionAttempts` in `FlutterTestConfiguration` 
+* Added the ability to test against an already running app; enabling you to debug a running application while it has tests executed against it.  Setting the configuration property `runningAppProtocolEndpointUri` to the service protocol endpoint (found in stdout when an app has `--verbose` logging turned on) will ensure that the existing app is connected to rather than starting a new instance of the app.  NOTE: ensure the app you are trying to connect to calls `enableFlutterDriverExtension()` when it starts up otherwise the Flutter Driver will not be able to connect to it.
 
-## [1.1.7+6] - 04/03/2019
+## [1.1.7+6] - 04/03/2020
 * Updated to latest Gherkin library (see https://github.com/jonsamwell/dart_gherkin/blob/master/CHANGELOG.md#117---04032020) - this includes a breaking change to the `Hook` inteface that will need to be updated if any of the `Scenerio` level methods are implemented
 * Ensured the well known step `I tap the ".." button` scroll the element into view first
 
-## [1.1.7+5] - 03/02/2019
+## [1.1.7+5] - 03/02/2020
 * Updated to latest Gherkin library (see https://github.com/jonsamwell/dart_gherkin/blob/master/CHANGELOG.md#1164---03022020)
 
-## [1.1.7+4] - 31/01/2019
+## [1.1.7+4] - 31/01/2020
 * Update check to determine if any devices are connected to run tests against
 * When the flag `verboseFlutterProcessLogs` was true Flutter driver was preemptively connecting to the app when it was not ready
 
-## [1.1.7+3] - 08/01/2019
+## [1.1.7+3] - 08/01/2020
 * Added retry logic to the Futter driver connect call to handle the seemingly random connection failures
 * Ensured `AttachScreenshotOnFailedStepHook` cannot throw an unhandled exception causing the test run to stop
 * Added new well known step `When I tap the back button` which finds and taps the default page back button
 * Added a new well known step `Then I expect the widget 'notification' to be present within 2 seconds` which expects a widget with a given key to be present within n seconds
 * Updated Gherkin library version
 
-## [1.1.7+2] - 07/01/2019
+## [1.1.7+2] - 07/01/2020
 * Increased the Flutter driver reconnection delay to try and overcome some driver to app connection issues on slower machines
 
-## [1.1.7+1] - 07/01/2019
+## [1.1.7+1] - 07/01/2020
 * Ensured when the Flutter driver is closed it cannot throw an unhandled exception causing the test run the stop
 * Updated Gherkin library version
 
-## [1.1.7] - 06/01/2019
+## [1.1.7] - 06/01/2020
 * `WhenFillFieldStep` Ensure widget is scrolled into view before setting it's value
 * Fixed lint warnings
 

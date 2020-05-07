@@ -20,5 +20,5 @@ class GivenIAddTheUsers extends Given1<Table> {
   }
 
   @override
-  RegExp get pattern => RegExp(r"I add the users");
+  RegExp get pattern => RegExp(r'I add the users');
 }

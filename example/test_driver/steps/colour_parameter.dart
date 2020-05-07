@@ -4,13 +4,13 @@ enum Colour { red, green, blue }
 
 class ColourParameter extends CustomParameter<Colour> {
   ColourParameter()
-      : super("colour", RegExp(r"(red|green|blue)", caseSensitive: true), (c) {
+      : super('colour', RegExp(r'(red|green|blue)', caseSensitive: true), (c) {
           switch (c.toLowerCase()) {
-            case "red":
+            case 'red':
               return Colour.red;
-            case "green":
+            case 'green':
               return Colour.green;
-            case "blue":
+            case 'blue':
             default:
               return Colour.blue;
           }

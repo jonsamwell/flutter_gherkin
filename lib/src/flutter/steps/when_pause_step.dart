@@ -18,5 +18,5 @@ class WhenPauseStep extends When1<int> {
   }
 
   @override
-  RegExp get pattern => RegExp(r"I pause for {int} second(s)");
+  RegExp get pattern => RegExp(r'I pause for {int} second(s)');
 }

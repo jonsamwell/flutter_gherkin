@@ -69,10 +69,10 @@ class FlutterAppRunnerHook extends Hook {
     } else {
       _flutterRunProcessHandler = FlutterRunProcessHandler()
         ..setLogFlutterProcessOutput(config.logFlutterProcessOutput)
-        ..setVerboseFluterlogs(config.verboseFlutterProcessLogs)
+        ..setVerboseFlutterLogs(config.verboseFlutterProcessLogs)
         ..setApplicationTargetFile(config.targetAppPath)
         ..setDriverConnectionDelay(config.flutterDriverReconnectionDelay)
-        ..setWorkingDirectory(config.targetAppWorkingDirecotry)
+        ..setWorkingDirectory(config.targetAppWorkingDirectory)
         ..setBuildRequired(haveRunFirstScenario ? false : config.build)
         ..setBuildFlavor(config.buildFlavor)
         ..setDeviceTargetId(config.targetDeviceId);
@@ -88,7 +88,7 @@ class FlutterAppRunnerHook extends Hook {
 
   Future<void> _terminateApp() async {
     if (_flutterRunProcessHandler != null) {
-      stdout.writeln("Terminating Flutter app under test");
+      stdout.writeln('Terminating Flutter app under test');
       await _flutterRunProcessHandler.terminate();
       _flutterRunProcessHandler = null;
     }
@@ -96,7 +96,7 @@ class FlutterAppRunnerHook extends Hook {
 
   Future<void> _restartApp() async {
     if (_flutterRunProcessHandler != null) {
-      stdout.writeln("Restarting Flutter app under test");
+      stdout.writeln('Restarting Flutter app under test');
       await _flutterRunProcessHandler.restart();
     }
   }
