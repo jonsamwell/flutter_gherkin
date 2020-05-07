@@ -6,7 +6,7 @@
 * `expect` the presence of `ThenExpectWidgetToBePresent`. If the widget was not present, the method would simply timeout and not report an error for the step.
 
 ## [1.1.7+6] - 04/03/2020
-* Updated to latest Gherkin library (see https://github.com/jonsamwell/dart_gherkin/blob/master/CHANGELOG.md#117---04032020) - this includes a breaking change to the `Hook` inteface that will need to be updated if any of the `Scenerio` level methods are implemented
+* Updated to latest Gherkin library (see https://github.com/jonsamwell/dart_gherkin/blob/master/CHANGELOG.md#117---04032020) - this includes a breaking change to the `Hook` interface that will need to be updated if any of the `Scenario` level methods are implemented
 * Ensured the well known step `I tap the ".." button` scroll the element into view first
 
 ## [1.1.7+5] - 03/02/2020
