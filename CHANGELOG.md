@@ -1,3 +1,6 @@
+## [1.1.8+1] - 09/05/2020
+* Updated Gherkin library version to sort issue with JSON reporter throwing error when an exception is logged before any feature have run
+
 ## [1.1.8] - 08/05/2020
 * Updated library to work with the new way the Flutter stable branch manages logging for Flutter driver
 * Added the ability to test against an already running app; enabling you to debug a running application while it has tests executed against it.  Setting the configuration property `runningAppProtocolEndpointUri` to the service protocol endpoint (found in stdout when an app has `--verbose` logging turned on) will ensure that the existing app is connected to rather than starting a new instance of the app.  NOTE: ensure the app you are trying to connect to calls `enableFlutterDriverExtension()` when it starts up otherwise the Flutter Driver will not be able to connect to it.
@@ -17,7 +20,7 @@
 * When the flag `verboseFlutterProcessLogs` was true Flutter driver was preemptively connecting to the app when it was not ready
 
 ## [1.1.7+3] - 08/01/2020
-* Added retry logic to the Futter driver connect call to handle the seemingly random connection failures
+* Added retry logic to the Flutter driver connect call to handle the seemingly random connection failures
 * Ensured `AttachScreenshotOnFailedStepHook` cannot throw an unhandled exception causing the test run to stop
 * Added new well known step `When I tap the back button` which finds and taps the default page back button
 * Added a new well known step `Then I expect the widget 'notification' to be present within 2 seconds` which expects a widget with a given key to be present within n seconds
@@ -36,7 +39,7 @@
 
 ## [1.1.5+2] - 19/12/2019
 * When more than one connected device is present the device to run against was unknown causing a failure, now a message is logged saying the --device-id argument needs to be set
-* Fixed issue where depricated api warnings when build a flutter app were written to the stderr stream
+* Fixed issue where deprecated api warnings when build a flutter app were written to the stderr stream
 
 ## [1.1.5+1] - 18/12/2019
 * Migrated example to AndroidX
@@ -51,7 +54,7 @@
 * Added `waitUntil` helper method to the `FlutterDriverUtils` class that waits until a certain provided condition is true
 
 ## [1.1.3] - 25/09/2019
-* Added Flutter driver reporter - the Flutter Driver logs all messages (even non-error ones) to stderr and will cause the process to be marked as failed by a CI server becuase of this.  So this reporter redirects the messages to the appropiate output stream (stdout / stderr).
+* Added Flutter driver reporter - the Flutter Driver logs all messages (even non-error ones) to stderr and will cause the process to be marked as failed by a CI server because of this.  So this reporter redirects the messages to the appropriate output stream (stdout / stderr).
 * FlutterWorld - added missing `super.dispose()` call
 
 ## [1.1.2] - 22/09/2019
@@ -62,26 +65,26 @@
 * Ensured Gradle build warnings do not output to `stderr` and cause tests runs to fail just because of build warnings
 
 ## [1.1.0] - 20/09/2019
-* Updated to latest Gherkin lib which implements langauges - features can now be written in different languages / dialects! See https://cucumber.io/docs/gherkin/reference/#overview for supported dialects.
+* Updated to latest Gherkin lib which implements languages - features can now be written in different languages / dialects! See https://cucumber.io/docs/gherkin/reference/#overview for supported dialects.
 * Ensured the hook to take a screenshot `AttachScreenshotOnFailedStepHook` works for steps that error or timeout as well as fail.
 * Fix missing await in `FlutterDriverUtils` when getting text of a widget.
 
 ## [1.0.12] - 18/09/2019
-* Relaxed package constraints to accomodate older versions of Flutter
+* Relaxed package constraints to accommodate older versions of Flutter
 
 ## [1.0.11] - 18/09/2019
 * Fixed package constraints so older versions of Flutter are compatible
 
 ## [1.0.10] - 18/09/2019
 * {string} placeholder variables can now contain whitespace characters [\n\r\t ]
-* Tags are now inherited by children if requried (see https://cucumber.io/docs/cucumber/api/#tag-inheritance)
+* Tags are now inherited by children if required (see https://cucumber.io/docs/cucumber/api/#tag-inheritance)
 * JSON reporter now adheres to the cucumber json reporter spec, I had to update the way tags and exceptions are handled
 
 ## [1.0.9] - 03/09/2019
 * Added ability to define the working directory for the app to run the tests against
 
 ## [1.0.8] - 25/08/2019
-* Updated to latest dart_gherkin lib which now has support for 'Scenerio Outline' and 'Example' blocks
+* Updated to latest dart_gherkin lib which now has support for 'Scenario Outline' and 'Example' blocks
 
 ## [1.0.7] - 23/08/2019
 * Updated to latest dart_gherkin lib
