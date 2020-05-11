@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'package:flutter_gherkin/src/flutter/flutter_world.dart';
@@ -71,13 +72,42 @@ class FlutterTestConfiguration extends TestConfiguration {
   /// You will have to add the `--verbose` flag to the command to start your flutter app to see this output and ensure `enableFlutterDriverExtension()` is called by the running app
   String runningAppProtocolEndpointUri;
 
+  /// Called before any attempt to connect Flutter driver to the running application,  Depending on your configuration this
+  /// method will be called before each scenario is run.
+  Future<void> Function() onBeforeFlutterDriverConnect;
+
+  /// Called after the successful connection of Flutter driver to the running application.  Depending on your configuration this
+  /// method will be called on each new connection usually before each scenario is run.
+  Future<void> Function(FlutterDriver driver) onAfterFlutterDriverConnect;
+
   void setObservatoryDebuggerUri(String uri) => _observatoryDebuggerUri = uri;
 
   Future<FlutterDriver> createFlutterDriver([String dartVmServiceUrl]) async {
+    final completer = Completer<FlutterDriver>();
     dartVmServiceUrl = (dartVmServiceUrl ?? _observatoryDebuggerUri) ??
         Platform.environment['VM_SERVICE_URL'];
 
-    return await _attemptDriverConnection(dartVmServiceUrl, 1, 3);
+    await runZonedGuarded(
+      () async {
+        if (onBeforeFlutterDriverConnect != null) {
+          await onBeforeFlutterDriverConnect();
+        }
+
+        final driver = await _attemptDriverConnection(dartVmServiceUrl, 1, 3);
+        if (onAfterFlutterDriverConnect != null) {
+          await onAfterFlutterDriverConnect(driver);
+        }
+
+        completer.complete(driver);
+      },
+      (Object e, StackTrace st) {
+        if (e is DriverError) {
+          completer.completeError(e, st);
+        }
+      },
+    );
+
+    return completer.future;
   }
 
   Future<FlutterWorld> createFlutterWorld(
@@ -93,6 +123,7 @@ class FlutterTestConfiguration extends TestConfiguration {
           ? flutterConfig.runningAppProtocolEndpointUri
           : null,
     );
+
     world.setFlutterDriver(driver);
 
     return world;
@@ -122,7 +153,7 @@ class FlutterTestConfiguration extends TestConfiguration {
         WhenPauseStep(),
         WhenFillFieldStep(),
         ThenExpectWidgetToBePresent(),
-        RestartAppStep()
+        RestartAppStep(),
       ]);
   }
 
@@ -131,24 +162,26 @@ class FlutterTestConfiguration extends TestConfiguration {
     int attempt,
     int maxAttempts,
   ) async {
-    try {
-      return await FlutterDriver.connect(
-        dartVmServiceUrl: dartVmServiceUrl,
-      );
-    } catch (e) {
-      if (attempt > maxAttempts) {
-        rethrow;
-      } else {
-        print(e);
-        await Future<void>.delayed(flutterDriverReconnectionDelay);
+    return await FlutterDriver.connect(
+      dartVmServiceUrl: dartVmServiceUrl,
+    ).catchError(
+      (e, st) async {
+        if (attempt > maxAttempts) {
+          throw e;
+        } else {
+          print(
+            'Fluter driver error connecting to application at `$dartVmServiceUrl`, retrying after delay of $flutterDriverReconnectionDelay',
+          );
+          await Future<void>.delayed(flutterDriverReconnectionDelay);
 
-        return _attemptDriverConnection(
-          dartVmServiceUrl,
-          attempt + 1,
-          maxAttempts,
-        );
-      }
-    }
+          return _attemptDriverConnection(
+            dartVmServiceUrl,
+            attempt + 1,
+            maxAttempts,
+          );
+        }
+      },
+    );
   }
 
   void _ensureCorrectConfiguration() {
