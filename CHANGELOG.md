@@ -1,3 +1,6 @@
+## [1.1.8+3] - 11/05/2020
+* Updated Gherkin library version to sort issue with JSON reporter throwing error when an exception is logged before any steps have run
+
 ## [1.1.8+2] - 11/05/2020
 * Fixed issue where the connection attempt of Flutter driver would not retry before throwing a connection error.  This was causing an error on some machines trying to connect to an Android emulator (x86 & x86_64) that runs the googleapis (see https://github.com/flutter/flutter/issues/42433)
 * Added a before `onBeforeFlutterDriverConnect` and after `onAfterFlutterDriverConnect` Flutter driver connection method property to the test configuration `FlutterTestConfiguration` to enable custom logic before and after a driver connection attempt.
