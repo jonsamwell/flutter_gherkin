@@ -85,7 +85,7 @@ Available as a Dart package https://pub.dartlang.org/packages/flutter_gherkin
 
 ## Getting Started
 
-See <https://docs.cucumber.io/gherkin/> for information on the Gherkin syntax and Behaviour Driven Development (BDD).  
+See <https://docs.cucumber.io/gherkin/> for information on the Gherkin syntax and Behaviour Driven Development (BDD).
 
 See [example readme](example/README.md) for a quick start guide to running the example features and app.
 
@@ -225,13 +225,13 @@ An infix boolean expression which defines the features and scenarios to run base
 
 #### order
 
-Defaults to `ExecutionOrder.random` 
+Defaults to `ExecutionOrder.random`
 
 The order by which scenarios will be run. Running an a random order may highlight any inter-test dependencies that should be fixed.
 
 #### stepDefinitions
 
-Defaults to `Iterable<StepDefinitionBase>` 
+Defaults to `Iterable<StepDefinitionBase>`
 
 Place instances of any custom step definition classes `Given` , `Then` , `When` , `And` , `But` that match to any custom steps defined in your feature files.
 
@@ -258,13 +258,13 @@ Future<void> main() {
 
 #### defaultLanguage
 
-Defaults to `en` 
+Defaults to `en`
 
 This specifies the default language the feature files are written in.  See https://cucumber.io/docs/gherkin/reference/#overview for supported languages.
 
 Note that this can be overridden in the feature itself by the use of a language block.
 
-``` 
+```
 # language: de
 Funktionalität: Calculator
   Tests the addition of two numbers
@@ -282,7 +282,7 @@ Funktionalität: Calculator
       | 20.937     | -1.937     | 19     |
 ```
 
-``` 
+```
 # language: fr
 Fonctionnalité: Counter
   The counter should be incremented when the button is pressed.
@@ -333,7 +333,7 @@ Attachment are pieces of data you can attach to a running scenario.  This could 
 
 Attachments would typically be attached via a `Hook` for example `onAfterStep` .
 
-``` 
+```
 import 'package:gherkin/gherkin.dart';
 
 class AttachScreenshotOnFailedStepHook extends Hook {
@@ -353,7 +353,7 @@ class AttachScreenshotOnFailedStepHook extends Hook {
 
 To take a screenshot on a step failing you can used the pre-defined hook `AttachScreenshotOnFailedStepHook` and include it in the hook configuration of the tests config.  This hook will take a screenshot and add it as an attachment to the scenario.  If the `JsonReporter` is being used the screenshot will be embedded in the report which can be used to generate a HTML report which will ultimately display the screenshot under the failed step.
 
-``` 
+```
 import 'dart:async';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'package:gherkin/gherkin.dart';
@@ -442,13 +442,13 @@ Future<void> main() {
 
 #### logFlutterProcessOutput
 
-Defaults to `false` 
+Defaults to `false`
 
 If `true` the output from the flutter process is logged to the stdout / stderr streams.  Useful when debugging app build or start failures
 
 #### flutterBuildTimeout
 
-Defaults to `90 seconds` 
+Defaults to `90 seconds`
 
 Specifies the period of time to wait for the Flutter build to complete and the app to be installed and in a state to be tested.  Slower machines may need longer than the default 90 seconds to complete this process.
 
@@ -462,19 +462,19 @@ An async method that is called after a successful attempt by Flutter driver to c
 
 #### flutterDriverMaxConnectionAttempts
 
-Defaults to `3` 
+Defaults to `3`
 
 Specifies the number of Flutter driver connection attempts to a running app before the test is aborted
 
 #### flutterDriverReconnectionDelay
 
-Defaults to `2 seconds` 
+Defaults to `2 seconds`
 
 Specifies the amount of time to wait after a failed Flutter driver connection attempt to the running app
 
 #### exitAfterTestRun
 
-Defaults to `true` 
+Defaults to `true`
 
 True to exit the program after all tests have run.  You may want to set this to false during debugging.
 
@@ -490,15 +490,15 @@ To avoid tests starting on an app changed by a previous test it is suggested tha
 
 #### targetAppPath
 
-Defaults to `lib/test_driver/app.dart` 
+Defaults to `lib/test_driver/app.dart`
 
 This should point to the *testable* application that enables the Flutter driver extensions and thus is able to be automated.  This application wil be started when the test run is started and restarted if the `restartAppBetweenScenarios` configuration property is set to true.
 
 #### build
 
-Defaults to `true` 
+Defaults to `true`
 
-This optional argument lets you specify if the target application should be built prior to running the first test.  This defaults to `true` 
+This optional argument lets you specify if the target application should be built prior to running the first test.  This defaults to `true`
 
 #### buildFlavor
 
@@ -515,7 +515,7 @@ This optional argument lets you specify device target id as `flutter run --devic
 #### runningAppProtocolEndpointUri
 
 An observatory url that the test runner can connect to instead of creating a new running instance of the target application
-The url takes the form of `http://127.0.0.1:51540/EM72VtRsUV0=/` and usually printed to stdout in the form `Connecting to service protocol: http://127.0.0.1:51540/EM72VtRsUV0=/` 
+The url takes the form of `http://127.0.0.1:51540/EM72VtRsUV0=/` and usually printed to stdout in the form `Connecting to service protocol: http://127.0.0.1:51540/EM72VtRsUV0=/`
 You will have to add the `--verbose` flag to the command to start your flutter app to see this output and ensure `enableFlutterDriverExtension()` is called by the running app
 
 ## Features Files
@@ -669,7 +669,7 @@ import 'package:gherkin/gherkin.dart';
 ///
 /// For example:
 ///
-/// `Given I add the users` 
+/// `Given I add the users`
 ///  | Firstname | Surname | Age | Gender |
 ///  | Woody     | Johnson | 28  | Male   |
 ///  | Edith     | Summers | 23  | Female |
@@ -707,7 +707,7 @@ In most scenarios theses parameters will be enough for you to write quite advanc
 | {int}          | Matches an integer                            | {int}, {Int}                   | int    | `Given I see {int} worm(s)` would match `Given I see 6 worms` |
 | {num}          | Matches an number                             | {num}, {Num}, {float}, {Float} | num    | `Given I see {num} worm(s)` would match `Given I see 0.75 worms` |
 
-Note that you can combine there well known parameters in any step. For example `Given I {word} {int} worm(s)` would match `Given I "see" 6 worms` and also match `Given I "eat" 1 worm` 
+Note that you can combine there well known parameters in any step. For example `Given I {word} {int} worm(s)` would match `Given I "see" 6 worms` and also match `Given I "eat" 1 worm`
 
 #### Pluralization
 
@@ -770,17 +770,17 @@ Tags are a great way of organizing your features and marking them with filterabl
 
 You can filter the scenarios by providing a tag expression to your configuration file.  Tag expression are simple infix expressions such as:
 
-`@smoke` 
+`@smoke`
 
-`@smoke and @perf` 
+`@smoke and @perf`
 
-`@billing or @onboarding` 
+`@billing or @onboarding`
 
-`@smoke and not @ignore` 
+`@smoke and not @ignore`
 
 You can even us brackets to ensure the order of precedence
 
-`@smoke and not (@ignore or @todo)` 
+`@smoke and not (@ignore or @todo)`
 
 You can use the usual boolean statement "and", "or", "not"
 
@@ -794,7 +794,7 @@ You can set the default language of feature files in your project via the config
 
 For example these two features are the same the keywords are just written in different languages. Note the ` ` ` # language: de ` ` ` on the second feature.  English is the default language.
 
-``` 
+```
 Feature: Calculator
   Tests the addition of two numbers
 
@@ -812,7 +812,7 @@ Feature: Calculator
 
 ```
 
-``` 
+```
 # language: de
 Funktionalität: Calculator
   Tests the addition of two numbers
@@ -918,17 +918,17 @@ A reporter is a class that is able to report on the progress of the test run. In
 
 You can create your own custom reporter by inheriting from the base `Reporter` class and overriding the one or many of the methods to direct the output message.  The `Reporter` defines the following methods that can be overridden.  All methods must return a `Future<void>` and can be async.
 
-* `onTestRunStarted` 
-* `onTestRunFinished` 
-* `onFeatureStarted` 
-* `onFeatureFinished` 
-* `onScenarioStarted` 
-* `onScenarioFinished` 
-* `onStepStarted` 
-* `onStepFinished` 
-* `onException` 
-* `message` 
-* `dispose` 
+* `onTestRunStarted`
+* `onTestRunFinished`
+* `onFeatureStarted`
+* `onFeatureFinished`
+* `onScenarioStarted`
+* `onScenarioFinished`
+* `onStepStarted`
+* `onStepFinished`
+* `onException`
+* `message`
+* `dispose`
 
 Once you have created your custom reporter don't forget to add it to the `reporters` configuration file property.
 
@@ -958,6 +958,17 @@ For convenience the library defines a number of pre-defined steps so you can get
 | I pause for {int} seconds                               | Pauses the test execution for the given seconds. Only use in debug scenarios or to inspect the state of the app | `Then I pause for 20 seconds` |
 | I restart the app                                       | Restarts the app under test | `Then I restart the app` |
 | I tap the back button                                   | Taps the page default back button widget | `Then I tap the back button` |
+| I expect a {string} that contains the text {string} to also contain the text {string} | Discovers a sibling based on its parent widget type and asserts that the both text string exist within the parent. | `Then I expect a "Row" that contains the text "X" to also contain the text "Y"` |
+| I swipe [down\|left\|right\|up] by {int} pixels on the {string} | Swipes in a cardinal direction on a widget discovered by its key. | `Then I swipe up by 800 pixels on the "login_screen"`, `Then I swipe left by 200 pixels on the "dismissible_list_item"` |
+| I swipe [down\|left\|right\|up] by {int} pixels on the on the [button\|element\|label\|field\|text\|widget\|dialog\|popup] that contains the text {string} | Swipes in a cardinal direction on a widget discovered by its test. | `Then I swipe left by 400 pixels on the widget that contains the text "Dismiss Me"` |
+| I tap the [button\|element\|label\|field\|text\|widget] that contains the text {string} within the {string} |  Taps a widget that contains the text within another widget. If the text is not visible, the ancestor will be scrolled. | `Then I tap the label that contains the text "Logout" within the "user_settings_list"` |
+| I tap the [button\|element\|label\|icon\|field\|text\|widget] of type {string} | Taps a widget of type. | `Then I tap the element of type "MaterialButton"`, `Then I tap the label of type "ListTile"`, `Then I tap the field of type "TextField"` |
+| I tap the [button\|element\|label\|icon\|field\|text\|widget] of type {string} within the {string} | Taps a widget of type within another widget. | `Then I tap the element of type "MaterialButton" within the "user_settings_list"` |
+| I tap the [button\|element\|label\|icon\|field\|text\|widget] that contains the text {string} | Taps a widget that contains text. | `Then I tap the label that contains the text "Logout"`, `Then I tap the button that contains the text "Sign up"`, `Then I tap the widget that contains the text "My User Profile"` |
+| I expect the text {string} to be [present\|absent] | Asserts the existence of text on the screen. | `Then I expect the text "Logout" to be present`,  `But I expect the text "Signup" to be absent` |
+| I expect the text {string} to be [present\|absent] within the {string} | Asserts the existence of text within a parent widget. | `Then I expect the text "Logout" to be present within the "user_settings_list"`, `But I expect the text "Signup" to be absent within the "login_screen"` |
+| I wait until the {string} is [present\absent] | Delays until a widget is present or absent. | `Then I wait until the "login_loading_indicator" is absent`, `And I wait until the "login_screen" is present` |
+| I wait until the [button\|element\|label\|icon\|field\|text\|widget] of type {string} is [present\absent] | Waits until a widget type is present or absent. | `Then I wait until the element of type "ProgressIndicator" is absent`, `And I wait until the button of type "MaterialButton" is present` |
 
 #### Flutter Driver Utilities
 

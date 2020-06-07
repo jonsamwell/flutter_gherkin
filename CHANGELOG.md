@@ -1,3 +1,6 @@
+## Unreleased
+* Add steps `SiblingContainsText`, `SwipeOnKey`, `SwipeOnText`, `TapTextWithinWidget`, `TapWidgetOfType`, `TapWidgetOfTypeWithin`, `TapWidgetWithText`, `TextExists`, `TextExistsWithin`, `WaitUntilKeyExists`, and `WaitUntilTypeExists`.
+
 ## [1.1.8+2] - 11/05/2020
 * Fixed issue where the connection attempt of Flutter driver would not retry before throwing a connection error.  This was causing an error on some machines trying to connect to an Android emulator (x86 & x86_64) that runs the googleapis (see https://github.com/flutter/flutter/issues/42433)
 * Added a before `onBeforeFlutterDriverConnect` and after `onAfterFlutterDriverConnect` Flutter driver connection method property to the test configuration `FlutterTestConfiguration` to enable custom logic before and after a driver connection attempt.
@@ -9,7 +12,7 @@
 ## [1.1.8] - 08/05/2020
 * Updated library to work with the new way the Flutter stable branch manages logging for Flutter driver
 * Added the ability to test against an already running app; enabling you to debug a running application while it has tests executed against it.  Setting the configuration property `runningAppProtocolEndpointUri` to the service protocol endpoint (found in stdout when an app has `--verbose` logging turned on) will ensure that the existing app is connected to rather than starting a new instance of the app.  NOTE: ensure the app you are trying to connect to calls `enableFlutterDriverExtension()` when it starts up otherwise the Flutter Driver will not be able to connect to it.
-* **BREAKING CHANGE** Fixed spelling mistake of `targetAppWorkingDirectory` & `flutterDriverMaxConnectionAttempts` in `FlutterTestConfiguration` 
+* **BREAKING CHANGE** Fixed spelling mistake of `targetAppWorkingDirectory` & `flutterDriverMaxConnectionAttempts` in `FlutterTestConfiguration`
 * **BREAKING CHANGE** reverse order of `driver` and `finder` in `FlutterDriverUtils#isPresent`. This makes this method's arguments more consistent with all other instance methods in the class by including `driver` first.
 * `expect` the presence of `ThenExpectWidgetToBePresent`. If the widget was not present, the method would simply timeout and not report an error for the step.
 
