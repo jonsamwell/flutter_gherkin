@@ -21,7 +21,7 @@ class SlackMessenger {
   /// Use the alphanumeric ending of the URL.
   final String slackChannelId;
 
-  /// The message to reply to. This will nest the test run, reducing channel noise.
+  /// The parent message ID. This will nest the test run to reduce channel noise.
   String threadTs;
 
   SlackMessenger({
@@ -63,7 +63,8 @@ class SlackMessenger {
     return notifySlack(payload);
   }
 
-  /// Initial message will set [threadTs] so that subsequent messages reply under one thread.
+  /// Initial message will set [threadTs] so that subsequent
+  /// messages reply under one thread when [threadMessages] is true.
   Future<http.Response> start(String startMessage,
       {bool threadMessages = true}) async {
     threadTs = null;
@@ -113,7 +114,8 @@ class SlackReporter extends Reporter {
 
   final SlackMessenger slackMessenger;
 
-  /// Reported on the parent thread of the test run. Defaults to `Starting tests`.
+  /// Reported as the initial message (or parent thread when [threadResults] is `true`)
+  /// of the test run. Defaults to `Starting tests`.
   final String startLabel;
 
   /// Whether the test run should be threaded under a single message. Defaults `true`.
