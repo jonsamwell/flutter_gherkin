@@ -64,10 +64,11 @@ class SlackMessenger {
   }
 
   /// Initial message will set [threadTs] so that subsequent messages reply under one thread.
-  Future<http.Response> start(String startMessage) async {
+  Future<http.Response> start(String startMessage,
+      {bool threadMessages = true}) async {
     threadTs = null;
     final resp = await sendText(startMessage);
-    threadTs = jsonDecode(resp.body)['ts'];
+    if (threadMessages) threadTs = jsonDecode(resp.body)['ts'];
     return resp;
   }
 
@@ -107,21 +108,28 @@ class SlackMessenger {
 /// Refer to [SlackMessenger] for steps to setup and configure your bot.
 class SlackReporter extends Reporter {
   /// The number of scenario failures before the test suite will terminate
-  /// and cease reporting to Slack.
+  /// and cease reporting to Slack. Defaults to `15`.
   final int maximumToleratedFailures;
 
   final SlackMessenger slackMessenger;
 
-  /// Reported on the parent thread of the test run.
+  /// Reported on the parent thread of the test run. Defaults to `Starting tests`.
   final String startLabel;
+
+  /// Whether the test run should be threaded under a single message. Defaults `true`.
+  final bool threadResults;
 
   final features = <FinishedMessage>[];
   final scenarios = <ScenarioFinishedMessage>[];
   final scenariosInActiveFeature = <ScenarioFinishedMessage>[];
   StepFinishedMessage firstFailedStepInActiveScenario;
 
-  SlackReporter(this.slackMessenger,
-      {this.startLabel, this.maximumToleratedFailures = 15});
+  SlackReporter(
+    this.slackMessenger, {
+    this.maximumToleratedFailures = 15,
+    this.threadResults = true,
+    this.startLabel = 'Starting tests',
+  });
 
   @override
   Future<void> onException(exception, stackTrace) {
@@ -190,7 +198,7 @@ class SlackReporter extends Reporter {
 
   @override
   Future<void> onTestRunStarted() async =>
-      slackMessenger.start('Starting tests for $startLabel');
+      slackMessenger.start(startLabel, threadMessages: threadResults);
 
   @override
   Future<void> onTestRunFinished() async {
