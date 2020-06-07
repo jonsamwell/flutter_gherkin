@@ -7,6 +7,7 @@ import 'package:meta/meta.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+/// Upload messages and logs as the delivery layer for the [SlackReporter].
 class SlackMessenger {
   /// After [creating a Slack Bot](https://api.slack.com/apps) with
   /// the proper scopes (chat.write, files:write), an Oauth token will be
@@ -98,6 +99,12 @@ class SlackMessenger {
   }
 }
 
+/// Notify a Slack channel for every failed step and every successful feature.
+/// This requires a bot installed to your workspace with the files:write scope
+/// (to upload screenshots of failed steps) and the chat.write permission
+/// (to publish test results).
+///
+/// Refer to [SlackMessenger] for steps to setup and configure your bot.
 class SlackReporter extends Reporter {
   final SlackMessenger slackMessenger;
 
@@ -157,39 +164,31 @@ class SlackReporter extends Reporter {
     if (!scenario.passed) {
       final payload = [
         slackMessenger.buildTextSection(':x: ${scenario.name}'),
-        slackMessenger.buildTextSection(
-            'Failed at step: ${firstFailedStepInActiveScenario.name}'),
+        slackMessenger.buildTextSection('Failed at step: ${firstFailedStepInActiveScenario.name}'),
       ];
-      await slackMessenger
-          .notifySlack(payload)
-          .then((_) => firstFailedStepInActiveScenario = null);
+      await slackMessenger.notifySlack(payload).then((_) => firstFailedStepInActiveScenario = null);
     }
 
     if (scenarios.where((s) => !s.passed).length > MAXIMUM_TOLERATED_FAILURES) {
-      await slackMessenger.sendText(
-          ':x: :x: :x: :x: Aborting: too many failures :x: :x: :x: :x:');
+      await slackMessenger.sendText(':x: :x: :x: :x: Aborting: too many failures :x: :x: :x: :x:');
       exit(1);
     }
   }
 
   @override
   Future<void> onStepFinished(step) async {
-    if (step.result.result != StepExecutionResult.pass &&
-        firstFailedStepInActiveScenario == null) {
+    if (step.result.result != StepExecutionResult.pass && firstFailedStepInActiveScenario == null) {
       firstFailedStepInActiveScenario = step;
     }
   }
 
   @override
-  Future<void> onTestRunStarted() async =>
-      slackMessenger.start('Starting tests for $startLabel');
+  Future<void> onTestRunStarted() async => slackMessenger.start('Starting tests for $startLabel');
 
   @override
   Future<void> onTestRunFinished() async {
-    final successfulNames =
-        scenarios.where((s) => s.passed).map((s) => '* ${s.name}');
-    final failedNames =
-        scenarios.where((s) => !s.passed).map((s) => '* ${s.name}');
+    final successfulNames = scenarios.where((s) => s.passed).map((s) => '* ${s.name}');
+    final failedNames = scenarios.where((s) => !s.passed).map((s) => '* ${s.name}');
 
     final payload = [
       slackMessenger.buildTextSection('Testing Complete'),
@@ -198,8 +197,8 @@ class SlackReporter extends Reporter {
           ':white_check_mark: ${successfulNames.length} / ${scenarios.length} Successful Tests:'),
       slackMessenger.buildTextSection(successfulNames.join('\n')),
       slackMessenger.divider,
-      slackMessenger.buildTextSection(
-          ':x: ${failedNames.length} / ${scenarios.length} Failed Tests:'),
+      slackMessenger
+          .buildTextSection(':x: ${failedNames.length} / ${scenarios.length} Failed Tests:'),
       slackMessenger.buildTextSection(failedNames.join('\n')),
     ];
 
