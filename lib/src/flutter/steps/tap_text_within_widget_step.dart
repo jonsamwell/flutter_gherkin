@@ -8,7 +8,8 @@ import 'package:gherkin/gherkin.dart';
 /// Examples:
 ///
 ///   `Then I tap the label that contains the text "Logout" within the "user_settings_list"`
-class TapTextWithinWidgetStep extends When2WithWorld<String, String, FlutterWorld> {
+class TapTextWithinWidgetStep
+    extends When2WithWorld<String, String, FlutterWorld> {
   @override
   Future<void> executeStep(String text, String ancestorKey) async {
     final finder = find.descendant(

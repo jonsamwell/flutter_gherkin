@@ -13,9 +13,11 @@ import 'package:gherkin/gherkin.dart';
 /// Examples:
 ///
 ///   `Then I expect a "Row" that contains the text "X" to also contain the text "Y"`
-class SiblingContainsTextStep extends When3WithWorld<String, String, String, FlutterWorld> {
+class SiblingContainsTextStep
+    extends When3WithWorld<String, String, String, FlutterWorld> {
   @override
-  Future<void> executeStep(String ancestorType, String leadingText, String valueText) async {
+  Future<void> executeStep(
+      String ancestorType, String leadingText, String valueText) async {
     final ancestor = await find.ancestor(
       of: find.text(leadingText),
       matching: find.byType(ancestorType),

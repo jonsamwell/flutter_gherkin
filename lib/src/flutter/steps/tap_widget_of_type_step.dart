@@ -20,6 +20,6 @@ class TapWidgetOfTypeStep extends When1WithWorld<String, FlutterWorld> {
   }
 
   @override
-  RegExp get pattern =>
-      RegExp(r'I tap the (?:button|element|label|icon|field|text|widget) of type {string}$');
+  RegExp get pattern => RegExp(
+      r'I tap the (?:button|element|label|icon|field|text|widget) of type {string}$');
 }

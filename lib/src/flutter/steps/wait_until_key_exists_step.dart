@@ -10,15 +10,18 @@ import '../parameters/existence_parameter.dart';
 ///
 ///   `Then I wait until the "login_loading_indicator" is absent`
 ///   `And I wait until the "login_screen" is present`
-class WaitUntilKeyExistsStep extends When2WithWorld<String, Existence, FlutterWorld> {
+class WaitUntilKeyExistsStep
+    extends When2WithWorld<String, Existence, FlutterWorld> {
   @override
   Future<void> executeStep(String keyString, Existence existence) async {
     await FlutterDriverUtils.waitUntil(
       world.driver,
       () {
         return existence == Existence.absent
-            ? FlutterDriverUtils.isAbsent(world.driver, find.byValueKey(keyString))
-            : FlutterDriverUtils.isPresent(world.driver, find.byValueKey(keyString));
+            ? FlutterDriverUtils.isAbsent(
+                world.driver, find.byValueKey(keyString))
+            : FlutterDriverUtils.isPresent(
+                world.driver, find.byValueKey(keyString));
       },
       timeout: timeout,
     );

@@ -96,8 +96,8 @@ class FlutterTestConfiguration extends TestConfiguration {
 
   Future<FlutterDriver> createFlutterDriver([String dartVmServiceUrl]) async {
     final completer = Completer<FlutterDriver>();
-    dartVmServiceUrl =
-        (dartVmServiceUrl ?? _observatoryDebuggerUri) ?? Platform.environment['VM_SERVICE_URL'];
+    dartVmServiceUrl = (dartVmServiceUrl ?? _observatoryDebuggerUri) ??
+        Platform.environment['VM_SERVICE_URL'];
 
     await runZonedGuarded(
       () async {
@@ -155,11 +155,12 @@ class FlutterTestConfiguration extends TestConfiguration {
     };
 
     hooks = List.from(hooks ?? [])..add(FlutterAppRunnerHook());
-    customStepParameterDefinitions = List.from(customStepParameterDefinitions ?? [])
-      ..addAll([
-        ExistenceParameter(),
-        SwipeDirectionParameter(),
-      ]);
+    customStepParameterDefinitions =
+        List.from(customStepParameterDefinitions ?? [])
+          ..addAll([
+            ExistenceParameter(),
+            SwipeDirectionParameter(),
+          ]);
     stepDefinitions = List.from(stepDefinitions ?? [])
       ..addAll([
         ThenExpectElementToHaveValue(),
@@ -213,7 +214,8 @@ class FlutterTestConfiguration extends TestConfiguration {
   }
 
   void _ensureCorrectConfiguration() {
-    if (runningAppProtocolEndpointUri != null && runningAppProtocolEndpointUri.isNotEmpty) {
+    if (runningAppProtocolEndpointUri != null &&
+        runningAppProtocolEndpointUri.isNotEmpty) {
       if (restartAppBetweenScenarios) {
         throw AssertionError(
             'Cannot restart app between scenarios if using runningAppProtocolEndpointUri');

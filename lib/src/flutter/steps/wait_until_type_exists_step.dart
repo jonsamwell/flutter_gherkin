@@ -10,7 +10,8 @@ import '../parameters/existence_parameter.dart';
 ///
 ///   `Then I wait until the element of type "ProgressIndicator" is absent`
 ///   `And I wait until the button of type the "MaterialButton" is present`
-class WaitUntilTypeExistsStep extends When2WithWorld<String, Existence, FlutterWorld> {
+class WaitUntilTypeExistsStep
+    extends When2WithWorld<String, Existence, FlutterWorld> {
   @override
   Future<void> executeStep(String ofType, Existence existence) async {
     await FlutterDriverUtils.waitUntil(

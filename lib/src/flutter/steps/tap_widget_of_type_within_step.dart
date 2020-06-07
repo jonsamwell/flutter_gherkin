@@ -7,7 +7,8 @@ import 'package:gherkin/gherkin.dart';
 /// Examples:
 ///
 ///   `Then I tap the element of type "MaterialButton" within the "user_settings_list"`
-class TapWidgetOfTypeWithinStep extends When2WithWorld<String, String, FlutterWorld> {
+class TapWidgetOfTypeWithinStep
+    extends When2WithWorld<String, String, FlutterWorld> {
   @override
   Future<void> executeStep(String widgetType, String ancestorKey) async {
     final finder = find.descendant(

@@ -10,9 +10,11 @@ import '../parameters/existence_parameter.dart';
 ///
 ///   `Then I expect the text "Logout" to be present within the "user_settings_list"`
 ///   `But I expect the text "Signup" to be absent within the "login_screen"`
-class TextExistsWithinStep extends When3WithWorld<String, Existence, String, FlutterWorld> {
+class TextExistsWithinStep
+    extends When3WithWorld<String, Existence, String, FlutterWorld> {
   @override
-  Future<void> executeStep(String text, Existence exists, String ancestorKey) async {
+  Future<void> executeStep(
+      String text, Existence exists, String ancestorKey) async {
     final finder = find.descendant(
       of: find.byValueKey(ancestorKey),
       matching: find.text(text),
@@ -28,6 +30,6 @@ class TextExistsWithinStep extends When3WithWorld<String, Existence, String, Flu
   }
 
   @override
-  RegExp get pattern =>
-      RegExp(r'I expect the text {string} to be {existence} within the {string}$');
+  RegExp get pattern => RegExp(
+      r'I expect the text {string} to be {existence} within the {string}$');
 }

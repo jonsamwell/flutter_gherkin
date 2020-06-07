@@ -32,5 +32,6 @@ class TextExistsStep extends When2WithWorld<String, Existence, FlutterWorld> {
   }
 
   @override
-  RegExp get pattern => RegExp(r'I expect the text {string} to be {existence}$');
+  RegExp get pattern =>
+      RegExp(r'I expect the text {string} to be {existence}$');
 }
