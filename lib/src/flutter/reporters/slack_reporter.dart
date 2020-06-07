@@ -115,6 +115,7 @@ class SlackReporter extends Reporter {
 
   SlackReporter(this.slackMessenger, {this.startLabel});
 
+  @override
   Future<void> onException(exception, stackTrace) {
     final payload = [
       slackMessenger.divider,
@@ -127,10 +128,12 @@ class SlackReporter extends Reporter {
     return slackMessenger.notifySlack(payload);
   }
 
+  @override
   Future<void> message(msg, level) async {
     if (level == MessageLevel.error) await slackMessenger.sendText(msg);
   }
 
+  @override
   Future<void> onFeatureFinished(feature) async {
     features.add(feature);
     final allScenariosPassed = scenariosInActiveFeature.every((s) => s.passed);
@@ -147,6 +150,7 @@ class SlackReporter extends Reporter {
     scenariosInActiveFeature.clear();
   }
 
+  @override
   Future<void> onScenarioFinished(scenario) async {
     scenarios.add(scenario);
     scenariosInActiveFeature.add(scenario);
@@ -168,6 +172,7 @@ class SlackReporter extends Reporter {
     }
   }
 
+  @override
   Future<void> onStepFinished(step) async {
     if (step.result.result != StepExecutionResult.pass &&
         firstFailedStepInActiveScenario == null) {
@@ -175,9 +180,11 @@ class SlackReporter extends Reporter {
     }
   }
 
+  @override
   Future<void> onTestRunStarted() async =>
       slackMessenger.start('Starting tests for $startLabel');
 
+  @override
   Future<void> onTestRunFinished() async {
     final successfulNames =
         scenarios.where((s) => s.passed).map((s) => '* ${s.name}');
