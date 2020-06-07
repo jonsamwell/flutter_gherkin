@@ -153,28 +153,36 @@ class SlackReporter extends Reporter {
     if (!scenario.passed) {
       final payload = [
         slackMessenger.buildTextSection(':x: ${scenario.name}'),
-        slackMessenger.buildTextSection('Failed at step: ${firstFailedStepInActiveScenario.name}'),
+        slackMessenger.buildTextSection(
+            'Failed at step: ${firstFailedStepInActiveScenario.name}'),
       ];
-      await slackMessenger.notifySlack(payload).then((_) => firstFailedStepInActiveScenario = null);
+      await slackMessenger
+          .notifySlack(payload)
+          .then((_) => firstFailedStepInActiveScenario = null);
     }
 
     if (scenarios.where((s) => !s.passed).length > MAXIMUM_TOLERATED_FAILURES) {
-      await slackMessenger.sendText(':x: :x: :x: :x: Aborting: too many failures :x: :x: :x: :x:');
+      await slackMessenger.sendText(
+          ':x: :x: :x: :x: Aborting: too many failures :x: :x: :x: :x:');
       exit(1);
     }
   }
 
   Future<void> onStepFinished(step) async {
-    if (step.result.result != StepExecutionResult.pass && firstFailedStepInActiveScenario == null) {
+    if (step.result.result != StepExecutionResult.pass &&
+        firstFailedStepInActiveScenario == null) {
       firstFailedStepInActiveScenario = step;
     }
   }
 
-  Future<void> onTestRunStarted() async => slackMessenger.start('Starting tests for $startLabel');
+  Future<void> onTestRunStarted() async =>
+      slackMessenger.start('Starting tests for $startLabel');
 
   Future<void> onTestRunFinished() async {
-    final successfulNames = scenarios.where((s) => s.passed).map((s) => '* ${s.name}');
-    final failedNames = scenarios.where((s) => !s.passed).map((s) => '* ${s.name}');
+    final successfulNames =
+        scenarios.where((s) => s.passed).map((s) => '* ${s.name}');
+    final failedNames =
+        scenarios.where((s) => !s.passed).map((s) => '* ${s.name}');
 
     final payload = [
       slackMessenger.buildTextSection('Testing Complete'),
@@ -183,8 +191,8 @@ class SlackReporter extends Reporter {
           ':white_check_mark: ${successfulNames.length} / ${scenarios.length} Successful Tests:'),
       slackMessenger.buildTextSection(successfulNames.join('\n')),
       slackMessenger.divider,
-      slackMessenger
-          .buildTextSection(':x: ${failedNames.length} / ${scenarios.length} Failed Tests:'),
+      slackMessenger.buildTextSection(
+          ':x: ${failedNames.length} / ${scenarios.length} Failed Tests:'),
       slackMessenger.buildTextSection(failedNames.join('\n')),
     ];
 
