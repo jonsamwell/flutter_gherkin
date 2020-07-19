@@ -12,11 +12,38 @@ import 'package:flutter_gherkin/src/flutter/steps/when_tap_widget_step.dart';
 import 'package:flutter_gherkin/src/flutter/steps/when_tap_the_back_button_step.dart';
 import 'package:flutter_driver/flutter_driver.dart';
 import 'package:gherkin/gherkin.dart';
+import 'package:glob/glob.dart';
 
 import 'steps/then_expect_widget_to_be_present_step.dart';
 
 class FlutterTestConfiguration extends TestConfiguration {
   String _observatoryDebuggerUri;
+
+  /// Provide a configuration object with default settings such as the reports and feature file location
+  /// Additional setting on the configuration object can be set on the returned instance.
+  static FlutterTestConfiguration DEFAULT(
+    Iterable<StepDefinitionGeneric<World>> steps, {
+    String featurePath = 'test_driver/features/**.feature',
+    String targetAppPath = 'test_driver/app.dart',
+  }) {
+    return FlutterTestConfiguration()
+      ..features = [Glob(featurePath)]
+      ..reporters = [
+        StdoutReporter(MessageLevel.error),
+        ProgressReporter(),
+        TestRunSummaryReporter(),
+        JsonReporter(path: './report.json'),
+        FlutterDriverReporter(
+          logErrorMessages: true,
+          logInfoMessages: false,
+          logWarningMessages: false,
+        ),
+      ]
+      ..targetAppPath = targetAppPath
+      ..stepDefinitions = steps
+      ..restartAppBetweenScenarios = true
+      ..exitAfterTestRun = true;
+  }
 
   /// restarts the application under test between each scenario.
   /// Defaults to true to avoid the application being in an invalid state

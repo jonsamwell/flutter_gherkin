@@ -17,40 +17,35 @@ import 'package:gherkin/gherkin.dart';
 ///   `When I tap "controlKey" field"`
 ///   `When I tap "controlKey" text"`
 ///   `When I tap "controlKey" widget"`
-class WhenTapWidget extends When1WithWorld<String, FlutterWorld> {
-  @override
-  RegExp get pattern => RegExp(
-      r'I tap the {string} (?:button|element|label|icon|field|text|widget)$');
+StepDefinitionGeneric WhenTapWidget() {
+  return when1<String, FlutterWorld>(
+    RegExp(
+        r'I tap the {string} (?:button|element|label|icon|field|text|widget)$'),
+    (key, context) async {
+      final finder = find.byValueKey(key);
 
-  @override
-  Future<void> executeStep(String key) async {
-    final finder = find.byValueKey(key);
-
-    await world.driver.scrollIntoView(
-      finder,
-      timeout: timeout * .45,
-    );
-    await FlutterDriverUtils.tap(
-      world.driver,
-      finder,
-      timeout: timeout * .45,
-    );
-  }
+      await context.world.driver.scrollIntoView(
+        finder,
+      );
+      await FlutterDriverUtils.tap(
+        context.world.driver,
+        finder,
+      );
+    },
+  );
 }
 
-class WhenTapWidgetWithoutScroll extends When1WithWorld<String, FlutterWorld> {
-  @override
-  RegExp get pattern => RegExp(
-      r'I tap the {string} (?:button|element|label|icon|field|text|widget) without scrolling it into view$');
+StepDefinitionGeneric WhenTapWidgetWithoutScroll() {
+  return when1<String, FlutterWorld>(
+    RegExp(
+        r'I tap the {string} (?:button|element|label|icon|field|text|widget) without scrolling it into view$'),
+    (key, context) async {
+      final finder = find.byValueKey(key);
 
-  @override
-  Future<void> executeStep(String key) async {
-    final finder = find.byValueKey(key);
-
-    await FlutterDriverUtils.tap(
-      world.driver,
-      finder,
-      timeout: timeout * .45,
-    );
-  }
+      await FlutterDriverUtils.tap(
+        context.world.driver,
+        finder,
+      );
+    },
+  );
 }

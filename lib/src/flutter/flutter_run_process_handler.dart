@@ -187,7 +187,7 @@ class FlutterRunProcessHandler extends ProcessHandler {
     final completer = Completer<String>();
     StreamSubscription sub;
     sub = _processStdoutStream.timeout(
-      timeout,
+      timeout ?? const Duration(seconds: 90),
       onTimeout: (_) {
         sub?.cancel();
         if (!completer.isCompleted) {

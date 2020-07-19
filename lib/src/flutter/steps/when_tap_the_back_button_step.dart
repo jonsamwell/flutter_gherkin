@@ -10,16 +10,14 @@ import 'package:gherkin/gherkin.dart';
 ///   `When I tap the back button"`
 ///   `When I tap the back element"`
 ///   `When I tap the back widget"`
-class WhenTapBackButtonWidget extends WhenWithWorld<FlutterWorld> {
-  @override
-  RegExp get pattern => RegExp(r'I tap the back (?:button|element|widget)$');
-
-  @override
-  Future<void> executeStep() async {
-    await FlutterDriverUtils.tap(
-      world.driver,
-      find.pageBack(),
-      timeout: timeout * .9,
-    );
-  }
+StepDefinitionGeneric WhenTapBackButtonWidget() {
+  return when1<String, FlutterWorld>(
+    RegExp(r'I tap the back (?:button|element|widget)$'),
+    (_, context) async {
+      await FlutterDriverUtils.tap(
+        context.world.driver,
+        find.pageBack(),
+      );
+    },
+  );
 }
