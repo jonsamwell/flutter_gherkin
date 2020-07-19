@@ -8,8 +8,11 @@ import '../parameters/swipe_direction_parameter.dart';
 mixin _SwipeHelper
     on When3WithWorld<SwipeDirection, int, String, FlutterWorld> {
   @protected
-  Future<void> swipeOnFinder(SerializableFinder finder,
-      SwipeDirection direction, int swipeAmount) async {
+  Future<void> swipeOnFinder(
+    SerializableFinder finder,
+    SwipeDirection direction,
+    int swipeAmount,
+  ) async {
     if (direction == SwipeDirection.left || direction == SwipeDirection.right) {
       final offset =
           direction == SwipeDirection.right ? swipeAmount : (swipeAmount * -1);
@@ -47,7 +50,10 @@ class SwipeOnKeyStep
     with _SwipeHelper {
   @override
   Future<void> executeStep(
-      SwipeDirection direction, int swipeAmount, String key) async {
+    SwipeDirection direction,
+    int swipeAmount,
+    String key,
+  ) async {
     final finder = find.byValueKey(key);
     await swipeOnFinder(finder, direction, swipeAmount);
   }
@@ -67,7 +73,10 @@ class SwipeOnTextStep
     with _SwipeHelper {
   @override
   Future<void> executeStep(
-      SwipeDirection direction, int swipeAmount, String text) async {
+    SwipeDirection direction,
+    int swipeAmount,
+    String text,
+  ) async {
     final finder = find.text(text);
     await swipeOnFinder(finder, direction, swipeAmount);
   }

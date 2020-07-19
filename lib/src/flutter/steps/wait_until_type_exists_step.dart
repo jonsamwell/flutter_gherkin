@@ -10,22 +10,24 @@ import '../parameters/existence_parameter.dart';
 ///
 ///   `Then I wait until the element of type "ProgressIndicator" is absent`
 ///   `And I wait until the button of type the "MaterialButton" is present`
-class WaitUntilTypeExistsStep
-    extends When2WithWorld<String, Existence, FlutterWorld> {
-  @override
-  Future<void> executeStep(String ofType, Existence existence) async {
-    await FlutterDriverUtils.waitUntil(
-      world.driver,
-      () {
-        return existence == Existence.absent
-            ? FlutterDriverUtils.isAbsent(world.driver, find.byType(ofType))
-            : FlutterDriverUtils.isPresent(world.driver, find.byType(ofType));
-      },
-      timeout: timeout,
-    );
-  }
-
-  @override
-  RegExp get pattern => RegExp(
-      r'I wait until the (?:button|element|label|icon|field|text|widget) of type {string} is {existence}');
+StepDefinitionGeneric WaitUntilTypeExistsStep() {
+  return then2<String, Existence, FlutterWorld>(
+    'I wait until the (?:button|element|label|icon|field|text|widget) of type {string} is {existence}',
+    (ofType, existence, context) async {
+      await FlutterDriverUtils.waitUntil(
+        context.world.driver,
+        () {
+          return existence == Existence.absent
+              ? FlutterDriverUtils.isAbsent(
+                  context.world.driver,
+                  find.byType(ofType),
+                )
+              : FlutterDriverUtils.isPresent(
+                  context.world.driver,
+                  find.byType(ofType),
+                );
+        },
+      );
+    },
+  );
 }

@@ -1,6 +1,9 @@
 import 'package:gherkin/gherkin.dart';
 
-enum Existence { present, absent }
+enum Existence {
+  present,
+  absent,
+}
 
 class ExistenceParameter extends CustomParameter<Existence> {
   ExistenceParameter()
@@ -14,7 +17,8 @@ class ExistenceParameter extends CustomParameter<Existence> {
               case 'absent':
                 return Existence.absent;
               default:
-                throw ArgumentError('"present" or "absent" must be defined for this parameter');
+                throw ArgumentError(
+                    'Value `$c` must be defined for this Existence parameter');
             }
           },
         );

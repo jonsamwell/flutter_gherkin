@@ -13,33 +13,29 @@ import 'package:gherkin/gherkin.dart';
 /// Examples:
 ///
 ///   `Then I expect a "Row" that contains the text "X" to also contain the text "Y"`
-class SiblingContainsTextStep
-    extends When3WithWorld<String, String, String, FlutterWorld> {
-  @override
-  Future<void> executeStep(
-      String ancestorType, String leadingText, String valueText) async {
-    final ancestor = await find.ancestor(
-      of: find.text(leadingText),
-      matching: find.byType(ancestorType),
-      firstMatchOnly: true,
-    );
+StepDefinitionGeneric SiblingContainsTextStep() {
+  return given3<String, String, String, FlutterWorld>(
+    'I expect a {string} that contains the text {string} to also contain the text {string}',
+    (ancestorType, leadingText, valueText, context) async {
+      final ancestor = await find.ancestor(
+        of: find.text(leadingText),
+        matching: find.byType(ancestorType),
+        firstMatchOnly: true,
+      );
 
-    final valueWidget = await find.descendant(
-      of: ancestor,
-      matching: find.text(valueText),
-      firstMatchOnly: true,
-    );
+      final valueWidget = await find.descendant(
+        of: ancestor,
+        matching: find.text(valueText),
+        firstMatchOnly: true,
+      );
 
-    final isPresent = await FlutterDriverUtils.isPresent(
-      world.driver,
-      valueWidget,
-      timeout: timeout,
-    );
+      final isPresent = await FlutterDriverUtils.isPresent(
+        context.world.driver,
+        valueWidget,
+        timeout: context.configuration?.timeout ?? const Duration(seconds: 20),
+      );
 
-    expect(isPresent, true);
-  }
-
-  @override
-  RegExp get pattern => RegExp(
-      r'I expect a {string} that contains the text {string} to also contain the text {string}');
+      context.expect(isPresent, true);
+    },
+  );
 }

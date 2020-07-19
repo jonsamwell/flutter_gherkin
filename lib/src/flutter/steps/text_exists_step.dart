@@ -10,28 +10,24 @@ import '../parameters/existence_parameter.dart';
 ///
 ///   `Then I expect the text "Logout" to be present`
 ///   `But I expect the text "Signup" to be absent`
-class TextExistsStep extends When2WithWorld<String, Existence, FlutterWorld> {
-  @override
-  Future<void> executeStep(String text, Existence exists) async {
-    if (exists == Existence.present) {
-      final isPresent = await FlutterDriverUtils.isPresent(
-        world.driver,
-        find.text(text),
-        timeout: timeout,
-      );
+StepDefinitionGeneric TextExistsStep() {
+  return then2<String, Existence, FlutterWorld>(
+    RegExp(r'I expect the text {string} to be {existence}$'),
+    (text, exists, context) async {
+      if (exists == Existence.present) {
+        final isPresent = await FlutterDriverUtils.isPresent(
+          context.world.driver,
+          find.text(text),
+        );
 
-      expect(isPresent, true);
-    } else {
-      final isAbsent = await FlutterDriverUtils.isAbsent(
-        world.driver,
-        find.text(text),
-        timeout: timeout,
-      );
-      expect(isAbsent, true);
-    }
-  }
-
-  @override
-  RegExp get pattern =>
-      RegExp(r'I expect the text {string} to be {existence}$');
+        context.expect(isPresent, true);
+      } else {
+        final isAbsent = await FlutterDriverUtils.isAbsent(
+          context.world.driver,
+          find.text(text),
+        );
+        context.expect(isAbsent, true);
+      }
+    },
+  );
 }
