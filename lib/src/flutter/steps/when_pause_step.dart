@@ -7,16 +7,11 @@ import 'package:gherkin/gherkin.dart';
 /// Examples:
 ///   When I pause for 10 seconds
 ///   When I pause for 120 seconds
-class WhenPauseStep extends When1<int> {
-  WhenPauseStep()
-      : super(StepDefinitionConfiguration()
-          ..timeout = const Duration(minutes: 5));
-
-  @override
-  Future<void> executeStep(int seconds) async {
-    await Future.delayed(Duration(seconds: seconds));
-  }
-
-  @override
-  RegExp get pattern => RegExp(r'I pause for {int} second(s)');
+StepDefinitionGeneric WhenPauseStep() {
+  return when1(
+    'I pause for {int} second(s)',
+    (wait, _) async {
+      await Future.delayed(Duration(seconds: wait));
+    },
+  );
 }

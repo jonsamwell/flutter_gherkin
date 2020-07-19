@@ -12,19 +12,17 @@ import 'package:gherkin/gherkin.dart';
 ///
 ///   `Then I expect the widget 'notification' to be present within 10 seconds`
 ///   `Then I expect the button 'save' to be present within 1 second`
-class ThenExpectWidgetToBePresent
-    extends When2WithWorld<String, int, FlutterWorld> {
-  @override
-  RegExp get pattern => RegExp(
-      r'I expect the (?:button|element|label|icon|field|text|widget|dialog|popup) {string} to be present within {int} second(s)$');
-
-  @override
-  Future<void> executeStep(String key, int seconds) async {
-    final isPresent = await FlutterDriverUtils.isPresent(
-      world.driver,
-      find.byValueKey(key),
-      timeout: Duration(seconds: seconds),
-    );
-    expect(isPresent, true);
-  }
+StepDefinitionGeneric ThenExpectWidgetToBePresent() {
+  return given2<String, int, FlutterWorld>(
+    RegExp(
+        r'I expect the (?:button|element|label|icon|field|text|widget|dialog|popup) {string} to be present within {int} second(s)$'),
+    (key, seconds, context) async {
+      final isPresent = await FlutterDriverUtils.isPresent(
+        context.world.driver,
+        find.byValueKey(key),
+        timeout: Duration(seconds: seconds),
+      );
+      context.expect(isPresent, true);
+    },
+  );
 }

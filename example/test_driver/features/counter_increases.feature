@@ -1,7 +1,6 @@
 Feature: Counter
   The counter should be incremented when the button is pressed.
 
-  @smoke
   Scenario: Counter increases when the button is pressed
     Given I pick the colour red
     Given I expect the "counter" to be "0"

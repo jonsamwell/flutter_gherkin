@@ -104,7 +104,6 @@ void main() {
   // are interested in testing.
   runApp(MyApp());
 }
-
 ```
 
 All this code does is enable the Flutter driver extension which is required to be able to automate the app and then runs your application.
@@ -134,30 +133,26 @@ import 'package:flutter_driver/flutter_driver.dart';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'package:gherkin/gherkin.dart';
 
-class TapButtonNTimesStep extends When2WithWorld<String, int, FlutterWorld> {
-  TapButtonNTimesStep()
-      : super(StepDefinitionConfiguration()..timeout = Duration(seconds: 10));
-
-  @override
-  Future<void> executeStep(String input1, int input2) async {
-    final locator = find.byValueKey(input1);
-    for (var i = 0; i < input2; i += 1) {
-      await FlutterDriverUtils.tap(world.driver, locator, timeout: timeout);
-    }
-  }
-
-  @override
-  RegExp get pattern => RegExp(r"I tap the {string} button {int} times");
+StepDefinitionGeneric TapButtonNTimesStep() {
+  return when2<String, int, FlutterWorld>(
+    'I tap the {string} button {int} times',
+    (key, count, context) async {
+      final locator = find.byValueKey(key);
+      for (var i = 0; i < count; i += 1) {
+        await FlutterDriverUtils.tap(context.world.driver, locator);
+      }
+    },
+  );
 }
 ```
 
-As you can see the class inherits from `When2WithWorld` and specifies the types of the two input parameters.  The third type `FlutterWorld` is a special Flutter context object that allow access to the Flutter driver instance within the step.  If you did not need this you could inherit from `When2` which does not type the world context object but still provides two input parameters.
+As you can see the `when2` method is invoked specifying two input parameters.  The third type `FlutterWorld` is a special world context object that allow access from the context object to the Flutter driver that allows you to interact with your app.  If you did not need a custom world object or strongly typed parameters you can omit the type arguments completely.
 
-The input parameters are retrieved via the pattern regex from well know parameter types `{string}` and `{int}` [explained below](#well-known-step-parameters).  They are just special syntax to indicate you are expecting a string and an integer at those points in the step text.  Therefore, when the step to execute is `When I tap the "increment" button 10 times` the parameters "increment" and 10 will be passed into the step as the correct types.  Note that in the pattern you can use any regex capture group to indicate any input parameter.  For example the regex ` ` ` RegExp(r"When I tap the {string} (button|icon) {int} times") ` ` ` indicates 3 parameters and would match to either of the below step text.
+The input parameters are retrieved via the pattern regex from well know parameter types `{string}` and `{int}` [explained below](#well-known-step-parameters).  They are just special syntax to indicate you are expecting a string and an integer at those points in the step text.  Therefore, when the step to execute is `When I tap the "increment" button 10 times` the parameters "increment" and 10 will be passed into the step as the correct types.  Note that in the pattern you can use any regex capture group to indicate any input parameter.  For example the regex ` `  ` RegExp(r"When I tap the {string} (button|icon) {int} times") `  ` ` indicates 3 parameters and would match to either of the below step text.
 
 ``` dart
 When I tap the "increment" button 10 times    // passes 3 parameters "increment", "button" & 10
-When I tap the "increment" icon 2 times       // passes 3 parameters "increment", "icon" & 2
+When I tap the "plus" icon 2 times       // passes 3 parameters "plus", "icon" & 2
 ```
 
 It is worth noting that this library *does not* rely on mirrors (reflection) for many reasons but most prominently for ease of maintenance and to fall inline with the principles of Flutter not allowing reflection.  All in all this make for a much easier to understand and maintain code base as well as much easier debugging for the user.  The downside is that we have to be slightly more explicit by providing instances of custom code such as step definition, hook, reporters and custom parameters.
@@ -225,14 +220,12 @@ An infix boolean expression which defines the features and scenarios to run base
 
 #### order
 
-Defaults to `ExecutionOrder.random` 
-
+Defaults to `ExecutionOrder.random`
 The order by which scenarios will be run. Running an a random order may highlight any inter-test dependencies that should be fixed.
 
 #### stepDefinitions
 
-Defaults to `Iterable<StepDefinitionBase>` 
-
+Defaults to `Iterable<StepDefinitionBase>`
 Place instances of any custom step definition classes `Given` , `Then` , `When` , `And` , `But` that match to any custom steps defined in your feature files.
 
 ``` dart
@@ -253,13 +246,11 @@ Future<void> main() {
     ..exitAfterTestRun = true; // set to false if debugging to exit cleanly
   return GherkinRunner().execute(config);
 }
-
 ```
 
 #### defaultLanguage
 
-Defaults to `en` 
-
+Defaults to `en`
 This specifies the default language the feature files are written in.  See https://cucumber.io/docs/gherkin/reference/#overview for supported languages.
 
 Note that this can be overridden in the feature itself by the use of a language block.
@@ -333,7 +324,7 @@ Attachment are pieces of data you can attach to a running scenario.  This could 
 
 Attachments would typically be attached via a `Hook` for example `onAfterStep` .
 
-``` 
+``` dart
 import 'package:gherkin/gherkin.dart';
 
 class AttachScreenshotOnFailedStepHook extends Hook {
@@ -346,14 +337,13 @@ class AttachScreenshotOnFailedStepHook extends Hook {
     }
   }
 }
-
 ```
 
 ##### screenshot
 
 To take a screenshot on a step failing you can used the pre-defined hook `AttachScreenshotOnFailedStepHook` and include it in the hook configuration of the tests config.  This hook will take a screenshot and add it as an attachment to the scenario.  If the `JsonReporter` is being used the screenshot will be embedded in the report which can be used to generate a HTML report which will ultimately display the screenshot under the failed step.
 
-``` 
+``` dart
 import 'dart:async';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'package:gherkin/gherkin.dart';
@@ -442,14 +432,12 @@ Future<void> main() {
 
 #### logFlutterProcessOutput
 
-Defaults to `false` 
-
+Defaults to `false`
 If `true` the output from the flutter process is logged to the stdout / stderr streams.  Useful when debugging app build or start failures
 
 #### flutterBuildTimeout
 
-Defaults to `90 seconds` 
-
+Defaults to `90 seconds`
 Specifies the period of time to wait for the Flutter build to complete and the app to be installed and in a state to be tested.  Slower machines may need longer than the default 90 seconds to complete this process.
 
 #### onBeforeFlutterDriverConnect
@@ -462,20 +450,17 @@ An async method that is called after a successful attempt by Flutter driver to c
 
 #### flutterDriverMaxConnectionAttempts
 
-Defaults to `3` 
-
+Defaults to `3`
 Specifies the number of Flutter driver connection attempts to a running app before the test is aborted
 
 #### flutterDriverReconnectionDelay
 
-Defaults to `2 seconds` 
-
+Defaults to `2 seconds`
 Specifies the amount of time to wait after a failed Flutter driver connection attempt to the running app
 
 #### exitAfterTestRun
 
-Defaults to `true` 
-
+Defaults to `true`
 True to exit the program after all tests have run.  You may want to set this to false during debugging.
 
 ### Flutter specific configuration options
@@ -490,15 +475,13 @@ To avoid tests starting on an app changed by a previous test it is suggested tha
 
 #### targetAppPath
 
-Defaults to `lib/test_driver/app.dart` 
-
+Defaults to `lib/test_driver/app.dart`
 This should point to the *testable* application that enables the Flutter driver extensions and thus is able to be automated.  This application wil be started when the test run is started and restarted if the `restartAppBetweenScenarios` configuration property is set to true.
 
 #### build
 
-Defaults to `true` 
-
-This optional argument lets you specify if the target application should be built prior to running the first test.  This defaults to `true` 
+Defaults to `true`
+This optional argument lets you specify if the target application should be built prior to running the first test.  This defaults to `true`
 
 #### buildFlavor
 
@@ -515,7 +498,7 @@ This optional argument lets you specify device target id as `flutter run --devic
 #### runningAppProtocolEndpointUri
 
 An observatory url that the test runner can connect to instead of creating a new running instance of the target application
-The url takes the form of `http://127.0.0.1:51540/EM72VtRsUV0=/` and usually printed to stdout in the form `Connecting to service protocol: http://127.0.0.1:51540/EM72VtRsUV0=/` 
+The url takes the form of `http://127.0.0.1:51540/EM72VtRsUV0=/` and usually printed to stdout in the form `Connecting to service protocol: http://127.0.0.1:51540/EM72VtRsUV0=/`
 You will have to add the `--verbose` flag to the command to start your flutter app to see this output and ensure `enableFlutterDriverExtension()` is called by the running app
 
 ## Features Files
@@ -537,7 +520,7 @@ However, the domain language you choose will influence what keyword works best i
 
 `Given` steps are used to describe the initial state of a system.  The execution of a `Given` step will usually put the system into well defined state.
 
-To implement a `Given` step you can inherit from the ` ` ` Given ` ` ` class.
+To implement a `Given` step you can inherit from the ` `  ` Given `  ` ` class.
 
 ``` dart
 Given Bob has logged in
@@ -548,14 +531,13 @@ Would be implemented like so:
 ``` dart
 import 'package:gherkin/gherkin.dart';
 
-class GivenWellKnownUserIsLoggedIn extends Given1<String> {
-  @override
-  Future<void> executeStep(String wellKnownUsername) async {
-    // implement your code
-  }
-
-  @override
-  RegExp get pattern => RegExp(r"(Bob|Mary|Emma|Jon) has logged in");
+StepDefinitionGeneric GivenWellKnownUserIsLoggedIn() {
+  return given1(
+    RegExp(r'(Bob|Mary|Emma|Jon) has logged in'),
+    (wellKnownUsername, context) async {
+      // implement your code
+    },
+  );
 }
 ```
 
@@ -579,16 +561,15 @@ Would be implemented like so:
 ``` dart
 import 'package:gherkin/gherkin.dart';
 
-class ThenExpectAppleCount extends Then1<int> {
-  @override
-  Future<void> executeStep(int count) async {
-    // example code
-    final actualCount = await _getActualCount();
-    expectMatch(actualCount, count);
-  }
-
-  @override
-  RegExp get pattern => RegExp(r"I expect {int} apple(s)");
+StepDefinitionGeneric ThenExpectAppleCount() {
+  return then1(
+    'I expect {int} apple(s)',
+    (count, context) async {
+      // example code
+      final actualCount = await _getActualCount();
+      context.expectMatch(actualCount, count);
+    },
+  );
 }
 ```
 
@@ -602,23 +583,19 @@ For example, the below sets the step's timeout to 10 seconds.
 
 ``` dart
 import 'package:flutter_driver/flutter_driver.dart';
-import 'package:gherkin/gherkin.dart';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
+import 'package:gherkin/gherkin.dart';
 
-class TapButtonNTimesStep extends When2WithWorld<String, int, FlutterWorld> {
-  TapButtonNTimesStep()
-      : super(StepDefinitionConfiguration()..timeout = Duration(seconds: 10));
-
-  @override
-  Future<void> executeStep(String input1, int input2) async {
-    final locator = find.byValueKey(input1);
-    for (var i = 0; i < input2; i += 1) {
-      await world.driver.tap(locator, timeout: timeout);
-    }
-  }
-
-  @override
-  RegExp get pattern => RegExp(r"I tap the {string} button {int} times");
+StepDefinitionGeneric TapButtonNTimesStep() {
+  return given2<String, int, FlutterWorld>(
+    'I tap the {string} button {int} times',
+    (key, count, context) async {
+      final locator = find.byValueKey(key);
+      for (var i = 0; i < count; i += 1) {
+        await FlutterDriverUtils.tap(context.world.driver, locator);
+      }
+    },
+  );
 }
 ```
 
@@ -648,16 +625,14 @@ The matching step definition would then be:
 ``` dart
 import 'package:gherkin/gherkin.dart';
 
-class GivenIProvideAComment extends Given2<String, String> {
-  @override
-  Future<void> executeStep(String commentType, String comment) async {
-    // TODO: implement executeStep
-  }
-
-  @override
-  RegExp get pattern => RegExp(r"I provide the following {string} comment");
+StepDefinitionGeneric GivenTheMultiLineComment() {
+  return given1(
+    'I provide the following {string} comment',
+    (comment, context) async {
+      // implement step
+    },
+  );
 }
-
 ```
 
 #### Data tables
@@ -669,28 +644,27 @@ import 'package:gherkin/gherkin.dart';
 ///
 /// For example:
 ///
-/// `Given I add the users` 
+/// `When I add the users`
 ///  | Firstname | Surname | Age | Gender |
 ///  | Woody     | Johnson | 28  | Male   |
 ///  | Edith     | Summers | 23  | Female |
 ///  | Megan     | Hill    | 83  | Female |
-class GivenIAddTheUsers extends Given1<Table> {
-  @override
-  Future<void> executeStep(Table dataTable) async {
-    for (var row in dataTable.rows) {
-      // do something with row
-      row.columns.forEach((columnValue) => print(columnValue));
-    }
+StepDefinitionGeneric WhenIAddTheUsers() {
+  return when1(
+    'I add the users',
+    (Table dataTable, context) async {
+      for (var row in dataTable.rows) {
+        // do something with row
+        row.columns.forEach((columnValue) => print(columnValue));
+      }
 
-    // or get the table as a map (column values keyed by the header)
-    final columns = dataTable.asMap();
-    final personOne = columns.elementAt(0);
-    final personOneName = personOne["Firstname"];
-    print('Name of first user: `$personOneName` ');
-  }
-
-  @override
-  RegExp get pattern => RegExp(r"I add the users");
+      // or get the table as a map (column values keyed by the header)
+      final columns = dataTable.asMap();
+      final personOne = columns.elementAt(0);
+      final personOneName = personOne["Firstname"];
+      print('Name of first user: `$personOneName` ');
+    },
+  );
 }
 ```
 
@@ -707,7 +681,7 @@ In most scenarios theses parameters will be enough for you to write quite advanc
 | {int}          | Matches an integer                            | {int}, {Int}                   | int    | `Given I see {int} worm(s)` would match `Given I see 6 worms` |
 | {num}          | Matches an number                             | {num}, {Num}, {float}, {Float} | num    | `Given I see {num} worm(s)` would match `Given I see 0.75 worms` |
 
-Note that you can combine there well known parameters in any step. For example `Given I {word} {int} worm(s)` would match `Given I "see" 6 worms` and also match `Given I "eat" 1 worm` 
+Note that you can combine there well known parameters in any step. For example `Given I {word} {int} worm(s)` would match `Given I "see" 6 worms` and also match `Given I "eat" 1 worm`
 
 #### Pluralization
 
@@ -747,14 +721,13 @@ The step definition would then use this custom parameter like so:
 import 'package:gherkin/gherkin.dart';
 import 'colour_parameter.dart';
 
-class GivenIPickAColour extends Given1<Colour> {
-  @override
-  Future<void> executeStep(Colour input1) async {
-    print("The picked colour was: '$input1'");
-  }
-
-  @override
-  RegExp get pattern => RegExp(r"I pick the colour {colour}");
+StepDefinitionGeneric GivenIAddTheUsers() {
+  return given1<Colour>(
+    'I pick the colour {colour}',
+    (colour, _) async {
+      print("The picked colour was: '$colour'");
+    },
+  );
 }
 ```
 
@@ -770,18 +743,13 @@ Tags are a great way of organizing your features and marking them with filterabl
 
 You can filter the scenarios by providing a tag expression to your configuration file.  Tag expression are simple infix expressions such as:
 
-`@smoke` 
-
-`@smoke and @perf` 
-
-`@billing or @onboarding` 
-
-`@smoke and not @ignore` 
-
+ `@smoke`
+ `@smoke and @perf`
+ `@billing or @onboarding`
+ `@smoke and not @ignore`
 You can even us brackets to ensure the order of precedence
 
-`@smoke and not (@ignore or @todo)` 
-
+ `@smoke and not (@ignore or @todo)`
 You can use the usual boolean statement "and", "or", "not"
 
 Also see <https://docs.cucumber.io/cucumber/api/#tags>
@@ -792,7 +760,7 @@ In order to allow features to be written in a number of languages, you can now w
 
 You can set the default language of feature files in your project via the configuration setting see [defaultLanguage](#defaultLanguage)
 
-For example these two features are the same the keywords are just written in different languages. Note the ` ` ` # language: de ` ` ` on the second feature.  English is the default language.
+For example these two features are the same the keywords are just written in different languages. Note the ` `  ` # language: de `  ` ` on the second feature.  English is the default language.
 
 ``` 
 Feature: Calculator
@@ -918,18 +886,17 @@ A reporter is a class that is able to report on the progress of the test run. In
 
 You can create your own custom reporter by inheriting from the base `Reporter` class and overriding the one or many of the methods to direct the output message.  The `Reporter` defines the following methods that can be overridden.  All methods must return a `Future<void>` and can be async.
 
-* `onTestRunStarted` 
-* `onTestRunFinished` 
-* `onFeatureStarted` 
-* `onFeatureFinished` 
-* `onScenarioStarted` 
-* `onScenarioFinished` 
-* `onStepStarted` 
-* `onStepFinished` 
-* `onException` 
-* `message` 
-* `dispose` 
-
+* `onTestRunStarted`
+* `onTestRunFinished`
+* `onFeatureStarted`
+* `onFeatureFinished`
+* `onScenarioStarted`
+* `onScenarioFinished`
+* `onStepStarted`
+* `onStepFinished`
+* `onException`
+* `message`
+* `dispose`
 Once you have created your custom reporter don't forget to add it to the `reporters` configuration file property.
 
 *Note*: PR's of new reporters are *always* welcome.

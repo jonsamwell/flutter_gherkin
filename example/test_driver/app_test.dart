@@ -8,25 +8,19 @@ import 'steps/given_I_pick_a_colour_step.dart';
 import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
-  final config = FlutterTestConfiguration()
-    ..features = [Glob('features//**.feature')]
-    ..reporters = [
-      ProgressReporter(),
-      TestRunSummaryReporter(),
-      JsonReporter(path: './report.json'),
-      FlutterDriverReporter(
-        logErrorMessages: true,
-        logInfoMessages: true,
-        logWarningMessages: true,
-      ),
-    ] // you can include the "StdoutReporter()" without the message level parameter for verbose log information
+  final steps = [
+    TapButtonNTimesStep(),
+    GivenIPickAColour(),
+  ];
+
+  final config = FlutterTestConfiguration.DEFAULT(
+    steps,
+    featurePath: 'features//**.feature',
+    targetAppPath: 'test_driver/app.dart',
+  )
     ..hooks = [
       HookExample(),
       // AttachScreenshotOnFailedStepHook(), // takes a screenshot of each step failure and attaches it to the world object
-    ]
-    ..stepDefinitions = [
-      TapButtonNTimesStep(),
-      GivenIPickAColour(),
     ]
     ..customStepParameterDefinitions = [
       ColourParameter(),

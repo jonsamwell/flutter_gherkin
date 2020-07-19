@@ -13,7 +13,7 @@ class FlutterWorld extends World {
     _driver = flutterDriver;
   }
 
-  void setFlutterProccessHandler(
+  void setFlutterProcessHandler(
       FlutterRunProcessHandler flutterRunProcessHandler) {
     _flutterRunProcessHandler = flutterRunProcessHandler;
   }
