@@ -11,9 +11,9 @@ import 'package:gherkin/gherkin.dart';
 ///   `When I tap the back element"`
 ///   `When I tap the back widget"`
 StepDefinitionGeneric WhenTapBackButtonWidget() {
-  return when1<String, FlutterWorld>(
+  return when<FlutterWorld>(
     RegExp(r'I tap the back (?:button|element|widget|icon|text)$'),
-    (_, context) async {
+    (context) async {
       await FlutterDriverUtils.tap(
         context.world.driver,
         find.pageBack(),

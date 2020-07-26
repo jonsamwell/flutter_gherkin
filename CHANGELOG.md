@@ -1,3 +1,6 @@
+## [1.1.8+4] - 26/07/2020
+* Fixes #76
+
 ## [1.1.8+3] - 19/07/2020
 * Updated Gherkin library version to allow for function step implementations; updated docs to match.
 * Add steps `SiblingContainsText`, `SwipeOnKey`, `SwipeOnText`, `TapTextWithinWidget`, `TapWidgetOfType`, `TapWidgetOfTypeWithin`, `TapWidgetWithText`, `TextExists`, `TextExistsWithin`, `WaitUntilKeyExists`, and `WaitUntilTypeExists` . Thanks to @tshedor for the PR!

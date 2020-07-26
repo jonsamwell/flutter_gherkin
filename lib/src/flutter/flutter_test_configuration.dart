@@ -191,9 +191,9 @@ class FlutterTestConfiguration extends TestConfiguration {
     stepDefinitions = List.from(stepDefinitions ?? [])
       ..addAll([
         ThenExpectElementToHaveValue(),
+        WhenTapBackButtonWidget(),
         WhenTapWidget(),
         WhenTapWidgetWithoutScroll(),
-        WhenTapBackButtonWidget(),
         GivenOpenDrawer(),
         WhenPauseStep(),
         WhenFillFieldStep(),

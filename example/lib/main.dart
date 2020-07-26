@@ -83,6 +83,15 @@ class _MyHomePageState extends State<MyHomePage> {
               key: const Key('counter'),
               style: Theme.of(context).textTheme.headline4,
             ),
+            FlatButton(
+              child: Text('Open page 2'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PageTwo()),
+                );
+              },
+            )
           ],
         ),
       ),
@@ -93,6 +102,23 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
+      ),
+    );
+  }
+}
+
+class PageTwo extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: true,
+        title: Text('Page 2'),
+      ),
+      body: SafeArea(
+        child: Center(
+          child: Text('Contents of page 2'),
+        ),
       ),
     );
   }
