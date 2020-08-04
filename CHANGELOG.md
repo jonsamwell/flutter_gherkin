@@ -1,3 +1,7 @@
+## [1.1.8+6] - 05/08/2020
+- Upgraded to latest Gherkin library version which fixes issues with non-alpha-numeric characters in multiline strings and comments https://github.com/jonsamwell/dart_gherkin/issues/14 https://github.com/jonsamwell/dart_gherkin/issues/15 https://github.com/jonsamwell/dart_gherkin/issues/16
+
+
 ## [1.1.8+5] - 03/08/2020
 * Ensure all well known steps are exposed (Thanks to @tshedor for the PR!)
 
