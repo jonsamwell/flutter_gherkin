@@ -23,7 +23,7 @@ void main() {
 
         config.prepare();
         expect(config.stepDefinitions, isNotNull);
-        expect(config.stepDefinitions.length, 20);
+        expect(config.stepDefinitions.length, 23);
         expect(config.customStepParameterDefinitions, isNotNull);
         expect(config.customStepParameterDefinitions.length, 2);
       });
@@ -36,7 +36,7 @@ void main() {
 
         config.prepare();
         expect(config.stepDefinitions, isNotNull);
-        expect(config.stepDefinitions.length, 21);
+        expect(config.stepDefinitions.length, 24);
         expect(config.stepDefinitions.elementAt(0),
             (x) => x is MockStepDefinition);
         expect(config.customStepParameterDefinitions, isNotNull);

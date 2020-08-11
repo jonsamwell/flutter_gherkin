@@ -23,6 +23,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  bool hasLongPressedText = false;
 
   void _incrementCounter() {
     setState(() {
@@ -91,7 +92,24 @@ class _MyHomePageState extends State<MyHomePage> {
                   MaterialPageRoute(builder: (context) => PageTwo()),
                 );
               },
-            )
+            ),
+            GestureDetector(
+              onLongPress: () {
+                setState(() {
+                  hasLongPressedText = true;
+                });
+              },
+              child: Container(
+                color:
+                    hasLongPressedText ? Colors.blueGrey : Colors.transparent,
+                child: Text(
+                  hasLongPressedText
+                      ? 'Text has been long pressed!'
+                      : 'Text that has not been long pressed',
+                  key: const Key('longPressText'),
+                ),
+              ),
+            ),
           ],
         ),
       ),

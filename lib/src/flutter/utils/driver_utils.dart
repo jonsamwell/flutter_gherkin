@@ -70,6 +70,16 @@ class FlutterDriverUtils {
     await FlutterDriverUtils.waitForFlutter(driver, timeout: timeout);
   }
 
+  static Future<void> longPress(
+    FlutterDriver driver,
+    SerializableFinder finder, {
+    Duration pressDuration = const Duration(milliseconds: 500),
+    Duration timeout = const Duration(seconds: 30),
+  }) async {
+    await driver.scroll(finder, 0, 0, pressDuration, timeout: timeout);
+    await FlutterDriverUtils.waitForFlutter(driver, timeout: timeout);
+  }
+
   /// Waits until the [condition] returns true
   /// Will raise a complete with a [TimeoutException] if the
   /// condition does not return true with the timeout period.

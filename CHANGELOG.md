@@ -1,3 +1,12 @@
+## [1.1.8+7] - 11/08/2020
+- Added well know steps and a driver helper method to long press a widget 
+
+```
+When I long press "controlKey" button
+
+When I long press "controlKey" icon for 1500 milliseconds
+```
+
 ## [1.1.8+6] - 05/08/2020
 - Upgraded to latest Gherkin library version which fixes issues with non-alpha-numeric characters in multiline strings and comments https://github.com/jonsamwell/dart_gherkin/issues/14 https://github.com/jonsamwell/dart_gherkin/issues/15 https://github.com/jonsamwell/dart_gherkin/issues/16
 

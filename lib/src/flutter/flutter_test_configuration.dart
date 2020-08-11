@@ -27,6 +27,7 @@ import 'package:gherkin/gherkin.dart';
 import 'package:glob/glob.dart';
 
 import 'steps/then_expect_widget_to_be_present_step.dart';
+import 'steps/when_long_press_widget_step.dart';
 
 class FlutterTestConfiguration extends TestConfiguration {
   String _observatoryDebuggerUri;
@@ -194,6 +195,9 @@ class FlutterTestConfiguration extends TestConfiguration {
         WhenTapBackButtonWidget(),
         WhenTapWidget(),
         WhenTapWidgetWithoutScroll(),
+        WhenLongPressWidget(),
+        WhenLongPressWidgetWithoutScroll(),
+        WhenLongPressWidgetForDuration(),
         GivenOpenDrawer(),
         WhenPauseStep(),
         WhenFillFieldStep(),
