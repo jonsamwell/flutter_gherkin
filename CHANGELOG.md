@@ -1,25 +1,39 @@
-## [1.1.8+7] - 11/08/2020
-- Added well know steps and a driver helper method to long press a widget 
+## [1.1.8+8] - 11/08/2020
 
+* Added well know steps and a driver helper method to long press a widget (fixed issue and documentation)
+
+``` 
+When I long press "controlKey" button
+
+When I long press "controlKey" icon for 1500 milliseconds
 ```
+
+## [1.1.8+7] - 11/08/2020
+
+* Added well know steps and a driver helper method to long press a widget 
+
+``` 
 When I long press "controlKey" button
 
 When I long press "controlKey" icon for 1500 milliseconds
 ```
 
 ## [1.1.8+6] - 05/08/2020
-- Upgraded to latest Gherkin library version which fixes issues with non-alpha-numeric characters in multiline strings and comments https://github.com/jonsamwell/dart_gherkin/issues/14 https://github.com/jonsamwell/dart_gherkin/issues/15 https://github.com/jonsamwell/dart_gherkin/issues/16
 
+* Upgraded to latest Gherkin library version which fixes issues with non-alpha-numeric characters in multiline strings and comments https://github.com/jonsamwell/dart_gherkin/issues/14 https://github.com/jonsamwell/dart_gherkin/issues/15 https://github.com/jonsamwell/dart_gherkin/issues/16
 
 ## [1.1.8+5] - 03/08/2020
+
 * Ensure all well known steps are exposed (Thanks to @tshedor for the PR!)
 
 ## [1.1.8+4] - 26/07/2020
+
 * Fixes #76
 
 ## [1.1.8+3] - 19/07/2020
+
 * Updated Gherkin library version to allow for function step implementations; updated docs to match.
-* Add steps `SiblingContainsText`, `SwipeOnKey`, `SwipeOnText`, `TapTextWithinWidget`, `TapWidgetOfType`, `TapWidgetOfTypeWithin`, `TapWidgetWithText`, `TextExists`, `TextExistsWithin`, `WaitUntilKeyExists`, and `WaitUntilTypeExists`. Thanks to @tshedor for the PR!
+* Add steps `SiblingContainsText` , `SwipeOnKey` , `SwipeOnText` , `TapTextWithinWidget` , `TapWidgetOfType` , `TapWidgetOfTypeWithin` , `TapWidgetWithText` , `TextExists` , `TextExistsWithin` , `WaitUntilKeyExists` , and `WaitUntilTypeExists` . Thanks to @tshedor for the PR!
 
 ## [1.1.8+2] - 11/05/2020
 
@@ -143,7 +157,7 @@ When I long press "controlKey" icon for 1500 milliseconds
 
 ## [1.0.6] - 21/08/2019
 
-* Added support to restart app during test `` `world.restartApp();` ``
+* Added support to restart app during test ` ` ` world.restartApp(); ` ` `
 
 ## [1.0.5] - 11/07/2019
 

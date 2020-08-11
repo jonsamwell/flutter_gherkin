@@ -35,6 +35,7 @@ StepDefinitionGeneric WhenLongPressWidget() {
   );
 }
 
+/// Long presses the widget found with the given control key, without scrolling into view
 StepDefinitionGeneric WhenLongPressWidgetWithoutScroll() {
   return when1<String, FlutterWorld>(
     RegExp(
@@ -42,7 +43,7 @@ StepDefinitionGeneric WhenLongPressWidgetWithoutScroll() {
     (key, context) async {
       final finder = find.byValueKey(key);
 
-      await FlutterDriverUtils.tap(
+      await FlutterDriverUtils.longPress(
         context.world.driver,
         finder,
       );
@@ -50,6 +51,7 @@ StepDefinitionGeneric WhenLongPressWidgetWithoutScroll() {
   );
 }
 
+/// Long presses the widget found with the given control key, for the given duration
 StepDefinitionGeneric WhenLongPressWidgetForDuration() {
   return when2<String, int, FlutterWorld>(
     RegExp(
