@@ -46,6 +46,7 @@ class FlutterRunProcessHandler extends ProcessHandler {
   bool _buildApp = true;
   bool _logFlutterProcessOutput = false;
   bool _verboseFlutterLogs = false;
+  bool _profileBuildMode = false;
   String _workingDirectory;
   String _appTarget;
   String _buildFlavor;
@@ -73,6 +74,10 @@ class FlutterRunProcessHandler extends ProcessHandler {
     _buildFlavor = buildFlavor;
   }
 
+  void setProfileBuildMode(bool profileBuildMode) {
+    _profileBuildMode = profileBuildMode;
+  }
+
   void setDeviceTargetId(String deviceTargetId) {
     _deviceTargetId = deviceTargetId;
   }
@@ -88,6 +93,10 @@ class FlutterRunProcessHandler extends ProcessHandler {
   @override
   Future<void> run() async {
     final arguments = ['run', '--target=$_appTarget'];
+
+    if (_profileBuildMode) {
+      arguments.add('--profile');
+    }
 
     if (_buildApp == false) {
       arguments.add('--no-build');

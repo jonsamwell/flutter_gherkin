@@ -75,6 +75,10 @@ class FlutterTestConfiguration extends TestConfiguration {
   /// Defaults to empty
   String buildFlavor = '';
 
+  /// The default build mode used for running tests is --debug.
+  /// We are exposing the option to run the tests also in profile mode
+  bool profileBuildMode = false;
+
   /// If the application should be built prior to running the tests
   /// Defaults to true
   bool build = true;
