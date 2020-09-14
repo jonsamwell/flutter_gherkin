@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter_gherkin/src/flutter/build_mode.dart';
 import 'package:gherkin/gherkin.dart';
 
 class FlutterRunProcessHandler extends ProcessHandler {
@@ -46,7 +47,7 @@ class FlutterRunProcessHandler extends ProcessHandler {
   bool _buildApp = true;
   bool _logFlutterProcessOutput = false;
   bool _verboseFlutterLogs = false;
-  bool _profileBuildMode = false;
+  BuildMode _buildMode = BuildMode.Debug;
   String _workingDirectory;
   String _appTarget;
   String _buildFlavor;
@@ -74,8 +75,8 @@ class FlutterRunProcessHandler extends ProcessHandler {
     _buildFlavor = buildFlavor;
   }
 
-  void setProfileBuildMode(bool profileBuildMode) {
-    _profileBuildMode = profileBuildMode;
+  void setBuildMode(BuildMode buildMode) {
+    _buildMode = buildMode;
   }
 
   void setDeviceTargetId(String deviceTargetId) {
@@ -94,8 +95,10 @@ class FlutterRunProcessHandler extends ProcessHandler {
   Future<void> run() async {
     final arguments = ['run', '--target=$_appTarget'];
 
-    if (_profileBuildMode) {
+    if (_buildMode == BuildMode.Profile) {
       arguments.add('--profile');
+    } else if (_buildMode == BuildMode.Debug) {
+      arguments.add('--debug');
     }
 
     if (_buildApp == false) {
