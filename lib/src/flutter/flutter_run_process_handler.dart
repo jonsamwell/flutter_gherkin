@@ -95,10 +95,10 @@ class FlutterRunProcessHandler extends ProcessHandler {
   Future<void> run() async {
     final arguments = ['run', '--target=$_appTarget'];
 
-    if (_buildMode == BuildMode.Profile) {
-      arguments.add('--profile');
-    } else if (_buildMode == BuildMode.Debug) {
+    if (_buildMode == BuildMode.Debug) {
       arguments.add('--debug');
+    } else if (_buildMode == BuildMode.Profile) {
+      arguments.add('--profile');
     }
 
     if (_buildApp == false) {
