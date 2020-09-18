@@ -24,5 +24,7 @@ StepDefinitionGeneric ThenExpectWidgetToBePresent() {
       );
       context.expect(isPresent, true);
     },
+    configuration: StepDefinitionConfiguration()
+      ..timeout = Duration(days: 9999)
   );
 }
