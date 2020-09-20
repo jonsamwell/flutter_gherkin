@@ -85,7 +85,16 @@ class _MyHomePageState extends State<MyHomePage> {
               style: Theme.of(context).textTheme.headline4,
             ),
             FlatButton(
+              key: Key('openPage2'),
               child: Text('Open page 2'),
+              onLongPress: () {
+                Future.delayed(
+                    Duration(seconds: 12),
+                    () => Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => PageTwo()),
+                        ));
+              },
               onPressed: () {
                 Navigator.push(
                   context,
@@ -129,6 +138,7 @@ class PageTwo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: Key('pageTwo'),
       appBar: AppBar(
         automaticallyImplyLeading: true,
         title: Text('Page 2'),
