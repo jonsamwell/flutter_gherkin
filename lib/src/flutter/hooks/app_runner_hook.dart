@@ -75,6 +75,7 @@ class FlutterAppRunnerHook extends Hook {
         ..setWorkingDirectory(config.targetAppWorkingDirectory)
         ..setBuildRequired(haveRunFirstScenario ? false : config.build)
         ..setBuildFlavor(config.buildFlavor)
+        ..setBuildMode(config.buildMode)
         ..setDeviceTargetId(config.targetDeviceId);
 
       stdout.writeln(

@@ -46,6 +46,7 @@ Available as a Dart package https://pub.dartlang.org/packages/flutter_gherkin
     - [restartAppBetweenScenarios](#restartappbetweenscenarios)
     - [build](#build)
     - [buildFlavor](#buildFlavor)
+    - [buildMode](#buildMode)
     - [flutterBuildTimeout](#flutterBuildTimeout)
     - [logFlutterProcessOutput](#logFlutterProcessOutput)
     - [targetDeviceId](#targetDeviceId)
@@ -488,6 +489,12 @@ This optional argument lets you specify if the target application should be buil
 Defaults to empty string
 
 This optional argument lets you specify which flutter flavor you want to test against.  Flutter's flavor has similar concept with `Android Build Variants` or `iOS Scheme Configuration` . This [flavoring flutter](https://flutter.dev/docs/deployment/flavors) documentation has complete guide on both flutter and android/ios side.
+
+#### buildMode
+
+Defaults to `BuildMode.Debug`
+
+This optional argument lets you specify which build mode you prefer while compiling your app. Flutter Gherkin supports `--debug` and `--profile` modes. Check [Flutter's build modes](https://flutter.dev/docs/testing/build-modes) documentation for more details.
 
 #### targetDeviceId
 

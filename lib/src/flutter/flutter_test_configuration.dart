@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
+import 'package:flutter_gherkin/src/flutter/build_mode.dart';
 import 'package:flutter_gherkin/src/flutter/flutter_world.dart';
 import 'package:flutter_gherkin/src/flutter/hooks/app_runner_hook.dart';
 import 'package:flutter_gherkin/src/flutter/parameters/existence_parameter.dart';
@@ -74,6 +75,10 @@ class FlutterTestConfiguration extends TestConfiguration {
   /// The build flavor to run the tests against (optional)
   /// Defaults to empty
   String buildFlavor = '';
+
+  /// The default build mode used for running tests is --debug.
+  /// We are exposing the option to run the tests also in --profile mode
+  BuildMode buildMode = BuildMode.Debug;
 
   /// If the application should be built prior to running the tests
   /// Defaults to true
