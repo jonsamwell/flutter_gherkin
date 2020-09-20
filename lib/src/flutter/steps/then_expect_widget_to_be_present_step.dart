@@ -14,17 +14,16 @@ import 'package:gherkin/gherkin.dart';
 ///   `Then I expect the button 'save' to be present within 1 second`
 StepDefinitionGeneric ThenExpectWidgetToBePresent() {
   return given2<String, int, FlutterWorld>(
-    RegExp(
-        r'I expect the (?:button|element|label|icon|field|text|widget|dialog|popup) {string} to be present within {int} second(s)$'),
-    (key, seconds, context) async {
-      final isPresent = await FlutterDriverUtils.isPresent(
-        context.world.driver,
-        find.byValueKey(key),
-        timeout: Duration(seconds: seconds),
-      );
-      context.expect(isPresent, true);
-    },
-    configuration: StepDefinitionConfiguration()
-      ..timeout = Duration(days: 9999)
-  );
+      RegExp(
+          r'I expect the (?:button|element|label|icon|field|text|widget|dialog|popup) {string} to be present within {int} second(s)$'),
+      (key, seconds, context) async {
+    final isPresent = await FlutterDriverUtils.isPresent(
+      context.world.driver,
+      find.byValueKey(key),
+      timeout: Duration(seconds: seconds),
+    );
+    context.expect(isPresent, true);
+  },
+      configuration: StepDefinitionConfiguration()
+        ..timeout = const Duration(days: 1));
 }

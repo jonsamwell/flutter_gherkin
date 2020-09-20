@@ -1,3 +1,10 @@
+## [1.1.8+9] - 20/09/2020
+
+* Fixes #84 - pre-defined `present within N seconds` is limited by system timeout (thanks @doubleo2)
+* Added build mode to enable profile build and performance profiling (thanks @lsuhov)
+* Updated to latest dart_gherkin library which fixes access to the default step timeout see #81
+
+
 ## [1.1.8+8] - 11/08/2020
 
 * Added well know steps and a driver helper method to long press a widget (fixed issue and documentation)
