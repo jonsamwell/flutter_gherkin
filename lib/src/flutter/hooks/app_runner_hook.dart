@@ -74,6 +74,7 @@ class FlutterAppRunnerHook extends Hook {
         ..setDriverConnectionDelay(config.flutterDriverReconnectionDelay)
         ..setWorkingDirectory(config.targetAppWorkingDirectory)
         ..setBuildRequired(haveRunFirstScenario ? false : config.build)
+        ..setKeepAppRunning(config.keepAppRunningAfterTests)
         ..setBuildFlavor(config.buildFlavor)
         ..setBuildMode(config.buildMode)
         ..setDeviceTargetId(config.targetDeviceId);

@@ -47,6 +47,7 @@ class FlutterRunProcessHandler extends ProcessHandler {
   bool _buildApp = true;
   bool _logFlutterProcessOutput = false;
   bool _verboseFlutterLogs = false;
+  bool _keepAppRunning = false;
   BuildMode _buildMode = BuildMode.Debug;
   String _workingDirectory;
   String _appTarget;
@@ -91,6 +92,10 @@ class FlutterRunProcessHandler extends ProcessHandler {
     _verboseFlutterLogs = verbose;
   }
 
+  void setKeepAppRunning(bool keepRunning) {
+    _keepAppRunning = keepRunning;
+  }
+
   @override
   Future<void> run() async {
     final arguments = ['run', '--target=$_appTarget'];
@@ -115,6 +120,10 @@ class FlutterRunProcessHandler extends ProcessHandler {
 
     if (_verboseFlutterLogs) {
       arguments.add('--verbose');
+    }
+
+    if (_keepAppRunning) {
+      arguments.add('--keep-app-running');
     }
 
     if (_logFlutterProcessOutput) {

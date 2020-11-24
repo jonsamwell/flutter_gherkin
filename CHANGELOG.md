@@ -1,3 +1,8 @@
+## [1.1.9] - 24/11/2020
+* Fixes #93 & #92 - Error waiting for no transient callbacks from Flutter driver
+* Added option to leave Flutter app under test running when the tests finish see `keepAppRunningAfterTests` configuration property
+* Added the ability to have multiple example blocks with tags per scenario outline
+
 ## [1.1.8+9] - 20/09/2020
 
 * Fixes #84 - pre-defined `present within N seconds` is limited by system timeout (thanks @doubleo2)

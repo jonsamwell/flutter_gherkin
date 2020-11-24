@@ -60,6 +60,7 @@ Available as a Dart package https://pub.dartlang.org/packages/flutter_gherkin
   + [Steps Definitions](#steps-definitions)
     - [Given](#given)
     - [Then](#then)
+    - [Expects Assertions](#expects-assertions)
     - [Step Timeout](#step-timeout)
     - [Multiline Strings](#multiline-strings)
     - [Data tables](#data-tables)
@@ -484,6 +485,11 @@ This should point to the *testable* application that enables the Flutter driver 
 Defaults to `true`
 This optional argument lets you specify if the target application should be built prior to running the first test.  This defaults to `true`
 
+#### keepAppRunningAfterTests
+
+Defaults to `false`
+This optional argument will keep the Flutter application running when done testing.  This defaults to `false`
+
 #### buildFlavor
 
 Defaults to empty string
@@ -580,7 +586,9 @@ StepDefinitionGeneric ThenExpectAppleCount() {
 }
 ```
 
-**Caveat**: The `expect` library currently only works within the library's own `test` function blocks; so using it with a `Then` step will cause an error.  Therefore, the `expectMatch` or `expectA` or `this.expect` methods have been added which mimic the underlying functionality of `except` in that they assert that the give is true.  The `Matcher` within Dart's test library still work and can be used as expected.
+#### Expects Assertions
+
+**Caveat**: The `expect` library currently only works within the library's own `test` function blocks; so using it with a `Then` step will cause an error.  Therefore, the `expectMatch` or `expectA` or `this.expect` or `context.expect` methods have been added which mimic the underlying functionality of `except` in that they assert that the give is true.  The `Matcher` within Dart's test library still work and can be used as expected.
 
 #### Step Timeout
 

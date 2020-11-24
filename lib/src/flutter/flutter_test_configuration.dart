@@ -88,6 +88,10 @@ class FlutterTestConfiguration extends TestConfiguration {
   /// Defaults to empty
   String targetDeviceId = '';
 
+  /// Will keep the Flutter application running when done testing
+  /// Defaults to false
+  bool keepAppRunningAfterTests = false;
+
   /// Logs Flutter process output to stdout
   /// The Flutter process is use to start and driver the app under test.
   /// The output may contain build and run information
