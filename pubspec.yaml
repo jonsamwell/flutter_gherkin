@@ -22,6 +22,6 @@ dependencies:
 
 dev_dependencies:
   test:
-  pedantic:
+  pedantic: ^1.9.2
 
 flutter:
