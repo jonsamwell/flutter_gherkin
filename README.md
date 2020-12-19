@@ -1028,6 +1028,8 @@ You should see similar output as this:
 
 ```
 .....
+Connecting to service protocol: http://127.0.0.1:61658/RtsPT2zp_qs=/
+.....
 Flutter run key commands.
 [ +2 ms] r Hot reload. 🔥🔥🔥
 [ +1 ms] R Hot restart.
@@ -1068,9 +1070,13 @@ final config = FlutterTestConfiguration.DEFAULT(
 
 Start a new terminal and navigate to the `test_driver` directory. 
 
-Notice the `app_test.dart` expects a parameter. This is to ease the changing uri which will occur each time the tests are started. You can copy/paste the uri from the terminal window of the app under test as shown here.
+Notice the `app_test.dart` expects a parameter. This is to ease the changing uri which will occur each time the app under test is started.  If you use the `R` command, the `uri` does not change.
 
-Run the command `dart app_test.dart <uri>`. As an example, the app under test has this line: 	`Connecting to service protocol: http://127.0.0.1:61658/RtsPT2zp_qs=/` you would copy `http://127.0.0.1:61658/RtsPT2zp_qs=/` and paste it as such: 
+You can copy the `uri` from the terminal window of the app under test.
+
+Run the command `dart app_test.dart <uri>`. As an example, the app under test has this line: 
+   `Connecting to service protocol: http://127.0.0.1:61658/RtsPT2zp_qs=/` 
+so you would copy `http://127.0.0.1:61658/RtsPT2zp_qs=/` and paste it as such: 
 
 `dart app_test.dart http://127.0.0.1:59862/luEyFXvK9Qc=/`.
 
