@@ -1005,3 +1005,79 @@ Setting the configuration property `runningAppProtocolEndpointUri` to the servic
 NOTE: ensure the app you are trying to connect to calls `enableFlutterDriverExtension()` when it starts up otherwise the Flutter Driver will not be able to connect to it.
 
 Also ensure that the `--verbose` flag is set when starting the app to test, this will then log the service protocol endpoint out to the console which is the uri you will need to set this property to.  It usually takes the form of `Connecting to service protocol: http://127.0.0.1:51540/EM72VtRsUV0=/` so set the `runningAppProtocolEndpointUri` to `http://127.0.0.1:51540/EM72VtRsUV0=/` and then start the tests.
+
+##### Interactive debugging
+One way to configure your test environment is to run the app under test in a separate terminal and run the gherkin in a different terminal. With this approach you can hot reload the app by entering `R` in the app terminal and run the steps repeatedly in the other terminal **with out** incurring the cost of the app start up.
+
+For the app under test, in this case `lib/main_test.dart`, it should look similar to this:
+
+```
+import 'package:flutter/material.dart';
+import 'package:flutter_driver/driver_extension.dart';
+void main() {
+  enableFlutterDriverExtension();
+runApp();
+```
+
+When you start this from the terminal, run like this:
+
+` flutter run -t lib/main_test.dart --verbose`
+
+As stated above, with the `--verbose` flag, you will want to find the service protocol endpoint.
+You should see similar output as this:
+
+```
+.....
+Connecting to service protocol: http://127.0.0.1:61658/RtsPT2zp_qs=/
+.....
+Flutter run key commands.
+[ +2 ms] r Hot reload. 🔥🔥🔥
+[ +1 ms] R Hot restart.
+[ ] h Repeat this help message.
+[ ] d Detach (terminate "flutter run" but leave application running).
+[ ] c Clear the screen
+[ ] q Quit (terminate the application on the device).
+[ ] An Observatory debugger and profiler on iPhone 8 Plus is available at: http://127.0.0.1:61660/xgrsw_qQ9sI=/
+[ ] Running with unsound null safety
+[ ] For more information see https://dart.dev/null-safety/unsound-null-safety
+```
+
+To run the gherkin tests, first update the `test_driver/app_test.dart` to something similar to this:
+
+```
+import 'dart:async';
+import 'dart:io';
+import 'package:flutter_gherkin/flutter_gherkin.dart';
+import 'package:gherkin/gherkin.dart';
+Future<void> main(List<String> args) async {
+if (args.isEmpty) {
+  print('please pass in the uri');
+  exit(1);
+}
+final Iterable<StepDefinitionGeneric<World>> steps = [];
+final config = FlutterTestConfiguration.DEFAULT(
+  steps,
+  featurePath: 'features//**.feature',
+  targetAppPath: 'test_driver/app.dart',
+)
+  ..restartAppBetweenScenarios = false
+  ..targetAppWorkingDirectory = '../'
+  ..runningAppProtocolEndpointUri = args[0]
+  ..exitAfterTestRun = true; 
+  return GherkinRunner().execute(config);
+}
+```
+
+Start a new terminal and navigate to the `test_driver` directory. 
+
+Notice the `app_test.dart` expects a parameter. This is to ease the changing uri which will occur each time the app under test is started.  If you use the `R` command, the `uri` does not change.
+
+You can copy the `uri` from the terminal window of the app under test.
+
+Run the command `dart app_test.dart <uri>`. As an example, the app under test has this line: 
+   `Connecting to service protocol: http://127.0.0.1:61658/RtsPT2zp_qs=/` 
+so you would copy `http://127.0.0.1:61658/RtsPT2zp_qs=/` and paste it as such: 
+
+`dart app_test.dart http://127.0.0.1:59862/luEyFXvK9Qc=/`.
+
+As you make changes in the app under test, just `R` (reload). In the test window you can rerun the tests and update the Scenarios quickly and easily.
