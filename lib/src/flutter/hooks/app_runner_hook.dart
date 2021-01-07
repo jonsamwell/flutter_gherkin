@@ -1,9 +1,8 @@
 import 'dart:io';
+import 'package:flutter_gherkin/src/flutter/configuration/flutter_driver_test_configuration.dart';
 import 'package:flutter_gherkin/src/flutter/flutter_run_process_handler.dart';
-import 'package:flutter_gherkin/src/flutter/flutter_test_configuration.dart';
+import 'package:flutter_gherkin/src/flutter/world/flutter_driver_world.dart';
 import 'package:gherkin/gherkin.dart';
-
-import '../flutter_world.dart';
 
 /// A hook that manages running the target flutter application
 /// that is under test
@@ -60,11 +59,12 @@ class FlutterAppRunnerHook extends Hook {
     }
   }
 
-  Future<void> _runApp(FlutterTestConfiguration config) async {
+  Future<void> _runApp(FlutterDriverTestConfiguration config) async {
     if (config.runningAppProtocolEndpointUri != null &&
         config.runningAppProtocolEndpointUri.isNotEmpty) {
       stdout.writeln(
-          "Connecting to running Flutter app under test at '${config.runningAppProtocolEndpointUri}', this might take a few moments");
+        "Connecting to running Flutter app under test at '${config.runningAppProtocolEndpointUri}', this might take a few moments",
+      );
       config.setObservatoryDebuggerUri(config.runningAppProtocolEndpointUri);
     } else {
       _flutterRunProcessHandler = FlutterRunProcessHandler()
@@ -103,6 +103,6 @@ class FlutterAppRunnerHook extends Hook {
     }
   }
 
-  FlutterTestConfiguration _castConfig(TestConfiguration config) =>
-      config as FlutterTestConfiguration;
+  FlutterDriverTestConfiguration _castConfig(TestConfiguration config) =>
+      config as FlutterDriverTestConfiguration;
 }

@@ -1,23 +1,8 @@
 import 'package:flutter_driver/flutter_driver.dart';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
-import 'package:gherkin/gherkin.dart';
 
-import 'adapters/app_driver_adapter.dart';
-import 'flutter_run_process_handler.dart';
+import '../flutter_run_process_handler.dart';
 
-abstract class FlutterWorld extends World {
-  AppDriverAdapter _adapter;
-
-  AppDriverAdapter get appDriver => _adapter;
-
-  void setAppAdapter(AppDriverAdapter appAdapter) {
-    _adapter = appAdapter;
-  }
-
-  Future<bool> restartApp({
-    Duration timeout = const Duration(seconds: 60),
-  });
-}
 
 class FlutterDriverWorld extends FlutterWorld {
   FlutterRunProcessHandler _flutterRunProcessHandler;
