@@ -1,5 +1,5 @@
-import 'package:flutter_driver/flutter_driver.dart';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
+import 'package:flutter_gherkin/src/flutter/adapters/app_driver_adapter.dart';
 import 'package:gherkin/gherkin.dart';
 
 import '../parameters/existence_parameter.dart';
@@ -15,16 +15,14 @@ StepDefinitionGeneric TextExistsStep() {
     RegExp(r'I expect the text {string} to be {existence}$'),
     (text, exists, context) async {
       if (exists == Existence.present) {
-        final isPresent = await FlutterDriverUtils.isPresent(
-          context.world.driver,
-          find.text(text),
+        final isPresent = await context.world.appDriver.isPresent(
+          context.world.appDriver.findBy(text, FindType.text),
         );
 
         context.expect(isPresent, true);
       } else {
-        final isAbsent = await FlutterDriverUtils.isAbsent(
-          context.world.driver,
-          find.text(text),
+        final isAbsent = await context.world.appDriver.isAbsent(
+          context.world.appDriver.findBy(text, FindType.text),
         );
         context.expect(isAbsent, true);
       }

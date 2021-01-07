@@ -1,5 +1,5 @@
-import 'package:flutter_driver/flutter_driver.dart';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
+import 'package:flutter_gherkin/src/flutter/adapters/app_driver_adapter.dart';
 import 'package:gherkin/gherkin.dart';
 
 import '../parameters/existence_parameter.dart';
@@ -15,14 +15,13 @@ StepDefinitionGeneric TextExistsWithinStep() {
     RegExp(
         r'I expect the text {string} to be {existence} within the {string}$'),
     (text, exists, ancestorKey, context) async {
-      final finder = find.descendant(
-        of: find.byValueKey(ancestorKey),
-        matching: find.text(text),
+      final finder = context.world.appDriver.findByDescendant(
+        context.world.appDriver.findBy(ancestorKey, FindType.key),
+        context.world.appDriver.findBy(text, FindType.text),
         firstMatchOnly: true,
       );
 
-      final isPresent = await FlutterDriverUtils.isPresent(
-        context.world.driver,
+      final isPresent = await context.world.appDriver.isPresent(
         finder,
       );
 

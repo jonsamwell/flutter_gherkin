@@ -5,6 +5,8 @@ export 'src/flutter/build_mode.dart';
 export 'src/flutter/flutter_world.dart';
 export 'src/flutter/flutter_test_configuration.dart';
 export 'src/flutter/utils/driver_utils.dart';
+export 'src/flutter/adapters/app_driver_adapter.dart';
+export 'src/flutter/adapters/flutter_driver_app_driver_adapter.dart';
 
 // Well known steps
 export 'src/flutter/steps/given_i_open_the_drawer_step.dart';

@@ -25,7 +25,7 @@ class AttachScreenshotOnFailedStepHook extends Hook {
 
   @protected
   Future<String> takeScreenshot(World world) async {
-    final bytes = await (world as FlutterWorld).driver.screenshot();
+    final bytes = await (world as FlutterWorld).appDriver.screenshot();
 
     return base64Encode(bytes);
   }

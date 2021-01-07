@@ -17,22 +17,22 @@ mixin _SwipeHelper
       final offset =
           direction == SwipeDirection.right ? swipeAmount : (swipeAmount * -1);
 
-      await world.driver.scroll(
+      await world.appDriver.scroll(
         finder,
-        offset.toDouble(),
-        0,
-        Duration(milliseconds: 500),
+        dx: offset.toDouble(),
+        dy: 0,
+        duration: Duration(milliseconds: 500),
         timeout: timeout,
       );
     } else {
       final offset =
           direction == SwipeDirection.up ? swipeAmount : (swipeAmount * -1);
 
-      await world.driver.scroll(
+      await world.appDriver.scroll(
         finder,
-        0,
-        offset.toDouble(),
-        Duration(milliseconds: 500),
+        dx: 0,
+        dy: offset.toDouble(),
+        duration: Duration(milliseconds: 500),
         timeout: timeout,
       );
     }

@@ -164,7 +164,7 @@ class FlutterTestConfiguration extends TestConfiguration {
     FlutterWorld world,
   ) async {
     var flutterConfig = config as FlutterTestConfiguration;
-    world = world ?? FlutterWorld();
+    world = world ?? FlutterDriverWorld();
 
     final driver = await createFlutterDriver(
       flutterConfig.runningAppProtocolEndpointUri != null &&
@@ -173,7 +173,7 @@ class FlutterTestConfiguration extends TestConfiguration {
           : null,
     );
 
-    world.setFlutterDriver(driver);
+    (world as FlutterDriverWorld).setFlutterDriver(driver);
 
     return world;
   }

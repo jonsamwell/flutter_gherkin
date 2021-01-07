@@ -55,7 +55,7 @@ class FlutterAppRunnerHook extends Hook {
     String scenario,
     Iterable<Tag> tags,
   ) async {
-    if (world is FlutterWorld) {
+    if (world is FlutterDriverWorld) {
       world.setFlutterProcessHandler(_flutterRunProcessHandler);
     }
   }

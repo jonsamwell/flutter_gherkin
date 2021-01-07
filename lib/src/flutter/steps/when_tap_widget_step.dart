@@ -1,6 +1,5 @@
+import 'package:flutter_gherkin/src/flutter/adapters/app_driver_adapter.dart';
 import 'package:flutter_gherkin/src/flutter/flutter_world.dart';
-import 'package:flutter_gherkin/src/flutter/utils/driver_utils.dart';
-import 'package:flutter_driver/flutter_driver.dart';
 import 'package:gherkin/gherkin.dart';
 
 /// Taps the widget found with the given control key.
@@ -22,13 +21,13 @@ StepDefinitionGeneric WhenTapWidget() {
     RegExp(
         r'I tap the {string} (?:button|element|label|icon|field|text|widget)$'),
     (key, context) async {
-      final finder = find.byValueKey(key);
+      final finder =
+          context.world.appDriver.findByDescendant(key, FindType.key);
 
-      await context.world.driver.scrollIntoView(
+      await context.world.appDriver.scrollIntoView(
         finder,
       );
-      await FlutterDriverUtils.tap(
-        context.world.driver,
+      await context.world.appDriver.tap(
         finder,
       );
     },
@@ -40,10 +39,10 @@ StepDefinitionGeneric WhenTapWidgetWithoutScroll() {
     RegExp(
         r'I tap the {string} (?:button|element|label|icon|field|text|widget) without scrolling it into view$'),
     (key, context) async {
-      final finder = find.byValueKey(key);
+      final finder =
+          context.world.appDriver.findByDescendant(key, FindType.key);
 
-      await FlutterDriverUtils.tap(
-        context.world.driver,
+      await context.world.appDriver.tap(
         finder,
       );
     },

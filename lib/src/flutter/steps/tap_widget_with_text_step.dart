@@ -1,5 +1,5 @@
-import 'package:flutter_driver/flutter_driver.dart';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
+import 'package:flutter_gherkin/src/flutter/adapters/app_driver_adapter.dart';
 import 'package:gherkin/gherkin.dart';
 
 /// Taps a widget that contains text.
@@ -14,10 +14,9 @@ StepDefinitionGeneric TapWidgetWithTextStep() {
     RegExp(
         r'I tap the (?:button|element|label|field|text|widget) that contains the text {string}$'),
     (input1, context) async {
-      final finder = find.text(input1);
-      await context.world.driver.scrollIntoView(finder);
-      await FlutterDriverUtils.tap(
-        context.world.driver,
+      final finder = context.world.appDriver.findBy(input1, FindType.text);
+      await context.world.appDriver.scrollIntoView(finder);
+      await context.world.appDriver.tap(
         finder,
       );
     },

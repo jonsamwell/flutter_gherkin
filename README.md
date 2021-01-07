@@ -610,6 +610,8 @@ StepDefinitionGeneric TapButtonNTimesStep() {
         await FlutterDriverUtils.tap(context.world.driver, locator);
       }
     },
+    configuration: StepDefinitionConfiguration()
+      ..timeout = const Duration(seconds: 10),
   );
 }
 ```
