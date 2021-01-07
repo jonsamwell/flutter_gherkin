@@ -1,12 +1,14 @@
 import 'dart:async';
 
-import 'package:flutter_driver/flutter_driver.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 import 'app_driver_adapter.dart';
 
-class FlutterDriverAppDriverAdapter
-    extends AppDriverAdapter<FlutterDriver, SerializableFinder, dynamic> {
-  FlutterDriverAppDriverAdapter(FlutterDriver rawAdapter) : super(rawAdapter);
+class WidgetTesterAppDriverAdapter
+    extends AppDriverAdapter<WidgetTester, Finder, Widget> {
+  WidgetTesterAppDriverAdapter(WidgetTester rawAdapter) : super(rawAdapter);
 
   @override
   Future<int> waitForAppToSettle({
@@ -14,7 +16,11 @@ class FlutterDriverAppDriverAdapter
     Duration timeout = const Duration(seconds: 30),
   }) async {
     try {
-      await rawDriver.waitUntilNoTransientCallbacks(timeout: timeout);
+      await rawDriver.pumpAndSettle(
+        duration,
+        EnginePhase.sendSemanticsUpdate,
+        timeout,
+      );
     } catch (_) {
       return null;
     }
@@ -23,74 +29,68 @@ class FlutterDriverAppDriverAdapter
   }
 
   @override
-  Future<T> widget<T extends Object>(SerializableFinder finder) {
-    throw UnimplementedError(
-        'Flutter driver does not support directly interacting with the widget tree');
-  }
-
-  @override
-  void dispose() {
-    rawDriver.close().catchError(
-      (e, st) {
-        // Avoid an unhandled error
-        return null;
-      },
-    );
+  Future<T> widget<T extends Widget>(Finder finder) {
+    return Future.value(rawDriver.widget<T>(finder));
   }
 
   @override
   Future<List<int>> screenshot() {
-    return rawDriver.screenshot();
+    var renderObject = rawDriver.binding.renderViewElement.renderObject;
+    while (!renderObject.isRepaintBoundary) {
+      renderObject = renderObject.parent as RenderObject;
+      assert(renderObject != null);
+    }
+    assert(!renderObject.debugNeedsPaint);
+    final layer = renderObject.debugLayer as OffsetLayer;
+
+    return layer
+        .toImage(renderObject.paintBounds)
+        .then((value) => value.toByteData())
+        .then((value) => value.buffer.asInt64List());
   }
 
   @override
   Future<bool> isPresent(
-    SerializableFinder finder, {
+    Finder finder, {
     Duration timeout = const Duration(seconds: 1),
   }) async {
     try {
-      await rawDriver.waitFor(
-        finder,
-        timeout: timeout,
-      );
-      return true;
-    } catch (_) {
+      final element = await widget(finder);
+      return element != null;
+    } on StateError {
       return false;
     }
   }
 
   @override
   Future<bool> isAbsent(
-    SerializableFinder finder, {
+    Finder finder, {
     Duration timeout = const Duration(seconds: 1),
   }) async {
-    try {
-      await rawDriver.waitForAbsent(
-        finder,
-        timeout: timeout,
-      );
-      return true;
-    } catch (_) {
-      return false;
-    }
+    return await isPresent(finder).then((value) => !value);
   }
 
   @override
   Future<String> getText(
-    SerializableFinder finder, {
+    Finder finder, {
     Duration timeout = const Duration(seconds: 30),
   }) async {
     await waitForAppToSettle(timeout: timeout);
 
-    return await rawDriver.getText(
-      finder,
-      timeout: timeout,
-    );
+    final instance = await widget(finder);
+    if (instance is Text) {
+      return instance.data;
+    } else if (instance is TextSpan) {
+      return (instance as TextSpan).text;
+    }
+
+    throw Exception(
+        'Unable to get text from unknown type `${instance.runtimeType}`');
   }
 
   @override
   Future<void> enterText(
-    SerializableFinder finder,
+    Finder finder,
     String text, {
     Duration timeout = const Duration(seconds: 30),
   }) async {
@@ -99,23 +99,23 @@ class FlutterDriverAppDriverAdapter
       timeout: timeout,
     );
     await rawDriver.enterText(
+      finder,
       text,
-      timeout: timeout,
     );
   }
 
   @override
   Future<void> tap(
-    SerializableFinder finder, {
+    Finder finder, {
     Duration timeout = const Duration(seconds: 30),
   }) async {
-    await rawDriver.tap(finder, timeout: timeout);
+    await rawDriver.tap(finder);
     await waitForAppToSettle(timeout: timeout);
   }
 
   @override
   Future<void> longPress(
-    SerializableFinder finder, {
+    Finder finder, {
     Duration pressDuration = const Duration(milliseconds: 500),
     Duration timeout = const Duration(seconds: 30),
   }) async {
@@ -131,42 +131,40 @@ class FlutterDriverAppDriverAdapter
 
   @override
   Future<void> scroll(
-    SerializableFinder finder, {
+    Finder finder, {
     double dx = 0,
     double dy = 0,
     Duration duration = const Duration(seconds: 200),
     Duration timeout = const Duration(seconds: 30),
   }) async {
-    await rawDriver.scroll(
+    await rawDriver.scrollUntilVisible(
       finder,
       dx,
-      dy,
-      duration,
-      timeout: timeout,
+      duration: duration,
     );
     await waitForAppToSettle(timeout: timeout);
   }
 
   @override
-  SerializableFinder findBy(String data, FindType type) {
+  Finder findBy(String data, FindType type) {
     switch (type) {
       case FindType.key:
-        return find.byValueKey(data);
+        return find.byKey(ValueKey(data));
       case FindType.text:
         return find.text(data);
       case FindType.tooltip:
         return find.byTooltip(data);
       case FindType.type:
-        return find.byType(data);
+      // return find.byType(data);
     }
 
     throw Exception('unknown finder');
   }
 
   @override
-  SerializableFinder findByAncestor(
-    SerializableFinder of,
-    SerializableFinder matching, {
+  Finder findByAncestor(
+    Finder of,
+    Finder matching, {
     bool matchRoot = false,
     bool firstMatchOnly = false,
   }) {
@@ -174,14 +172,13 @@ class FlutterDriverAppDriverAdapter
       of: of,
       matching: matching,
       matchRoot: matchRoot,
-      firstMatchOnly: firstMatchOnly,
     );
   }
 
   @override
-  SerializableFinder findByDescendant(
-    SerializableFinder of,
-    SerializableFinder matching, {
+  Finder findByDescendant(
+    Finder of,
+    Finder matching, {
     bool matchRoot = false,
     bool firstMatchOnly = false,
   }) {
@@ -189,40 +186,34 @@ class FlutterDriverAppDriverAdapter
       of: of,
       matching: matching,
       matchRoot: matchRoot,
-      firstMatchOnly: firstMatchOnly,
     );
   }
 
   @override
   Future<void> scrollUntilVisible(
-    SerializableFinder scrollable,
-    SerializableFinder item, {
+    Finder scrollable,
+    Finder item, {
     double dx = 0,
     double dy = 0,
     Duration timeout = const Duration(seconds: 30),
   }) async {
     await rawDriver.scrollUntilVisible(
-      scrollable,
       item,
-      timeout: timeout,
-      dxScroll: dx,
-      dyScroll: dy,
+      dx,
+      scrollable: scrollable,
     );
   }
 
   @override
   Future<void> scrollIntoView(
-    SerializableFinder finder, {
+    Finder finder, {
     Duration timeout = const Duration(seconds: 30),
   }) async {
-    await rawDriver.scrollIntoView(
-      finder,
-      timeout: timeout,
-    );
+    await rawDriver.ensureVisible(finder);
   }
 
   @override
   Future<void> pageBack() async {
-    await tap(find.pageBack());
+    await rawDriver.pageBack();
   }
 }

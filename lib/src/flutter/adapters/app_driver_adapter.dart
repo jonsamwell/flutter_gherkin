@@ -2,7 +2,6 @@ import 'dart:async';
 
 enum FindType {
   key,
-  pageBack,
   text,
   tooltip,
   type,
@@ -79,6 +78,8 @@ abstract class AppDriverAdapter<TRawAdapter, TFinderType, TWidgetBaseType> {
     Duration timeout = const Duration(seconds: 30),
   });
 
+  Future<void> pageBack();
+
   Future<void> scroll(
     TFinderType finder, {
     double dx = 0,
@@ -88,7 +89,7 @@ abstract class AppDriverAdapter<TRawAdapter, TFinderType, TWidgetBaseType> {
   });
 
   Future<void> scrollUntilVisible(
-    TFinderType parent,
+    TFinderType scrollable,
     TFinderType item, {
     double dx = 0,
     double dy = 0,
