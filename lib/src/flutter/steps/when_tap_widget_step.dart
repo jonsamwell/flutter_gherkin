@@ -22,7 +22,7 @@ StepDefinitionGeneric WhenTapWidget() {
         r'I tap the {string} (?:button|element|label|icon|field|text|widget)$'),
     (key, context) async {
       final finder =
-          context.world.appDriver.findByDescendant(key, FindType.key);
+          context.world.appDriver.findBy(key, FindType.key);
 
       await context.world.appDriver.scrollIntoView(
         finder,
