@@ -22,8 +22,12 @@ dependencies:
   build_config: ^0.4.5
   integration_test: ^1.0.1
   # gherkin: ^1.1.9
+  # gherkin:
+    # path: ../dart_gherkin
   gherkin:
-    path: ../dart_gherkin
+    git:
+      url: https://github.com/jonsamwell/dart_gherkin.git
+      ref: code_gen_changes
 
 dev_dependencies:
   test:

@@ -83,6 +83,8 @@ void main() {
 }
 ```
 11. Custom world need to extend `FlutterWorld` note `FlutterDriverWorld`.
+
+
 ## [1.1.9] - 24/11/2020
 * Fixes #93 & #92 - Error waiting for no transient callbacks from Flutter driver
 * Added option to leave Flutter app under test running when the tests finish see `keepAppRunningAfterTests` configuration property
