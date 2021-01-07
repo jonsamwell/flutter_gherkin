@@ -3,7 +3,7 @@ import 'package:gherkin/gherkin.dart';
 
 import '../adapters/app_driver_adapter.dart';
 
-abstract class FlutterWorld extends World {
+class FlutterWorld extends World {
   AppDriverAdapter _adapter;
 
   AppDriverAdapter get appDriver => _adapter;

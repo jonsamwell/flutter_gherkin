@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui' as ui show ImageByteFormat;
 
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
@@ -30,7 +31,15 @@ class WidgetTesterAppDriverAdapter
 
   @override
   Future<T> widget<T extends Widget>(Finder finder) {
-    return Future.value(rawDriver.widget<T>(finder));
+    try {
+      final element = rawDriver.widget<T>(finder);
+
+      return Future.value(element);
+    } on StateError {
+      throw TestFailure(
+        'Unable to find element with finder ${finder.toString()}',
+      );
+    }
   }
 
   @override
@@ -45,8 +54,9 @@ class WidgetTesterAppDriverAdapter
 
     return layer
         .toImage(renderObject.paintBounds)
-        .then((value) => value.toByteData())
-        .then((value) => value.buffer.asInt64List());
+        // .then((value) => value.toByteData(format: ui.ImageByteFormat.png))
+        .then((value) => value.toByteData(format: ui.ImageByteFormat.png))
+        .then((value) => value.buffer.asUint8List());
   }
 
   @override
@@ -137,12 +147,18 @@ class WidgetTesterAppDriverAdapter
     Duration duration = const Duration(seconds: 200),
     Duration timeout = const Duration(seconds: 30),
   }) async {
-    await rawDriver.scrollUntilVisible(
-      finder,
-      dx,
-      duration: duration,
-    );
-    await waitForAppToSettle(timeout: timeout);
+    final state = rawDriver.state(find.byType(Scrollable)) as ScrollableState;
+    final position = state.position;
+    position.jumpTo(dx);
+
+    await rawDriver.pump();
+
+    // await rawDriver.scrollUntilVisible(
+    //   finder,
+    //   dx,
+    //   duration: duration,
+    // );
+    // await waitForAppToSettle(timeout: timeout);
   }
 
   @override

@@ -1,7 +1,7 @@
 import 'package:flutter_driver/flutter_driver.dart';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 
-import '../flutter_run_process_handler.dart';
+import '../runners/flutter_run_process_handler.dart';
 
 class FlutterDriverWorld extends FlutterWorld {
   FlutterRunProcessHandler _flutterRunProcessHandler;

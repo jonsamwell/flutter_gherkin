@@ -32,3 +32,9 @@ export 'src/flutter/hooks/attach_screenshot_on_failed_step_hook.dart';
 
 // Reporters
 export 'src/flutter/reporters/flutter_driver_reporter.dart';
+
+// Code Generation
+export 'src/flutter/code_generation/annotations/gherkin_full_test_suite_annotation.dart';
+
+// Runners
+export 'src/flutter/runners/gherkin_integration_test_runner.dart';

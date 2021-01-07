@@ -26,23 +26,18 @@ import 'package:glob/glob.dart';
 class FlutterTestConfiguration extends TestConfiguration {
   /// Provide a configuration object with default settings such as the reports and feature file location
   /// Additional setting on the configuration object can be set on the returned instance.
-  static FlutterDriverTestConfiguration DEFAULT(
+  static FlutterTestConfiguration DEFAULT(
     Iterable<StepDefinitionGeneric<World>> steps, {
     String featurePath = 'test_driver/features/**.feature',
     String targetAppPath = 'test_driver/app.dart',
   }) {
-    return FlutterDriverTestConfiguration()
+    return FlutterTestConfiguration()
       ..features = [Glob(featurePath)]
       ..reporters = [
         StdoutReporter(MessageLevel.error),
         ProgressReporter(),
         TestRunSummaryReporter(),
         JsonReporter(path: './report.json'),
-        FlutterDriverReporter(
-          logErrorMessages: true,
-          logInfoMessages: false,
-          logWarningMessages: false,
-        ),
       ]
       ..stepDefinitions = steps;
   }

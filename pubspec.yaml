@@ -17,10 +17,13 @@ dependencies:
   analyzer: ">=0.37.0 <0.41.0"
   glob: ^1.1.7
   meta: ">=1.1.6 <2.0.0"
+  source_gen: ^0.9.10+1
+  build: ^1.6.0
+  build_config: ^0.4.5
   integration_test: ^1.0.1
-  gherkin: ^1.1.9
-  # gherkin:
-    # path: ../dart_gherkin
+  # gherkin: ^1.1.9
+  gherkin:
+    path: ../dart_gherkin
 
 dev_dependencies:
   test:
