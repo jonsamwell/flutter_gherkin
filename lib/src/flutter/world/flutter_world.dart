@@ -14,5 +14,7 @@ abstract class FlutterWorld extends World {
 
   Future<bool> restartApp({
     Duration timeout = const Duration(seconds: 60),
-  });
+  }) {
+    throw UnimplementedError('Unable to restart the app during the test');
+  }
 }

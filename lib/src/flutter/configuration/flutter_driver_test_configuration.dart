@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
-import 'package:flutter_gherkin/src/flutter/build_mode.dart';
+import 'package:flutter_gherkin/src/flutter/configuration/build_mode.dart';
 import 'package:flutter_gherkin/src/flutter/world/flutter_driver_world.dart';
 import 'package:flutter_gherkin/src/flutter/world/flutter_world.dart';
 import 'package:flutter_gherkin/src/flutter/hooks/app_runner_hook.dart';

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter_gherkin/src/flutter/build_mode.dart';
+import 'package:flutter_gherkin/src/flutter/configuration/build_mode.dart';
 import 'package:gherkin/gherkin.dart';
 
 class FlutterRunProcessHandler extends ProcessHandler {
