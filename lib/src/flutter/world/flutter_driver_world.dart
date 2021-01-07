@@ -3,7 +3,6 @@ import 'package:flutter_gherkin/flutter_gherkin.dart';
 
 import '../flutter_run_process_handler.dart';
 
-
 class FlutterDriverWorld extends FlutterWorld {
   FlutterRunProcessHandler _flutterRunProcessHandler;
 

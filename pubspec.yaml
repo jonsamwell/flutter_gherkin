@@ -4,8 +4,8 @@ version: 1.2.0
 homepage: https://github.com/jonsamwell/flutter_gherkin
 
 environment:
-  sdk: ">=2.6.0 <3.0.0"
-  flutter: ">=1.13.0"
+  sdk: ">=2.7.0 <3.0.0"
+  flutter: ">=1.17.0"
 
 dependencies:
   flutter:
@@ -14,6 +14,7 @@ dependencies:
     sdk: flutter
   flutter_driver:
     sdk: flutter
+  analyzer: ">=0.37.0 <0.41.0"
   glob: ^1.1.7
   meta: ">=1.1.6 <2.0.0"
   integration_test: ^1.0.1

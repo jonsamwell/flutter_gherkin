@@ -21,8 +21,7 @@ StepDefinitionGeneric WhenTapWidget() {
     RegExp(
         r'I tap the {string} (?:button|element|label|icon|field|text|widget)$'),
     (key, context) async {
-      final finder =
-          context.world.appDriver.findBy(key, FindType.key);
+      final finder = context.world.appDriver.findBy(key, FindType.key);
 
       await context.world.appDriver.scrollIntoView(
         finder,

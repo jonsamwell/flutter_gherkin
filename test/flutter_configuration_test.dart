@@ -9,7 +9,7 @@ void main() {
   group('config', () {
     group('prepare', () {
       test('flutter app runner hook added', () {
-        final config = FlutterTestConfiguration();
+        final config = FlutterDriverTestConfiguration();
         expect(config.hooks, isNull);
         config.prepare();
         expect(config.hooks, isNotNull);
@@ -18,7 +18,7 @@ void main() {
       });
 
       test('common steps definition added', () {
-        final config = FlutterTestConfiguration();
+        final config = FlutterDriverTestConfiguration();
         expect(config.stepDefinitions, isNull);
 
         config.prepare();
