@@ -130,21 +130,12 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
   }
   ''';
   static const String SCENARIO_TEMPLATE = '''
-  testWidgets(
+  runScenario(
     '{{scenario_name}}',
-    (WidgetTester tester) async {
-      final dependencies = await createTestDependencies(
-        configuration,
-        tester,
-      );
-
-      await startApp(tester);
-
+    {{tags}},
+    (TestDependencies dependencies) async {
       {{steps}}
-
-      cleanupScenarioRun(dependencies);
     },
-    timeout: scenarioExecutionTimeout,
   );
   ''';
   static const String STEP_TEMPLATE = '''
@@ -197,13 +188,12 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
   }
 
   @override
-  Future<void> visitScenario(
-    String name,
-    Iterable<String> tags
-  ) async {
+  Future<void> visitScenario(String name, Iterable<String> tags) async {
     _flushScenario();
     _currentScenarioCode =
         _replaceVariable(SCENARIO_TEMPLATE, 'scenario_name', name);
+    _currentScenarioCode =
+        _replaceVariable(_currentScenarioCode, 'tags', '[${tags.map((e) => "'$e'").join(', ')}]');
   }
 
   @override
@@ -221,7 +211,7 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
     code = _replaceVariable(
       code,
       'step_table',
-      'null',
+      table == null ? 'null' : 'Table.fromJson(\'${table.toJson()}\')',
     );
 
     _stepBuffer.writeln(code);

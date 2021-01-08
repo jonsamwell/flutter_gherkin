@@ -7,11 +7,11 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
-class _TestDependencies {
+class TestDependencies {
   final World world;
   final AttachmentManager attachmentManager;
 
-  _TestDependencies(
+  TestDependencies(
     this.world,
     this.attachmentManager,
   );
@@ -24,6 +24,8 @@ abstract class GherkinIntegrationTestRunner {
   Hook _hook;
   Iterable<ExecutableStep> _executableSteps;
   Iterable<CustomParameter> _customParameters;
+
+  IntegrationTestWidgetsFlutterBinding _binding;
 
   Reporter get reporter => _reporter;
   Hook get hook => _hook;
@@ -46,26 +48,80 @@ abstract class GherkinIntegrationTestRunner {
   }
 
   Future<void> run() async {
-    final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized()
+    _binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized()
         as IntegrationTestWidgetsFlutterBinding;
 
-    try {
-      await _reporter.onTestRunStarted();
-      onRun();
-    } finally {
-      _safeInvokeFuture(() async => await reporter.onTestRunFinished());
-      _safeInvokeFuture(() async => await _hook.onAfterRun(configuration));
-      _safeInvokeFuture(() async => await reporter.dispose());
-      setTestResultData(binding);
-    }
+    await _reporter.onTestRunStarted();
+    onRun();
+
+    tearDownAll(() {
+      onRunComplete();
+    });
   }
 
   void onRun();
 
+  void onRunComplete() {
+    _safeInvokeFuture(() async => await reporter.onTestRunFinished());
+    _safeInvokeFuture(() async => await hook.onAfterRun(configuration));
+    setTestResultData(_binding);
+    _safeInvokeFuture(() async => await reporter.dispose());
+  }
+
   void setTestResultData(IntegrationTestWidgetsFlutterBinding binding) {
     binding.reportData = {
-      'gherkin_results': jsonEncode({'test': 'moo'})
+      'gherkin_results': jsonEncode({'test': 'moo1'})
     };
+  }
+
+  @protected
+  void runScenario(
+    String name,
+    Iterable<String> tags,
+    Future<void> Function(TestDependencies dependencies) runTest,
+  ) {
+    testWidgets(
+      'User can increment the counter',
+      (WidgetTester tester) async {
+        final debugInformation = RunnableDebugInformation('', 0, name);
+        final scenarioTags =
+            (tags ?? Iterable<Tag>.empty()).map((t) => Tag(t, 0));
+        final dependencies = await createTestDependencies(
+          configuration,
+          tester,
+        );
+
+        await startApp(tester);
+
+        await reporter.onScenarioStarted(
+          StartedMessage(
+            Target.scenario,
+            name,
+            debugInformation,
+            scenarioTags,
+          ),
+        );
+
+        await runTest(dependencies);
+
+        await _reporter.onScenarioFinished(
+          ScenarioFinishedMessage(
+            name,
+            debugInformation,
+            true,
+          ),
+        );
+
+        await _hook.onAfterScenario(
+          configuration,
+          name,
+          scenarioTags,
+        );
+
+        cleanupScenarioRun(dependencies);
+      },
+      timeout: scenarioExecutionTimeout,
+    );
   }
 
   @protected
@@ -75,7 +131,7 @@ abstract class GherkinIntegrationTestRunner {
   }
 
   @protected
-  Future<_TestDependencies> createTestDependencies(
+  Future<TestDependencies> createTestDependencies(
     TestConfiguration configuration,
     WidgetTester tester,
   ) async {
@@ -92,7 +148,7 @@ abstract class GherkinIntegrationTestRunner {
 
     (world as FlutterWorld).setAppAdapter(WidgetTesterAppDriverAdapter(tester));
 
-    return _TestDependencies(
+    return TestDependencies(
       world,
       attachmentManager,
     );
@@ -103,7 +159,7 @@ abstract class GherkinIntegrationTestRunner {
     String step,
     Iterable<String> multiLineStrings,
     dynamic table,
-    _TestDependencies dependencies,
+    TestDependencies dependencies,
   ) async {
     final executable = _executableSteps.firstWhere(
       (s) => s.expression.isMatch(step),
@@ -152,7 +208,7 @@ abstract class GherkinIntegrationTestRunner {
   }
 
   @protected
-  void cleanupScenarioRun(_TestDependencies dependencies) {
+  void cleanupScenarioRun(TestDependencies dependencies) {
     _safeInvokeFuture(
         () async => await dependencies.attachmentManager.dispose());
     _safeInvokeFuture(() async => await dependencies.world.dispose());
@@ -234,7 +290,7 @@ abstract class GherkinIntegrationTestRunner {
   Future<void> _onAfterStepRun(
     String step,
     StepResult result,
-    _TestDependencies dependencies,
+    TestDependencies dependencies,
   ) async {
     await _hook.onAfterStep(
       dependencies.world,

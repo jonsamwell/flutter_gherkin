@@ -55,7 +55,18 @@ part 'gherkin_suite_test.g.dart';
 @GherkinTestSuite()
 void main() {
   executeTestSuite(
-    FlutterTestConfiguration.DEFAULT([]),
+    FlutterTestConfiguration.DEFAULT([])
+      ..reporters = [
+        StdoutReporter(MessageLevel.error)
+          ..setWriteLineFn(print)
+          ..setWriteFn(print),
+        ProgressReporter()
+          ..setWriteLineFn(print)
+          ..setWriteFn(print),
+        TestRunSummaryReporter()
+          ..setWriteLineFn(print)
+          ..setWriteFn(print),
+      ],
     app.main,
   );
 }

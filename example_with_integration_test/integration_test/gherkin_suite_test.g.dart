@@ -21,16 +21,10 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
     group(
       'Counter:',
       () {
-        testWidgets(
+        runScenario(
           'User can increment the counter',
-          (WidgetTester tester) async {
-            final dependencies = await createTestDependencies(
-              configuration,
-              tester,
-            );
-
-            await startApp(tester);
-
+          ['@tag1', '@tag_two'],
+          (TestDependencies dependencies) async {
             await runStep(
               'Given I expect the "counter" to be "0"',
               [],
@@ -52,9 +46,14 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
               dependencies,
             );
 
-            cleanupScenarioRun(dependencies);
+            await runStep(
+              'Given the table',
+              [],
+              Table.fromJson(
+                  '[{"Header One":"1","Header Two":"2","Header Three":"3"},{"Header One":"4","Header Two":"5","Header Three":"6"}]'),
+              dependencies,
+            );
           },
-          timeout: scenarioExecutionTimeout,
         );
       },
     );
