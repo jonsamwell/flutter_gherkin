@@ -141,6 +141,8 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
       await startApp(tester);
 
       {{steps}}
+
+      cleanupScenarioRun(dependencies);
     },
     timeout: scenarioExecutionTimeout,
   );
@@ -150,7 +152,7 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
     '{{step_name}}',
     {{step_multi_line_strings}},
     {{step_table}},
-    dependencies.world,
+    dependencies,
   );
   ''';
 

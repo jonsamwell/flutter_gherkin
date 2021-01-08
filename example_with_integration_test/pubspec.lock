@@ -234,9 +234,11 @@ packages:
   gherkin:
     dependency: transitive
     description:
-      path: "../../dart_gherkin"
-      relative: true
-    source: path
+      path: "."
+      ref: "59b9db42e917927ccb8d1265e6cb8fe93ddbb73a"
+      resolved-ref: "59b9db42e917927ccb8d1265e6cb8fe93ddbb73a"
+      url: "https://github.com/jonsamwell/dart_gherkin.git"
+    source: git
     version: "1.1.10"
   glob:
     dependency: transitive

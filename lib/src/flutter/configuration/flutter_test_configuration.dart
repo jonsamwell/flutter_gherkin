@@ -37,7 +37,7 @@ class FlutterTestConfiguration extends TestConfiguration {
         StdoutReporter(MessageLevel.error),
         ProgressReporter(),
         TestRunSummaryReporter(),
-        JsonReporter(path: './report.json'),
+        // JsonReporter(path: './report.json'),
       ]
       ..stepDefinitions = steps;
   }

@@ -162,16 +162,19 @@ class WidgetTesterAppDriverAdapter
   }
 
   @override
-  Finder findBy(String data, FindType type) {
+  Finder findBy(
+    dynamic data,
+    FindType type,
+  ) {
     switch (type) {
       case FindType.key:
-        return find.byKey(ValueKey(data));
+        return find.byKey(data is Key ? data : Key(data));
       case FindType.text:
         return find.text(data);
       case FindType.tooltip:
         return find.byTooltip(data);
       case FindType.type:
-      // return find.byType(data);
+        return find.byType(data);
     }
 
     throw Exception('unknown finder');

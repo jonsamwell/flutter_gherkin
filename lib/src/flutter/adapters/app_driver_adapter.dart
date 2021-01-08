@@ -18,9 +18,12 @@ abstract class AppDriverAdapter<TRawAdapter, TFinderType, TWidgetBaseType> {
     _driver = driver;
   }
 
+  /// Returns the correct finder type instance
+  /// `data` can be `String`, `Key` or a `Type`
+  /// `findType` denotes the type of finder returned
   TFinderType findBy(
-    String text,
-    FindType type,
+    dynamic data,
+    FindType findType,
   );
 
   TFinderType findByAncestor(

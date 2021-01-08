@@ -148,16 +148,19 @@ class FlutterDriverAppDriverAdapter
   }
 
   @override
-  SerializableFinder findBy(String data, FindType type) {
+  SerializableFinder findBy(
+    dynamic data,
+    FindType type,
+  ) {
     switch (type) {
       case FindType.key:
-        return find.byValueKey(data);
+        return find.byValueKey(data.toString());
       case FindType.text:
         return find.text(data);
       case FindType.tooltip:
         return find.byTooltip(data);
       case FindType.type:
-        return find.byType(data);
+        return find.byType(data is Type ? data.runtimeType.toString() : data);
     }
 
     throw Exception('unknown finder');

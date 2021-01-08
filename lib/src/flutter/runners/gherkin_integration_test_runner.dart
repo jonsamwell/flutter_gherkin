@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_gherkin/src/flutter/adapters/widget_tester_app_driver_adapter.dart';
 import 'package:flutter_gherkin/src/flutter/world/flutter_world.dart';
 import 'package:gherkin/gherkin.dart';
@@ -19,10 +21,12 @@ abstract class GherkinIntegrationTestRunner {
   final TestConfiguration configuration;
   final void Function() appMainFunction;
   Reporter _reporter;
+  Hook _hook;
   Iterable<ExecutableStep> _executableSteps;
   Iterable<CustomParameter> _customParameters;
 
   Reporter get reporter => _reporter;
+  Hook get hook => _hook;
 
   Timeout scenarioExecutionTimeout = const Timeout(Duration(minutes: 10));
 
@@ -32,6 +36,7 @@ abstract class GherkinIntegrationTestRunner {
   ) {
     configuration.prepare();
     _reporter = _registerReporters(configuration.reporters);
+    _hook = _registerHooks(configuration.hooks);
     _customParameters =
         _registerCustomParameters(configuration.customStepParameterDefinitions);
     _executableSteps = _registerStepDefinitions(
@@ -40,12 +45,28 @@ abstract class GherkinIntegrationTestRunner {
     );
   }
 
-  void run() {
-    IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-    onRun();
+  Future<void> run() async {
+    final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized()
+        as IntegrationTestWidgetsFlutterBinding;
+
+    try {
+      await _reporter.onTestRunStarted();
+      onRun();
+    } finally {
+      _safeInvokeFuture(() async => await reporter.onTestRunFinished());
+      _safeInvokeFuture(() async => await _hook.onAfterRun(configuration));
+      _safeInvokeFuture(() async => await reporter.dispose());
+      setTestResultData(binding);
+    }
   }
 
   void onRun();
+
+  void setTestResultData(IntegrationTestWidgetsFlutterBinding binding) {
+    binding.reportData = {
+      'gherkin_results': jsonEncode({'test': 'moo'})
+    };
+  }
 
   @protected
   Future<void> startApp(WidgetTester tester) async {
@@ -64,10 +85,10 @@ abstract class GherkinIntegrationTestRunner {
 
     if (configuration.createWorld != null) {
       world = await configuration.createWorld(configuration);
-      world.setAttachmentManager(attachmentManager);
     }
 
     world = world ?? FlutterWorld();
+    world.setAttachmentManager(attachmentManager);
 
     (world as FlutterWorld).setAppAdapter(WidgetTesterAppDriverAdapter(tester));
 
@@ -82,7 +103,7 @@ abstract class GherkinIntegrationTestRunner {
     String step,
     Iterable<String> multiLineStrings,
     dynamic table,
-    World world,
+    _TestDependencies dependencies,
   ) async {
     final executable = _executableSteps.firstWhere(
       (s) => s.expression.isMatch(step),
@@ -101,13 +122,24 @@ abstract class GherkinIntegrationTestRunner {
       executable,
     );
 
-    // await reporter.onStepStarted(StepStartedMessage('some name', null));
+    await _onBeforeStepRun(
+      dependencies.world,
+      step,
+      table,
+      multiLineStrings,
+    );
 
     final result = await executable.step.run(
-      world,
+      dependencies.world,
       reporter,
       configuration.defaultTimeout,
       parameters,
+    );
+
+    await _onAfterStepRun(
+      step,
+      result,
+      dependencies,
     );
 
     if (result.result == StepExecutionResult.fail) {
@@ -119,13 +151,29 @@ abstract class GherkinIntegrationTestRunner {
     return result;
   }
 
+  @protected
+  void cleanupScenarioRun(_TestDependencies dependencies) {
+    _safeInvokeFuture(
+        () async => await dependencies.attachmentManager.dispose());
+    _safeInvokeFuture(() async => await dependencies.world.dispose());
+  }
+
   Reporter _registerReporters(Iterable<Reporter> reporters) {
-    final _reporter = AggregatedReporter();
+    final reporter = AggregatedReporter();
     if (reporters != null) {
-      reporters.forEach((r) => _reporter.addReporter(r));
+      reporters.forEach((r) => reporter.addReporter(r));
     }
 
-    return _reporter;
+    return reporter;
+  }
+
+  Hook _registerHooks(Iterable<Hook> hooks) {
+    final hook = AggregatedHook();
+    if (hooks != null) {
+      hook.addHooks(hooks);
+    }
+
+    return hook;
   }
 
   Iterable<CustomParameter> _registerCustomParameters(
@@ -181,5 +229,49 @@ abstract class GherkinIntegrationTestRunner {
     }
 
     return parameters;
+  }
+
+  Future<void> _onAfterStepRun(
+    String step,
+    StepResult result,
+    _TestDependencies dependencies,
+  ) async {
+    await _hook.onAfterStep(
+      dependencies.world,
+      step,
+      result,
+    );
+    await _reporter.onStepFinished(
+      StepFinishedMessage(
+        step,
+        RunnableDebugInformation('', 0, step),
+        result,
+        dependencies.attachmentManager.getAttachmentsForContext(step),
+      ),
+    );
+  }
+
+  Future<void> _onBeforeStepRun(
+    World world,
+    String step,
+    table,
+    Iterable<String> multiLineStrings,
+  ) async {
+    await _hook.onBeforeStep(world, step);
+    await reporter.onStepStarted(
+      StepStartedMessage(
+        step,
+        RunnableDebugInformation('', 0, step),
+        table: table,
+        multilineString:
+            multiLineStrings.isNotEmpty ? multiLineStrings.first : null,
+      ),
+    );
+  }
+
+  void _safeInvokeFuture(Future<void> Function() fn) async {
+    try {
+      await fn().catchError((_, __) {});
+    } catch (_) {}
   }
 }

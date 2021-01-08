@@ -8,7 +8,7 @@ part of 'gherkin_suite_test.dart';
 
 class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
   _CustomGherkinIntegrationTestRunner(
-    FlutterTestConfiguration configuration,
+    TestConfiguration configuration,
     void Function() appMainFunction,
   ) : super(configuration, appMainFunction);
 
@@ -35,22 +35,24 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
               'Given I expect the "counter" to be "0"',
               [],
               null,
-              dependencies.world,
+              dependencies,
             );
 
             await runStep(
               'When I tap the "increment" button',
               [],
               null,
-              dependencies.world,
+              dependencies,
             );
 
             await runStep(
               'Then I expect the "counter" to be "1"',
               [],
               null,
-              dependencies.world,
+              dependencies,
             );
+
+            cleanupScenarioRun(dependencies);
           },
           timeout: scenarioExecutionTimeout,
         );

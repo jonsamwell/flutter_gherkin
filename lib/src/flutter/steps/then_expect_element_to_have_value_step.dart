@@ -17,9 +17,8 @@ StepDefinitionGeneric ThenExpectElementToHaveValue() {
     RegExp(r'I expect the {string} to be {string}$'),
     (key, value, context) async {
       try {
-        final text = await context.world.appDriver.getText(
-          context.world.appDriver.findBy(key, FindType.key),
-        );
+        final finder = context.world.appDriver.findBy(key, FindType.key);
+        final text = await context.world.appDriver.getText(finder);
 
         context.expect(text, value);
       } catch (e) {
