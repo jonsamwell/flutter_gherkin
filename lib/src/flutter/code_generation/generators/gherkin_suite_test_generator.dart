@@ -192,8 +192,8 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
     _flushScenario();
     _currentScenarioCode =
         _replaceVariable(SCENARIO_TEMPLATE, 'scenario_name', name);
-    _currentScenarioCode =
-        _replaceVariable(_currentScenarioCode, 'tags', '[${tags.map((e) => "'$e'").join(', ')}]');
+    _currentScenarioCode = _replaceVariable(_currentScenarioCode, 'tags',
+        '[${tags.map((e) => "'$e'").join(', ')}]');
   }
 
   @override
