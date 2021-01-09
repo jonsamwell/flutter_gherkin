@@ -1,5 +1,10 @@
 library flutter_gherkin;
 
+/// ***************************************
+/// Library export for use with integration_test with include reference to flutter_test which reference dart:ui
+/// which are not allowed when running tests with flutter_driver hence this separate library declaration file
+/// ***************************************
+
 // Flutter specific implementations
 export 'src/flutter/configuration/build_mode.dart';
 export 'src/flutter/world/flutter_world.dart';
@@ -28,7 +33,7 @@ export 'src/flutter/steps/wait_until_type_exists_step.dart';
 // Hooks
 export 'src/flutter/hooks/attach_screenshot_on_failed_step_hook.dart';
 
-// Flutter driver specific implementations
-export 'src/flutter/configuration/flutter_driver_test_configuration.dart';
-export 'src/flutter/adapters/flutter_driver_app_driver_adapter.dart';
-export 'src/flutter/reporters/flutter_driver_reporter.dart';
+// integration_test specific exports
+export 'src/flutter/adapters/widget_tester_app_driver_adapter.dart';
+export 'src/flutter/code_generation/annotations/gherkin_full_test_suite_annotation.dart';
+export 'src/flutter/runners/gherkin_integration_test_runner.dart';

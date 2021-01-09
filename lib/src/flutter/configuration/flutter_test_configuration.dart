@@ -28,8 +28,8 @@ class FlutterTestConfiguration extends TestConfiguration {
   /// Additional setting on the configuration object can be set on the returned instance.
   static FlutterTestConfiguration DEFAULT(
     Iterable<StepDefinitionGeneric<World>> steps, {
-    String featurePath = 'test_driver/features/**.feature',
-    String targetAppPath = 'test_driver/app.dart',
+    String featurePath = 'integration_test/features/**.feature',
+    String targetAppPath = 'test_driver/integration_test_driver.dart',
   }) {
     return FlutterTestConfiguration()
       ..features = [Glob(featurePath)]

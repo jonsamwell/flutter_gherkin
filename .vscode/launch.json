@@ -10,14 +10,14 @@
       "type": "dart"
     },
     {
-      "name": "Debug example tests",
-      "program": "app_test.dart",
-      "cwd": "example/test_driver",
+      "name": "Debug flutter_driver example",
+      "program": "test_harness.dart",
+      "cwd": "example_with_flutter_driver/test_driver",
       "request": "launch",
       "type": "dart",
     },
     {
-      "name": "Debug integration_test",
+      "name": "Debug integration_test example",
       "program": "test_driver/integration_test_driver.dart",
       "cwd": "example_with_integration_test/",
       "request": "launch",
