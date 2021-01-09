@@ -27,9 +27,18 @@ The change to use the `integration_test` package is a fundamentally different ap
   ```
 3. Add the following file (and folder) `example_with_integration_test\test_driver\integration_test_driver.dart`.  This file is the entry point to run your tests.  See `https://flutter.dev/docs/testing/integration-tests` for more information.
    ```
-   import 'package:integration_test/integration_test_driver.dart';
+    import 'package:integration_test/integration_test_driver.dart'
+        as integration_test_driver;
 
-   Future<void> main() => integrationDriver(timeout: const Duration(minutes: 90));
+    Future<void> main() {
+      // The Gherkin report data send back to this runner by the app after
+      // the tests have run will be saved to this directory
+      integration_test_driver.testOutputsDirectory = 'integration_test/gherkin_reports';
+
+      return integration_test_driver.integrationDriver(
+        timeout: Duration(minutes: 90),
+      );
+    }
    ```
 4. Create a folder call `integration_test` this will eventually contain all your Gherkin feature files and the generated test files.
 5. Add the following file (and folder) `integration_test\feature\counter.feature` with the following below contents.  This is a basic feature file that will be transform in to a test file that can run a test against the sample app.
@@ -65,7 +74,10 @@ void main() {
           ..setWriteFn(print),
         TestRunSummaryReporter()
           ..setWriteLineFn(print)
-          ..setWriteFn(print),
+          ..setWriteFn(print),,
+        JsonReporter(
+          writeReport: (_, __) => Future<void>.value(),
+        ),
       ],
     app.main,
   );
@@ -94,6 +106,10 @@ void main() {
 }
 ```
 11. Custom world need to extend `FlutterWorld` note `FlutterDriverWorld`.
+12. If you change any of the feature files you will need to regenerate the tests using the below command
+  ```
+  flutter pub run build_runner build
+  ```
 
 
 ## [1.1.9] - 24/11/2020
