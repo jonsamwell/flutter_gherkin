@@ -1,3 +1,4 @@
+@tag
 Feature: Counter
 
   @tag1 @tag_two

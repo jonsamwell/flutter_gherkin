@@ -235,8 +235,8 @@ packages:
     dependency: transitive
     description:
       path: "."
-      ref: "80c03137d883637b2526e16a945009d76c3cbd85"
-      resolved-ref: "80c03137d883637b2526e16a945009d76c3cbd85"
+      ref: "2eb30d84c3f7d7f6fa2ad5f93c8d9bfb160a3ced"
+      resolved-ref: "2eb30d84c3f7d7f6fa2ad5f93c8d9bfb160a3ced"
       url: "https://github.com/jonsamwell/dart_gherkin.git"
     source: git
     version: "1.1.10"

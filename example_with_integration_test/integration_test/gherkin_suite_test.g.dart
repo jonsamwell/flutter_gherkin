@@ -18,12 +18,13 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
   }
 
   void testFeature0() {
-    group(
+    runFeature(
       'Counter:',
-      () {
+      ['@tag'],
+      () async {
         runScenario(
           'User can increment the counter',
-          ['@tag1', '@tag_two'],
+          ['@tag', '@tag1', '@tag_two'],
           (TestDependencies dependencies) async {
             await runStep(
               'Given I expect the "counter" to be "0"',

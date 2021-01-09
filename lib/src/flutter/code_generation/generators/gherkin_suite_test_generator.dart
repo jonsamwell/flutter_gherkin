@@ -1,14 +1,11 @@
 import 'dart:io';
 
-// ignore: implementation_imports
 import 'package:build/src/builder/build_step.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:flutter_gherkin/src/flutter/code_generation/annotations/gherkin_full_test_suite_annotation.dart';
 import 'package:gherkin/gherkin.dart';
 import 'package:glob/glob.dart';
 import 'package:source_gen/source_gen.dart';
-
-// flutter pub run build_runner build -v
 
 class NoOpReporter extends Reporter {}
 
@@ -121,9 +118,10 @@ class FeatureFileTestGenerator {
 class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
   static const String FUNCTION_TEMPLATE = '''
   void testFeature{{feature_number}}() {
-    group(
+    runFeature(
       '{{feature_name}}:',
-      () {
+      {{tags}},
+      () async {
         {{scenarios}}
       },
     );
@@ -185,6 +183,11 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
         _replaceVariable(FUNCTION_TEMPLATE, 'feature_number', _id.toString());
     _currentFeatureCode =
         _replaceVariable(_currentFeatureCode, 'feature_name', name);
+    _currentFeatureCode = _replaceVariable(
+      _currentFeatureCode,
+      'tags',
+      '[${tags.map((e) => "'$e'").join(', ')}]',
+    );
   }
 
   @override
@@ -192,8 +195,11 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
     _flushScenario();
     _currentScenarioCode =
         _replaceVariable(SCENARIO_TEMPLATE, 'scenario_name', name);
-    _currentScenarioCode = _replaceVariable(_currentScenarioCode, 'tags',
-        '[${tags.map((e) => "'$e'").join(', ')}]');
+    _currentScenarioCode = _replaceVariable(
+      _currentScenarioCode,
+      'tags',
+      '[${tags.map((e) => "'$e'").join(', ')}]',
+    );
   }
 
   @override

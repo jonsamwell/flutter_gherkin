@@ -2,12 +2,14 @@ import 'package:integration_test/integration_test_driver.dart'
     as integration_test_driver;
 
 Future<void> main() {
-  const maximumTestRunDuration = Duration(minutes: 90);
-  // Tests will write any output files to this directory
-  integration_test_driver.testOutputsDirectory = './';
+  // The Gherkin report data send back to this runner by the app after
+  // the tests have run will be saved to this directory
+  integration_test_driver.testOutputsDirectory =
+      'integration_test/gherkin_reports';
 
   return integration_test_driver.integrationDriver(
-      timeout: maximumTestRunDuration);
+    timeout: Duration(minutes: 90),
+  );
 }
 
 // import 'package:flutter_driver/flutter_driver.dart';

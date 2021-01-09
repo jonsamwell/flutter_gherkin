@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter_gherkin/src/flutter/adapters/widget_tester_app_driver_adapter.dart';
 import 'package:flutter_gherkin/src/flutter/world/flutter_world.dart';
 import 'package:gherkin/gherkin.dart';
@@ -51,7 +49,7 @@ abstract class GherkinIntegrationTestRunner {
     _binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized()
         as IntegrationTestWidgetsFlutterBinding;
 
-    await _reporter.onTestRunStarted();
+    await reporter.onTestRunStarted();
     onRun();
 
     tearDownAll(() {
@@ -69,9 +67,44 @@ abstract class GherkinIntegrationTestRunner {
   }
 
   void setTestResultData(IntegrationTestWidgetsFlutterBinding binding) {
-    binding.reportData = {
-      'gherkin_results': jsonEncode({'test': 'moo1'})
-    };
+    if (reporter is SerializableReporter) {
+      final json = (reporter as SerializableReporter).toJson();
+      binding.reportData = {'gherkin_reports': json};
+    }
+  }
+
+  @protected
+  void runFeature(
+    String name,
+    Iterable<String> tags,
+    void Function() runFeature,
+  ) {
+    group(
+      name,
+      () {
+        final debugInformation = RunnableDebugInformation('', 0, name);
+        final featureTags =
+            (tags ?? Iterable<Tag>.empty()).map((t) => Tag(t, 0));
+        reporter.onFeatureStarted(
+          StartedMessage(
+            Target.feature,
+            name,
+            debugInformation,
+            featureTags,
+          ),
+        );
+
+        runFeature();
+
+        reporter.onFeatureFinished(
+          FinishedMessage(
+            Target.feature,
+            name,
+            debugInformation,
+          ),
+        );
+      },
+    );
   }
 
   @protected

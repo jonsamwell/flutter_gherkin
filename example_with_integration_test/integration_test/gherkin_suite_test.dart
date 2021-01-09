@@ -25,6 +25,9 @@ void main() {
         TestRunSummaryReporter()
           ..setWriteLineFn(print)
           ..setWriteFn(print),
+        JsonReporter(
+          writeReport: (_, __) => Future<void>.value(),
+        ),
       ],
     app.main,
   );
