@@ -17,7 +17,7 @@ class TestDependencies {
 
 abstract class GherkinIntegrationTestRunner {
   final TestConfiguration configuration;
-  final void Function() appMainFunction;
+  final void Function(World world) appMainFunction;
   Reporter _reporter;
   Hook _hook;
   Iterable<ExecutableStep> _executableSteps;
@@ -49,12 +49,15 @@ abstract class GherkinIntegrationTestRunner {
     _binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized()
         as IntegrationTestWidgetsFlutterBinding;
 
-    await reporter.onTestRunStarted();
+    _safeInvokeFuture(() async => await reporter.onTestRunStarted());
+
     onRun();
 
-    tearDownAll(() {
-      onRunComplete();
-    });
+    tearDownAll(
+      () {
+        onRunComplete();
+      },
+    );
   }
 
   void onRun();
@@ -85,22 +88,26 @@ abstract class GherkinIntegrationTestRunner {
         final debugInformation = RunnableDebugInformation('', 0, name);
         final featureTags =
             (tags ?? Iterable<Tag>.empty()).map((t) => Tag(t, 0));
-        reporter.onFeatureStarted(
-          StartedMessage(
-            Target.feature,
-            name,
-            debugInformation,
-            featureTags,
+        _safeInvokeFuture(
+          () async => await reporter.onFeatureStarted(
+            StartedMessage(
+              Target.feature,
+              name,
+              debugInformation,
+              featureTags,
+            ),
           ),
         );
 
         runFeature();
 
-        reporter.onFeatureFinished(
-          FinishedMessage(
-            Target.feature,
-            name,
-            debugInformation,
+        _safeInvokeFuture(
+          () async => reporter.onFeatureFinished(
+            FinishedMessage(
+              Target.feature,
+              name,
+              debugInformation,
+            ),
           ),
         );
       },
@@ -114,7 +121,7 @@ abstract class GherkinIntegrationTestRunner {
     Future<void> Function(TestDependencies dependencies) runTest,
   ) {
     testWidgets(
-      'User can increment the counter',
+      name,
       (WidgetTester tester) async {
         final debugInformation = RunnableDebugInformation('', 0, name);
         final scenarioTags =
@@ -124,7 +131,22 @@ abstract class GherkinIntegrationTestRunner {
           tester,
         );
 
-        await startApp(tester);
+        await _hook.onBeforeScenario(
+          configuration,
+          name,
+          scenarioTags,
+        );
+
+        await startApp(
+          tester,
+          dependencies.world,
+        );
+
+        await _hook.onAfterScenarioWorldCreated(
+          dependencies.world,
+          name,
+          scenarioTags,
+        );
 
         await reporter.onScenarioStarted(
           StartedMessage(
@@ -158,8 +180,11 @@ abstract class GherkinIntegrationTestRunner {
   }
 
   @protected
-  Future<void> startApp(WidgetTester tester) async {
-    appMainFunction();
+  Future<void> startApp(
+    WidgetTester tester,
+    World world,
+  ) async {
+    appMainFunction(world);
     await tester.pumpAndSettle();
   }
 

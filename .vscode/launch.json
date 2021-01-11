@@ -5,19 +5,13 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Flutter",
-      "request": "launch",
-      "type": "dart"
-    },
-    {
-      "name": "Debug flutter_driver example",
-      "program": "test_harness.dart",
-      "cwd": "example_with_flutter_driver/test_driver",
+      "name": "Debug integration_test app",
       "request": "launch",
       "type": "dart",
+      "cwd": "example_with_integration_test/",
     },
     {
-      "name": "Debug integration_test example",
+      "name": "Debug integration_test example tests",
       "program": "test_driver/integration_test_driver.dart",
       "cwd": "example_with_integration_test/",
       "request": "launch",
@@ -25,6 +19,19 @@
       "args": [
         "--target=integration_test/gherkin_suite_test.dart",
       ],
-    }
+    },
+    {
+      "name": "Debug flutter_driver app",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "example_with_flutter_driver/",
+    },
+    {
+      "name": "Debug flutter_driver example tests",
+      "program": "test_harness.dart",
+      "cwd": "example_with_flutter_driver/test_driver",
+      "request": "launch",
+      "type": "dart",
+    },
   ]
 }

@@ -9,7 +9,7 @@ part of 'gherkin_suite_test.dart';
 class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
   _CustomGherkinIntegrationTestRunner(
     TestConfiguration configuration,
-    void Function() appMainFunction,
+    void Function(World) appMainFunction,
   ) : super(configuration, appMainFunction);
 
   @override
@@ -19,39 +19,87 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
 
   void testFeature0() {
     runFeature(
-      'Counter:',
-      ['@tag'],
+      'Creating todos:',
+      <String>['@tag'],
       () async {
         runScenario(
-          'User can increment the counter',
-          ['@tag', '@tag1', '@tag_two'],
+          'User can create a new todo item',
+          <String>['@tag', '@tag1', '@tag_two'],
           (TestDependencies dependencies) async {
             await runStep(
-              'Given I expect the "counter" to be "0"',
-              [],
+              'Given I fill the "todo" field with "Buy carrots"',
+              <String>[],
               null,
               dependencies,
             );
 
             await runStep(
-              'When I tap the "increment" button',
-              [],
+              'When I tap the "add" button',
+              <String>[],
               null,
               dependencies,
             );
 
             await runStep(
-              'Then I expect the "counter" to be "1"',
-              [],
+              'Then I expect the todo list',
+              <String>[],
+              GherkinTable.fromJson('[{"Todo":"Buy carrots"}]'),
+              dependencies,
+            );
+          },
+        );
+
+        runScenario(
+          'User can create multiple new todo items',
+          <String>['@tag'],
+          (TestDependencies dependencies) async {
+            await runStep(
+              'Given I fill the "todo" field with "Buy carrots"',
+              <String>[],
               null,
               dependencies,
             );
 
             await runStep(
-              'Given the table',
-              [],
-              Table.fromJson(
-                  '[{"Header One":"1","Header Two":"2","Header Three":"3"},{"Header One":"4","Header Two":"5","Header Three":"6"}]'),
+              'When I tap the "add" button',
+              <String>[],
+              null,
+              dependencies,
+            );
+
+            await runStep(
+              'Given I fill the "todo" field with "Buy apples"',
+              <String>[],
+              null,
+              dependencies,
+            );
+
+            await runStep(
+              'When I tap the "add" button',
+              <String>[],
+              null,
+              dependencies,
+            );
+
+            await runStep(
+              'Given I fill the "todo" field with "Buy blueberries"',
+              <String>[],
+              null,
+              dependencies,
+            );
+
+            await runStep(
+              'When I tap the "add" button',
+              <String>[],
+              null,
+              dependencies,
+            );
+
+            await runStep(
+              'Then I expect the todo list',
+              <String>[],
+              GherkinTable.fromJson(
+                  '[{"Todo":"Buy blueberries"},{"Todo":"Buy apples"},{"Todo":"Buy carrots"}]'),
               dependencies,
             );
           },
@@ -63,7 +111,7 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
 
 void executeTestSuite(
   TestConfiguration configuration,
-  void Function() appMainFunction,
+  void Function(World) appMainFunction,
 ) {
   _CustomGherkinIntegrationTestRunner(configuration, appMainFunction).run();
 }

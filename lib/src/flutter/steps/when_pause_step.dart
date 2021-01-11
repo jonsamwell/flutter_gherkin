@@ -13,5 +13,8 @@ StepDefinitionGeneric WhenPauseStep() {
     (wait, _) async {
       await Future.delayed(Duration(seconds: wait));
     },
+    configuration: StepDefinitionConfiguration()
+      // add a large timeout here, I think 15 is more than enough
+      ..timeout = const Duration(minutes: 15),
   );
 }

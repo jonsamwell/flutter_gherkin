@@ -7,6 +7,12 @@ enum FindType {
   type,
 }
 
+enum ExpectedWidgetResultType {
+  first,
+  last,
+  list,
+}
+
 abstract class AppDriverAdapter<TRawAdapter, TFinderType, TWidgetBaseType> {
   TRawAdapter _driver;
 
@@ -45,7 +51,10 @@ abstract class AppDriverAdapter<TRawAdapter, TFinderType, TWidgetBaseType> {
     Duration timeout = const Duration(seconds: 30),
   });
 
-  Future<T> widget<T extends TWidgetBaseType>(TFinderType finder);
+  Future<T> widget<T extends TWidgetBaseType>(
+    TFinderType finder, [
+    ExpectedWidgetResultType expectResultType = ExpectedWidgetResultType.first,
+  ]);
 
   Future<List<int>> screenshot();
 

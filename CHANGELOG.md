@@ -1,6 +1,8 @@
 ## [1.2.0] - 07/01/2021
 # BREAKING CHANGES
 
+- `Table` has been renamed to `GherkinTable` to avoid naming clashes
+
 In order to progress this library and add support for the new integration_test package various things have had to be changed to enable this will still supporting Flutter Driver.  The big of which is removing Flutter Driver instance from the `FlutterWorld` instance in favour of an adapter approach whereby driving of the app (whether that is via `flutter_driver` or `WidgetTester`) becomes agnostic see `https://github.com/jonsamwell/flutter_gherkin/blob/f1fb2d4a632362629f5d1a196a0c055f858ad1d7/lib/src/flutter/adapters/app_driver_adapter.dart`.
 
 - `FlutterDriverUtils` has been removed, use `world.appDriver` instead.  You can still access the raw driver if needed via `world.appDriver.rawDriver`
@@ -78,7 +80,7 @@ void main() {
           writeReport: (_, __) => Future<void>.value(),
         ),
       ],
-    app.main,
+    (World world) => app.main,
   );
 }
 ```

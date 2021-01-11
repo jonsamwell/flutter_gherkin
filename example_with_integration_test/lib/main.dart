@@ -1,68 +1,47 @@
+import 'package:example_with_integration_test/services/external_application_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_simple_dependency_injection/injector.dart';
+
+import 'module.dart';
+import 'widgets/views/home_view.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    TodoApp(
+      injector: Injector(),
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
+class TodoApp extends StatelessWidget {
+  final ExternalApplicationManager externalApplicationManager;
+  final Injector injector;
+
+  TodoApp({
+    this.injector,
+    this.externalApplicationManager,
+  }) : super() {
+    ModuleContainer().initialise(injector);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
+    final app = MaterialApp(
+      title: 'Todo App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: injector.get<HomeView>(),
     );
-  }
-}
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              key: const Key('counter'),
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-        key: const Key('increment'),
-      ),
-    );
+    // if the app is in test mode and an ExternalApplicationManager is passed in
+    // let the app respond to external changes
+    return externalApplicationManager == null
+        ? app
+        : StreamBuilder(
+            stream: externalApplicationManager.applicationReset,
+            builder: (ctx, _) => app,
+          );
   }
 }

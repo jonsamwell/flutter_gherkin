@@ -15,7 +15,7 @@ class GherkinSuiteTestGenerator
 class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
   _CustomGherkinIntegrationTestRunner(
     TestConfiguration configuration,
-    void Function() appMainFunction,
+    void Function(World) appMainFunction,
   ) : super(configuration, appMainFunction);
 
   @override
@@ -28,7 +28,7 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
 
 void executeTestSuite(
   TestConfiguration configuration,
-  void Function() appMainFunction,
+  void Function(World) appMainFunction,
 ) {
   _CustomGherkinIntegrationTestRunner(configuration, appMainFunction).run();
 }
@@ -186,7 +186,7 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
     _currentFeatureCode = _replaceVariable(
       _currentFeatureCode,
       'tags',
-      '[${tags.map((e) => "'$e'").join(', ')}]',
+      '<String>[${tags.map((e) => "'$e'").join(', ')}]',
     );
   }
 
@@ -198,7 +198,7 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
     _currentScenarioCode = _replaceVariable(
       _currentScenarioCode,
       'tags',
-      '[${tags.map((e) => "'$e'").join(', ')}]',
+      '<String>[${tags.map((e) => "'$e'").join(', ')}]',
     );
   }
 
@@ -206,18 +206,18 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
   Future<void> visitScenarioStep(
     String name,
     Iterable<String> multiLineStrings,
-    Table table,
+    GherkinTable table,
   ) async {
     var code = _replaceVariable(STEP_TEMPLATE, 'step_name', name);
     code = _replaceVariable(
       code,
       'step_multi_line_strings',
-      '[${multiLineStrings.map((s) => "'$s'").join(',')}]',
+      '<String>[${multiLineStrings.map((s) => "'$s'").join(',')}]',
     );
     code = _replaceVariable(
       code,
       'step_table',
-      table == null ? 'null' : 'Table.fromJson(\'${table.toJson()}\')',
+      table == null ? 'null' : 'GherkinTable.fromJson(\'${table.toJson()}\')',
     );
 
     _stepBuffer.writeln(code);

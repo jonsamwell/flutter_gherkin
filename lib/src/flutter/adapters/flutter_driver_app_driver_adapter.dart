@@ -23,7 +23,10 @@ class FlutterDriverAppDriverAdapter
   }
 
   @override
-  Future<T> widget<T extends Object>(SerializableFinder finder) {
+  Future<T> widget<T extends Object>(
+    SerializableFinder finder, [
+    ExpectedWidgetResultType expectResultType = ExpectedWidgetResultType.first,
+  ]) {
     throw UnimplementedError(
         'Flutter driver does not support directly interacting with the widget tree');
   }
@@ -160,7 +163,7 @@ class FlutterDriverAppDriverAdapter
       case FindType.tooltip:
         return find.byTooltip(data);
       case FindType.type:
-        return find.byType(data is Type ? data.runtimeType.toString() : data);
+        return find.byType(data.toString());
     }
 
     throw Exception('unknown finder');

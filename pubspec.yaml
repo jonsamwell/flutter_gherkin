@@ -27,7 +27,7 @@ dependencies:
   gherkin:
     git:
       url: https://github.com/jonsamwell/dart_gherkin.git
-      ref: 2eb30d84c3f7d7f6fa2ad5f93c8d9bfb160a3ced
+      ref: 6db02b6553200ea498c24315dc18373a6682fe7d
       # ref: code_gen_changes
 
 dev_dependencies:

@@ -30,7 +30,10 @@ class WidgetTesterAppDriverAdapter
   }
 
   @override
-  Future<T> widget<T extends Widget>(Finder finder) {
+  Future<T> widget<T extends Widget>(
+    Finder finder, [
+    ExpectedWidgetResultType expectResultType = ExpectedWidgetResultType.first,
+  ]) {
     try {
       final element = rawDriver.widget<T>(finder);
 
