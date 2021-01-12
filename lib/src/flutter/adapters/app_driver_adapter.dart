@@ -39,6 +39,7 @@ abstract class AppDriverAdapter<TRawAdapter, TFinderType, TWidgetBaseType> {
     bool firstMatchOnly = false,
   });
 
+  /// Finds widgets that are descendants of the [of] parameter and that match the [matching] parameter.
   TFinderType findByDescendant(
     TFinderType of,
     TFinderType matching, {
@@ -92,19 +93,20 @@ abstract class AppDriverAdapter<TRawAdapter, TFinderType, TWidgetBaseType> {
 
   Future<void> pageBack();
 
+  /// Scrolls a descendant scrollable widget by the give parameters
   Future<void> scroll(
     TFinderType finder, {
-    double dx = 0,
-    double dy = 0,
-    Duration duration = const Duration(seconds: 200),
+    double dx,
+    double dy,
+    Duration duration = const Duration(milliseconds: 200),
     Duration timeout = const Duration(seconds: 30),
   });
 
   Future<void> scrollUntilVisible(
     TFinderType scrollable,
     TFinderType item, {
-    double dx = 0,
-    double dy = 0,
+    double dx,
+    double dy,
     Duration timeout = const Duration(seconds: 30),
   });
 
@@ -113,6 +115,8 @@ abstract class AppDriverAdapter<TRawAdapter, TFinderType, TWidgetBaseType> {
     Duration timeout = const Duration(seconds: 30),
   });
 
+  /// Will wait until the give condition returns `true` polling every `pollInterval`. If `condition` has not returned true
+  /// within the given `timeout` this will cause the returned future to complete with a [TimeoutException].
   Future<void> waitUntil(
     Future<bool> Function() condition, {
     Duration timeout = const Duration(seconds: 10),

@@ -135,9 +135,9 @@ class FlutterDriverAppDriverAdapter
   @override
   Future<void> scroll(
     SerializableFinder finder, {
-    double dx = 0,
-    double dy = 0,
-    Duration duration = const Duration(seconds: 200),
+    double dx,
+    double dy,
+    Duration duration = const Duration(milliseconds: 200),
     Duration timeout = const Duration(seconds: 30),
   }) async {
     await rawDriver.scroll(
