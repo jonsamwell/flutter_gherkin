@@ -181,8 +181,11 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
   ) async {
     _currentFeatureCode =
         _replaceVariable(FUNCTION_TEMPLATE, 'feature_number', _id.toString());
-    _currentFeatureCode =
-        _replaceVariable(_currentFeatureCode, 'feature_name', name);
+    _currentFeatureCode = _replaceVariable(
+      _currentFeatureCode,
+      'feature_name',
+      _escapeText(name),
+    );
     _currentFeatureCode = _replaceVariable(
       _currentFeatureCode,
       'tags',
@@ -193,8 +196,11 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
   @override
   Future<void> visitScenario(String name, Iterable<String> tags) async {
     _flushScenario();
-    _currentScenarioCode =
-        _replaceVariable(SCENARIO_TEMPLATE, 'scenario_name', name);
+    _currentScenarioCode = _replaceVariable(
+      SCENARIO_TEMPLATE,
+      'scenario_name',
+      _escapeText(name),
+    );
     _currentScenarioCode = _replaceVariable(
       _currentScenarioCode,
       'tags',
@@ -208,11 +214,15 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
     Iterable<String> multiLineStrings,
     GherkinTable table,
   ) async {
-    var code = _replaceVariable(STEP_TEMPLATE, 'step_name', name);
+    var code = _replaceVariable(
+      STEP_TEMPLATE,
+      'step_name',
+      _escapeText(name),
+    );
     code = _replaceVariable(
       code,
       'step_multi_line_strings',
-      '<String>[${multiLineStrings.map((s) => "'$s'").join(',')}]',
+      '<String>[${multiLineStrings.map((s) => "'${_escapeText(s)}'").join(',')}]',
     );
     code = _replaceVariable(
       code,
@@ -258,4 +268,6 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
   String _replaceVariable(String content, String property, String value) {
     return content.replaceAll('{{$property}}', value);
   }
+
+  String _escapeText(String text) => text.replaceAll("'", "\\'");
 }

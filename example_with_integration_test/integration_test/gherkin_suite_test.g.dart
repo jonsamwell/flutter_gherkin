@@ -34,7 +34,7 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
             );
 
             await runStep(
-              'When I tap the "add" button',
+              'When I tap the \'add\' button',
               <String>[],
               null,
               dependencies,
