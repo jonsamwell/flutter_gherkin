@@ -67,12 +67,7 @@ class WidgetTesterAppDriverAdapter
     Finder finder, {
     Duration timeout = const Duration(seconds: 1),
   }) async {
-    try {
-      final element = await widget(finder);
-      return element != null;
-    } on StateError {
-      return false;
-    }
+    return finder.evaluate().isNotEmpty;
   }
 
   @override
