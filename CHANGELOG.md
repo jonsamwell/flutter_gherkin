@@ -17,15 +17,15 @@ The change to use the `integration_test` package is a fundamentally different ap
   - build_runner
   - flutter_gherkin
 2. Add the following `build.yaml` to the root of your project. This file allows the dart code generator to target files outside of your application's `lib` folder
-```
+```yaml
 targets:
-$default:
-  sources:
-    - lib/**
-    - pubspec.*
-    - $package$
-    # Allows the code generator to target files outside of the lib folder
-    - integration_test/**.dart
+  $default:
+    sources:
+      - lib/**
+      - pubspec.*
+      - $package$
+      # Allows the code generator to target files outside of the lib folder
+      - integration_test/**.dart
 ```
 3. Add the following file (and folder) `example_with_integration_test\test_driver\integration_test_driver.dart`.  This file is the entry point to run your tests.  See `https://flutter.dev/docs/testing/integration-tests` for more information.
 ```dart
@@ -75,12 +75,12 @@ void main() {
           ..setWriteFn(print),
         TestRunSummaryReporter()
           ..setWriteLineFn(print)
-          ..setWriteFn(print),,
+          ..setWriteFn(print),
         JsonReporter(
           writeReport: (_, __) => Future<void>.value(),
         ),
       ],
-    (World world) => app.main,
+    (World world) => app.main(),
   );
 }
 ```
