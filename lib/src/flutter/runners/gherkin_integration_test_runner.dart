@@ -1,3 +1,4 @@
+import 'package:flutter_gherkin/flutter_gherkin_integration_test.dart';
 import 'package:flutter_gherkin/src/flutter/adapters/widget_tester_app_driver_adapter.dart';
 import 'package:flutter_gherkin/src/flutter/world/flutter_world.dart';
 import 'package:gherkin/gherkin.dart';
@@ -212,7 +213,7 @@ abstract class GherkinIntegrationTestRunner {
       world = await configuration.createWorld(configuration);
     }
 
-    world = world ?? FlutterWorld();
+    world = world ?? FlutterWidgetTesterWorld();
     world.setAttachmentManager(attachmentManager);
 
     (world as FlutterWorld).setAppAdapter(WidgetTesterAppDriverAdapter(tester));
