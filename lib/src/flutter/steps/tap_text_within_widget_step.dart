@@ -28,8 +28,10 @@ StepDefinitionGeneric TapTextWithinWidgetStep() {
 
       if (!isPresent) {
         await context.world.appDriver.scrollUntilVisible(
-          context.world.appDriver.findBy(ancestorKey, FindType.key),
-          context.world.appDriver.findBy(text, FindType.text),
+          context.world.appDriver.findByDescendant(
+            context.world.appDriver.findBy(ancestorKey, FindType.key),
+            context.world.appDriver.findBy(text, FindType.text),
+          ),
           dy: -100.0,
           timeout: timeout * .9,
         );

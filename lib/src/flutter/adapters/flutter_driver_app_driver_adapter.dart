@@ -201,10 +201,10 @@ class FlutterDriverAppDriverAdapter
 
   @override
   Future<void> scrollUntilVisible(
-    SerializableFinder scrollable,
     SerializableFinder item, {
-    double dx = 0,
-    double dy = 0,
+    SerializableFinder scrollable,
+    double dx,
+    double dy,
     Duration timeout = const Duration(seconds: 30),
   }) async {
     await rawDriver.scrollUntilVisible(

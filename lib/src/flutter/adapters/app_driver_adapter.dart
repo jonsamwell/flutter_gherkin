@@ -102,9 +102,12 @@ abstract class AppDriverAdapter<TRawAdapter, TFinderType, TWidgetBaseType> {
     Duration timeout = const Duration(seconds: 30),
   });
 
+  /// Repeatedly scrolls a [Scrollable] by delta until finder is visible.
+  /// Between each scroll, wait for duration time for settling.
+  /// If scrollable is null, this will find a [Scrollable].
   Future<void> scrollUntilVisible(
-    TFinderType scrollable,
     TFinderType item, {
+    TFinderType scrollable,
     double dx,
     double dy,
     Duration timeout = const Duration(seconds: 30),

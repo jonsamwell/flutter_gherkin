@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui' as ui show ImageByteFormat;
 
+import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -90,6 +91,8 @@ class WidgetTesterAppDriverAdapter
       return instance.data;
     } else if (instance is TextSpan) {
       return (instance as TextSpan).text;
+    } else if (instance is TextFormField) {
+      return instance.controller?.text;
     }
 
     throw Exception(
@@ -206,15 +209,15 @@ class WidgetTesterAppDriverAdapter
 
   @override
   Future<void> scrollUntilVisible(
-    Finder scrollable,
     Finder item, {
-    double dx = 0,
-    double dy = 0,
+    Finder scrollable,
+    double dx,
+    double dy,
     Duration timeout = const Duration(seconds: 30),
   }) async {
     await rawDriver.scrollUntilVisible(
       item,
-      dx,
+      dy ?? dx,
       scrollable: scrollable,
     );
   }
@@ -225,6 +228,7 @@ class WidgetTesterAppDriverAdapter
     Duration timeout = const Duration(seconds: 30),
   }) async {
     await rawDriver.ensureVisible(finder);
+    await rawDriver.pumpAndSettle();
   }
 
   @override
