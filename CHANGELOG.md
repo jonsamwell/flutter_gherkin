@@ -42,7 +42,7 @@ Future<void> main() {
 }
 ```
 4. Create a folder call `integration_test` this will eventually contain all your Gherkin feature files and the generated test files.
-5. Add the following file (and folder) `integration_test\feature\counter.feature` with the following below contents.  This is a basic feature file that will be transform in to a test file that can run a test against the sample app.
+5. Add the following file (and folder) `integration_test\features\counter.feature` with the following below contents.  This is a basic feature file that will be transform in to a test file that can run a test against the sample app.
 ```
 Feature: Counter
 
@@ -88,7 +88,7 @@ void main() {
 ```
 flutter pub run build_runner build
 ```
-8. The errors in the `integration_test\gherkin_suite_test.dart` file should have not gone away and it you look in `integration_test\gherkin_suite_test.g.dart` you will see the coded version of the Gherkin tests described in the feature file `integration_test\feature\counter.feature`.
+8. The errors in the `integration_test\gherkin_suite_test.dart` file should have not gone away and it you look in `integration_test\gherkin_suite_test.g.dart` you will see the coded version of the Gherkin tests described in the feature file `integration_test\features\counter.feature`.
 9. We can now run the test using the below command from the root of your project.
 ```
 flutter drive --driver=test_driver/integration_test_driver.dart --target=integration_test/gherkin_suite_test.dart
