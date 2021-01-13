@@ -165,8 +165,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "6db02b6553200ea498c24315dc18373a6682fe7d"
-      resolved-ref: "6db02b6553200ea498c24315dc18373a6682fe7d"
+      ref: f0b3f955191b53a78075ed2c9387ea8bee12f111
+      resolved-ref: f0b3f955191b53a78075ed2c9387ea8bee12f111
       url: "https://github.com/jonsamwell/dart_gherkin.git"
     source: git
     version: "1.1.10"

@@ -9,6 +9,7 @@ Feature: Creating todos
       | Todo        |
       | Buy carrots |
 
+  @debug
   Scenario: User can create multiple new todo items
     Given I fill the "todo" field with "Buy carrots"
     When I tap the "add" button

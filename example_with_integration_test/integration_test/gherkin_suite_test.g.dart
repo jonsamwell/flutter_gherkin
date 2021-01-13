@@ -51,7 +51,7 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
 
         runScenario(
           'User can create multiple new todo items',
-          <String>['@tag'],
+          <String>['@tag', '@debug'],
           (TestDependencies dependencies) async {
             await runStep(
               'Given I fill the "todo" field with "Buy carrots"',

@@ -16,6 +16,8 @@ class TestDependencies {
 }
 
 abstract class GherkinIntegrationTestRunner {
+  final TagExpressionEvaluator _tagExpressionEvaluator =
+      TagExpressionEvaluator();
   final TestConfiguration configuration;
   final void Function(World world) appMainFunction;
   Reporter _reporter;
@@ -120,63 +122,72 @@ abstract class GherkinIntegrationTestRunner {
     Iterable<String> tags,
     Future<void> Function(TestDependencies dependencies) runTest,
   ) {
-    testWidgets(
-      name,
-      (WidgetTester tester) async {
-        final debugInformation = RunnableDebugInformation('', 0, name);
-        final scenarioTags =
-            (tags ?? Iterable<Tag>.empty()).map((t) => Tag(t, 0));
-        final dependencies = await createTestDependencies(
-          configuration,
-          tester,
-        );
+    if (_evaluateTagFilterExpression(configuration.tagExpression, tags)) {
+      testWidgets(
+        name,
+        (WidgetTester tester) async {
+          final debugInformation = RunnableDebugInformation('', 0, name);
+          final scenarioTags =
+              (tags ?? Iterable<Tag>.empty()).map((t) => Tag(t, 0));
+          final dependencies = await createTestDependencies(
+            configuration,
+            tester,
+          );
 
-        await _hook.onBeforeScenario(
-          configuration,
-          name,
-          scenarioTags,
-        );
-
-        await startApp(
-          tester,
-          dependencies.world,
-        );
-
-        await _hook.onAfterScenarioWorldCreated(
-          dependencies.world,
-          name,
-          scenarioTags,
-        );
-
-        await reporter.onScenarioStarted(
-          StartedMessage(
-            Target.scenario,
+          await _hook.onBeforeScenario(
+            configuration,
             name,
-            debugInformation,
             scenarioTags,
-          ),
-        );
+          );
 
-        await runTest(dependencies);
+          await startApp(
+            tester,
+            dependencies.world,
+          );
 
-        await _reporter.onScenarioFinished(
-          ScenarioFinishedMessage(
+          await _hook.onAfterScenarioWorldCreated(
+            dependencies.world,
             name,
-            debugInformation,
-            true,
-          ),
-        );
+            scenarioTags,
+          );
 
-        await _hook.onAfterScenario(
-          configuration,
-          name,
-          scenarioTags,
-        );
+          await reporter.onScenarioStarted(
+            StartedMessage(
+              Target.scenario,
+              name,
+              debugInformation,
+              scenarioTags,
+            ),
+          );
 
-        cleanupScenarioRun(dependencies);
-      },
-      timeout: scenarioExecutionTimeout,
-    );
+          await runTest(dependencies);
+
+          await _reporter.onScenarioFinished(
+            ScenarioFinishedMessage(
+              name,
+              debugInformation,
+              true,
+            ),
+          );
+
+          await _hook.onAfterScenario(
+            configuration,
+            name,
+            scenarioTags,
+          );
+
+          cleanupScenarioRun(dependencies);
+        },
+        timeout: scenarioExecutionTimeout,
+      );
+    } else {
+      _safeInvokeFuture(
+        () async => reporter.message(
+          'Ignoring scenario `${name}` as tag expression `${configuration.tagExpression}` not satisfied',
+          MessageLevel.info,
+        ),
+      );
+    }
   }
 
   @protected
@@ -387,5 +398,14 @@ abstract class GherkinIntegrationTestRunner {
     try {
       await fn().catchError((_, __) {});
     } catch (_) {}
+  }
+
+  bool _evaluateTagFilterExpression(
+    String tagExpression,
+    List<String> tags,
+  ) {
+    return tagExpression == null || tagExpression.isEmpty
+        ? true
+        : _tagExpressionEvaluator.evaluate(tagExpression, tags);
   }
 }

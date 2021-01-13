@@ -17,6 +17,7 @@ FlutterTestConfiguration gherkinTestConfiguration =
     whenAnAnimationIsAwaited,
   ],
 )
+      // ..tagExpression = '@debug'
       ..hooks = [
         ResetAppHook(),
       ]
