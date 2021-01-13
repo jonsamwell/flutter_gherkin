@@ -3,10 +3,8 @@ import 'package:flutter_gherkin/flutter_gherkin.dart';
 
 import '../runners/flutter_run_process_handler.dart';
 
-class FlutterDriverWorld extends FlutterWorld {
+class FlutterDriverWorld extends FlutterWorld<FlutterDriver> {
   FlutterRunProcessHandler _flutterRunProcessHandler;
-
-  FlutterDriver get driver => appDriver.rawDriver as FlutterDriver;
 
   void setFlutterDriver(FlutterDriver flutterDriver) {
     setAppAdapter(FlutterDriverAppDriverAdapter(flutterDriver));
@@ -47,8 +45,8 @@ class FlutterDriverWorld extends FlutterWorld {
   Future<void> _closeDriver({
     Duration timeout = const Duration(seconds: 60),
   }) async {
-    if (driver != null) {
-      await driver.close().catchError(
+    if (rawAppDriver != null) {
+      await rawAppDriver.close().catchError(
         (e, st) {
           // Avoid an unhandled error
           return null;

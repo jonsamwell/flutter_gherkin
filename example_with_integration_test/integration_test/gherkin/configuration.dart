@@ -7,12 +7,16 @@ import 'package:gherkin/gherkin.dart';
 
 import 'hooks/reset_app_hook.dart';
 import 'steps/expect_todos_step.dart';
+import 'steps/when_await_animation.dart';
 import 'world/custom_world.dart';
 
 FlutterTestConfiguration gherkinTestConfiguration =
-    FlutterTestConfiguration.DEFAULT([
-  thenIExpectTheTodos(),
-])
+    FlutterTestConfiguration.DEFAULT(
+  [
+    thenIExpectTheTodos,
+    whenAnAnimationIsAwaited,
+  ],
+)
       ..hooks = [
         ResetAppHook(),
       ]

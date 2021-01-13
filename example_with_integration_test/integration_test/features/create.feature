@@ -12,12 +12,13 @@ Feature: Creating todos
   Scenario: User can create multiple new todo items
     Given I fill the "todo" field with "Buy carrots"
     When I tap the "add" button
-    Given I fill the "todo" field with "Buy apples"
+    And I fill the "todo" field with "Buy apples"
     When I tap the "add" button
-    Given I fill the "todo" field with "Buy blueberries"
+    And I fill the "todo" field with "Buy blueberries"
     When I tap the "add" button
     Then I expect the todo list
       | Todo            |
       | Buy blueberries |
       | Buy apples      |
       | Buy carrots     |
+    Given I wait 5 seconds for the animation to complete

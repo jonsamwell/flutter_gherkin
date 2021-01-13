@@ -37,3 +37,4 @@ export 'src/flutter/hooks/attach_screenshot_on_failed_step_hook.dart';
 export 'src/flutter/adapters/widget_tester_app_driver_adapter.dart';
 export 'src/flutter/code_generation/annotations/gherkin_full_test_suite_annotation.dart';
 export 'src/flutter/runners/gherkin_integration_test_runner.dart';
+export 'src/flutter/world/flutter_widget_tester_world.dart';

@@ -32,3 +32,4 @@ export 'src/flutter/hooks/attach_screenshot_on_failed_step_hook.dart';
 export 'src/flutter/configuration/flutter_driver_test_configuration.dart';
 export 'src/flutter/adapters/flutter_driver_app_driver_adapter.dart';
 export 'src/flutter/reporters/flutter_driver_reporter.dart';
+export 'src/flutter/world/flutter_driver_world.dart';

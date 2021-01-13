@@ -68,7 +68,7 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
             );
 
             await runStep(
-              'Given I fill the "todo" field with "Buy apples"',
+              'And I fill the "todo" field with "Buy apples"',
               <String>[],
               null,
               dependencies,
@@ -82,7 +82,7 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
             );
 
             await runStep(
-              'Given I fill the "todo" field with "Buy blueberries"',
+              'And I fill the "todo" field with "Buy blueberries"',
               <String>[],
               null,
               dependencies,
@@ -100,6 +100,13 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
               <String>[],
               GherkinTable.fromJson(
                   '[{"Todo":"Buy blueberries"},{"Todo":"Buy apples"},{"Todo":"Buy carrots"}]'),
+              dependencies,
+            );
+
+            await runStep(
+              'Given I wait 5 seconds for the animation to complete',
+              <String>[],
+              null,
               dependencies,
             );
           },

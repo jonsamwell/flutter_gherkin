@@ -107,7 +107,7 @@ flutter drive --driver=test_driver/integration_test_driver.dart --target=integra
 }
 ```
 11. Custom world need to extend `FlutterWorld` note `FlutterDriverWorld`.
-12. If you change any of the feature files you will need to regenerate the tests using the below command
+12. If you change any of the feature files you will need to re-generate the tests using the below command
 ```
 flutter pub run build_runner build
 ```
