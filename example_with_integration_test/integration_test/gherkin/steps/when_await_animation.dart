@@ -3,10 +3,12 @@ import 'package:gherkin/gherkin.dart';
 import 'package:flutter_gherkin/flutter_gherkin_integration_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+/// Shows are example of using the `WidgetTester` from the `World` context rather than
+/// using the implementation agnostic `appDriver`
 final whenAnAnimationIsAwaited = when1<int, FlutterWidgetTesterWorld>(
   'I wait {int} seconds for the animation to complete',
   (duration, context) async {
-    final tester = context.world.appDriver.rawDriver;
+    final tester = context.world.rawAppDriver;
 
     try {
       await tester.pumpAndSettle(
@@ -17,6 +19,7 @@ final whenAnAnimationIsAwaited = when1<int, FlutterWidgetTesterWorld>(
       // ignore: avoid_catching_errors
     } on FlutterError {
       // pump for 2 seconds and stop
+      await tester.pump(const Duration(seconds: 2));
     }
   },
   configuration: StepDefinitionConfiguration()

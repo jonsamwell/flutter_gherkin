@@ -6,11 +6,11 @@ import '../adapters/app_driver_adapter.dart';
 /// The world object that can be used to store state during a single test.
 /// It also allows interaction with the app under test through the `appDriver`
 /// which exposes an instance of `AppDriverAdapter`
-class FlutterWorld extends World {
+class FlutterWorld<TFinder extends dynamic> extends World {
   AppDriverAdapter _adapter;
 
   /// The adapter that is used to agnostically drive the app under test
-  AppDriverAdapter get appDriver => _adapter;
+  AppDriverAdapter<dynamic, TFinder, dynamic> get appDriver => _adapter;
 
   /// Sets the app driver that is used to control the app under test
   void setAppAdapter(AppDriverAdapter appAdapter) {
@@ -29,7 +29,7 @@ class FlutterWorld extends World {
 /// It also allows interaction with the app under test through the `appDriver`
 /// which exposes an instance of `AppDriverAdapter` and a typed instance of `TDriver`
 /// of the actual class that is able to interact with the app under test
-class FlutterDriverTypedWorld<TDriver> extends FlutterWorld {
+class FlutterDriverTypedWorld<TDriver, TFinder> extends FlutterWorld<TFinder> {
   /// The underlying driver that is able to instrument the app under test
   /// It is suggested you use `appDriver` for all interactions with the app under tests
   /// however if you need a specific api not available on `appDriver` this property

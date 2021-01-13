@@ -5,4 +5,5 @@ import 'package:flutter_test/flutter_test.dart';
 /// It also allows interaction with the app under test through the `appDriver`
 /// which exposes an instance of `AppDriverAdapter` and an
 /// instance of `WidgetTester` via the property `rawAppDriver`
-class FlutterWidgetTesterWorld extends FlutterDriverTypedWorld<WidgetTester> {}
+class FlutterWidgetTesterWorld
+    extends FlutterDriverTypedWorld<WidgetTester, Finder> {}

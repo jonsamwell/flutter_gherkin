@@ -3,7 +3,9 @@ import 'package:flutter_gherkin/flutter_gherkin.dart';
 
 import '../runners/flutter_run_process_handler.dart';
 
-class FlutterDriverWorld extends FlutterDriverTypedWorld<FlutterDriver> {
+/// Driver version of the FlutterWorld with a typed driver 
+class FlutterDriverWorld
+    extends FlutterDriverTypedWorld<FlutterDriver, SerializableFinder> {
   FlutterRunProcessHandler _flutterRunProcessHandler;
 
   void setFlutterDriver(FlutterDriver flutterDriver) {
