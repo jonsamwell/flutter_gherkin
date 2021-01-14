@@ -228,11 +228,12 @@ class WidgetTesterAppDriverAdapter
     Duration timeout = const Duration(seconds: 30),
   }) async {
     await rawDriver.ensureVisible(finder);
-    await rawDriver.pumpAndSettle();
+    await waitForAppToSettle();
   }
 
   @override
   Future<void> pageBack() async {
     await rawDriver.pageBack();
+    await waitForAppToSettle();
   }
 }

@@ -230,5 +230,6 @@ class FlutterDriverAppDriverAdapter
   @override
   Future<void> pageBack() async {
     await tap(find.pageBack());
+    await waitForAppToSettle();
   }
 }
