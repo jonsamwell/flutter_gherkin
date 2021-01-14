@@ -15,7 +15,9 @@ StepDefinitionGeneric WaitUntilTypeExistsStep() {
     'I wait until the (?:button|element|label|icon|field|text|widget) of type {string} is {existence}',
     (ofType, existence, context) async {
       await context.world.appDriver.waitUntil(
-        () {
+        () async {
+          await context.world.appDriver.waitForAppToSettle();
+
           return existence == Existence.absent
               ? context.world.appDriver.isAbsent(
                   context.world.appDriver.findBy(ofType, FindType.type),
