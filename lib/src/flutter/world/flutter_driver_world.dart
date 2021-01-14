@@ -5,7 +5,7 @@ import '../runners/flutter_run_process_handler.dart';
 
 /// Driver version of the FlutterWorld with a typed driver 
 class FlutterDriverWorld
-    extends FlutterDriverTypedWorld<FlutterDriver, SerializableFinder> {
+    extends FlutterTypedAdapterWorld<FlutterDriver, SerializableFinder, dynamic> {
   FlutterRunProcessHandler _flutterRunProcessHandler;
 
   void setFlutterDriver(FlutterDriver flutterDriver) {
