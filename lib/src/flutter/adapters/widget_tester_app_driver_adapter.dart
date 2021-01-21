@@ -57,8 +57,7 @@ class WidgetTesterAppDriverAdapter
     final layer = renderObject.debugLayer as OffsetLayer;
 
     return layer
-        .toImage(renderObject.paintBounds)
-        // .then((value) => value.toByteData(format: ui.ImageByteFormat.png))
+        .toImage(renderObject.semanticBounds)
         .then((value) => value.toByteData(format: ui.ImageByteFormat.png))
         .then((value) => value.buffer.asUint8List());
   }
