@@ -8,6 +8,7 @@ import 'package:gherkin/gherkin.dart';
 import 'hooks/reset_app_hook.dart';
 import 'steps/expect_todos_step.dart';
 import 'steps/when_await_animation.dart';
+import 'steps/when_step_has_timeout.dart';
 import 'world/custom_world.dart';
 
 FlutterTestConfiguration gherkinTestConfiguration =
@@ -15,6 +16,7 @@ FlutterTestConfiguration gherkinTestConfiguration =
   [
     thenIExpectTheTodos,
     whenAnAnimationIsAwaited,
+    whenStepHasTimeout,
   ],
 )
       // ..tagExpression = '@debug'
@@ -35,7 +37,6 @@ FlutterTestConfiguration gherkinTestConfiguration =
           writeReport: (_, __) => Future<void>.value(),
         ),
       ]
-      ..defaultTimeout = const Duration(minutes: 1)
       ..createWorld = (config) => Future.value(CustomWorld());
 
 void Function(World) appInitializationFn = (World world) {

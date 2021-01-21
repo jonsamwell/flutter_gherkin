@@ -23,3 +23,4 @@ Feature: Creating todos
       | Buy apples      |
       | Buy carrots     |
     Given I wait 5 seconds for the animation to complete
+    When I test the default step timeout is not applied to step with custom timeout

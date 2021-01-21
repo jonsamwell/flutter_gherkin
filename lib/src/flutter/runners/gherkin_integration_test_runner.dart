@@ -54,13 +54,13 @@ abstract class GherkinIntegrationTestRunner {
 
     _safeInvokeFuture(() async => await reporter.onTestRunStarted());
 
-    onRun();
-
     tearDownAll(
       () {
         onRunComplete();
       },
     );
+
+    onRun();
   }
 
   void onRun();
