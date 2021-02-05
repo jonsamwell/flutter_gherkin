@@ -29,6 +29,7 @@ StepDefinitionGeneric WhenTapWidget() {
       );
       await context.world.appDriver.tap(
         finder,
+        timeout: context.configuration.timeout,
       );
     },
   );
