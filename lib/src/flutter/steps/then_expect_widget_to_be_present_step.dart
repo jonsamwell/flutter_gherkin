@@ -16,11 +16,16 @@ StepDefinitionGeneric ThenExpectWidgetToBePresent() {
     RegExp(
         r'I expect the (?:button|element|label|icon|field|text|widget|dialog|popup) {string} to be present within {int} second(s)$'),
     (key, seconds, context) async {
-      final isPresent = await context.world.appDriver.isPresent(
-        context.world.appDriver.findBy(key, FindType.key),
+      await context.world.appDriver.waitUntil(
+        () async {
+          await context.world.appDriver.waitForAppToSettle();
+
+          return context.world.appDriver.isPresent(
+            context.world.appDriver.findBy(key, FindType.key),
+          );
+        },
         timeout: Duration(seconds: seconds),
       );
-      context.expect(isPresent, true);
     },
     configuration: StepDefinitionConfiguration()
       ..timeout = const Duration(days: 1),

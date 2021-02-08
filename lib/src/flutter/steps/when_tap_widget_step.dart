@@ -27,10 +27,12 @@ StepDefinitionGeneric WhenTapWidget() {
       await context.world.appDriver.scrollIntoView(
         finder,
       );
+      await context.world.appDriver.waitForAppToSettle();
       await context.world.appDriver.tap(
         finder,
         timeout: context.configuration.timeout,
       );
+      await context.world.appDriver.waitForAppToSettle();
     },
   );
 }
@@ -46,6 +48,8 @@ StepDefinitionGeneric WhenTapWidgetWithoutScroll() {
       await context.world.appDriver.tap(
         finder,
       );
+      
+      await context.world.appDriver.waitForAppToSettle();
     },
   );
 }
