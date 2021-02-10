@@ -23,12 +23,9 @@ StepDefinitionGeneric WhenLongPressWidget() {
     (key, context) async {
       final finder = context.world.appDriver.findBy(key, FindType.key);
 
-      await context.world.appDriver.scrollIntoView(
-        finder,
-      );
-      await context.world.appDriver.longPress(
-        finder,
-      );
+      await context.world.appDriver.scrollIntoView(finder);
+      await context.world.appDriver.longPress(finder);
+      await context.world.appDriver.waitForAppToSettle();
     },
   );
 }

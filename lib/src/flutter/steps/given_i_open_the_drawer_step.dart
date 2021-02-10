@@ -37,6 +37,8 @@ StepDefinitionGeneric GivenOpenDrawer() {
           timeout: context.configuration?.timeout,
         );
       }
+
+      await context.world.appDriver.waitForAppToSettle();
     },
   );
 }

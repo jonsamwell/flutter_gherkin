@@ -38,5 +38,6 @@ class FlutterTypedAdapterWorld<TDriver, TFinder, TWidget> extends FlutterWorld {
 
   /// The adapter that is used to agnostically drive the app under test
   @override
-  AppDriverAdapter<TDriver, TFinder, TWidget> get appDriver => _adapter as AppDriverAdapter<TDriver, TFinder, TWidget>;
+  AppDriverAdapter<TDriver, TFinder, TWidget> get appDriver =>
+      _adapter as AppDriverAdapter<TDriver, TFinder, TWidget>;
 }

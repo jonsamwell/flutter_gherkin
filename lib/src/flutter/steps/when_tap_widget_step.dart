@@ -48,7 +48,7 @@ StepDefinitionGeneric WhenTapWidgetWithoutScroll() {
       await context.world.appDriver.tap(
         finder,
       );
-      
+
       await context.world.appDriver.waitForAppToSettle();
     },
   );

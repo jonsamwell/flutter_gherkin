@@ -16,9 +16,8 @@ StepDefinitionGeneric TapWidgetWithTextStep() {
     (input1, context) async {
       final finder = context.world.appDriver.findBy(input1, FindType.text);
       await context.world.appDriver.scrollIntoView(finder);
-      await context.world.appDriver.tap(
-        finder,
-      );
+      await context.world.appDriver.tap(finder);
+      await context.world.appDriver.waitForAppToSettle();
     },
   );
 }

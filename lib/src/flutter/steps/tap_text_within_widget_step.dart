@@ -37,10 +37,11 @@ StepDefinitionGeneric TapTextWithinWidgetStep() {
         );
       }
 
-      await await context.world.appDriver.tap(
+      await context.world.appDriver.tap(
         finder,
         timeout: timeout,
       );
+      await context.world.appDriver.waitForAppToSettle();
     },
   );
 }
