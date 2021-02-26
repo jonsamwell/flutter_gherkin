@@ -223,7 +223,7 @@ An infix boolean expression which defines the features and scenarios to run base
 #### order
 
 Defaults to `ExecutionOrder.random`
-The order by which scenarios will be run. Running an a random order may highlight any inter-test dependencies that should be fixed.
+The order by which scenarios will be run. Running an a random order may highlight any inter-test dependencies that should be fixed.  Running with `ExecutionOrder.sorted` processes the feature files in `filename` order.
 
 #### stepDefinitions
 
