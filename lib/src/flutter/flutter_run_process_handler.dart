@@ -52,6 +52,7 @@ class FlutterRunProcessHandler extends ProcessHandler {
   String _workingDirectory;
   String _appTarget;
   String _buildFlavor;
+  List<String> _dartDefineArgs;
   String _deviceTargetId;
   Duration _driverConnectionDelay = const Duration(seconds: 2);
   String currentObservatoryUri;
@@ -84,6 +85,10 @@ class FlutterRunProcessHandler extends ProcessHandler {
     _deviceTargetId = deviceTargetId;
   }
 
+  void setDartDefineArgs(List<String> dartDefineArgs) {
+    _dartDefineArgs = dartDefineArgs;
+  }
+
   void setBuildRequired(bool build) {
     _buildApp = build;
   }
@@ -112,6 +117,12 @@ class FlutterRunProcessHandler extends ProcessHandler {
 
     if (_buildFlavor != null && _buildFlavor.isNotEmpty) {
       arguments.add('--flavor=$_buildFlavor');
+    }
+
+    if (_dartDefineArgs.isNotEmpty) {
+      _dartDefineArgs.forEach((element) {
+        arguments.add('--dart-define=$element');
+      });
     }
 
     if (_deviceTargetId != null && _deviceTargetId.isNotEmpty) {

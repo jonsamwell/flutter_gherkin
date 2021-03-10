@@ -88,6 +88,9 @@ class FlutterTestConfiguration extends TestConfiguration {
   /// Defaults to empty
   String targetDeviceId = '';
 
+  // Dart define args to pass into the build parameters
+  List<String> dartDefineArgs = [];
+
   /// Will keep the Flutter application running when done testing
   /// Defaults to false
   bool keepAppRunningAfterTests = false;
