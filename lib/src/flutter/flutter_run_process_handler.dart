@@ -143,6 +143,9 @@ class FlutterRunProcessHandler extends ProcessHandler {
       );
     }
 
+    print("Running Test:");
+    print("Arguments: ${arguments}");
+
     _runningProcess = await Process.start(
       'flutter',
       arguments,
