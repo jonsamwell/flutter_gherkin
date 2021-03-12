@@ -88,6 +88,10 @@ class FlutterTestConfiguration extends TestConfiguration {
   /// Defaults to empty
   String targetDeviceId = '';
 
+  /// `--dart-define` args to pass into the build parameters. Include the name and value
+  /// for each. For example, `--dart-define=MY_VAR="true"` becomes `['MY_VAR="true"']`
+  List<String> dartDefineArgs = [];
+
   /// Will keep the Flutter application running when done testing
   /// Defaults to false
   bool keepAppRunningAfterTests = false;
