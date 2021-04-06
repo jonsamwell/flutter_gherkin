@@ -14,7 +14,7 @@ StepDefinitionGeneric TapTextWithinWidgetStep() {
         r'I tap the (?:button|element|label|field|text|widget) that contains the text {string} within the {string}'),
     (text, ancestorKey, context) async {
       final timeout =
-          context.configuration?.timeout ?? const Duration(seconds: 20);
+          context.configuration.timeout ?? const Duration(seconds: 20);
       final finder = find.descendant(
         of: find.byValueKey(ancestorKey),
         matching: find.text(text),
@@ -28,7 +28,7 @@ StepDefinitionGeneric TapTextWithinWidgetStep() {
       );
 
       if (!isPresent) {
-        await context.world.driver.scrollUntilVisible(
+        await context.world.driver?.scrollUntilVisible(
           find.byValueKey(ancestorKey),
           find.text(text),
           dyScroll: -100.0,

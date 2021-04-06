@@ -13,9 +13,9 @@ StepDefinitionGeneric WhenFillFieldStep() {
     'I fill the {string} field with {string}',
     (key, value, context) async {
       final finder = find.byValueKey(key);
-      await context.world.driver.scrollIntoView(finder);
+      await context.world.driver!.scrollIntoView(finder);
       await FlutterDriverUtils.enterText(
-        context.world.driver,
+        context.world.driver!,
         finder,
         value,
       );

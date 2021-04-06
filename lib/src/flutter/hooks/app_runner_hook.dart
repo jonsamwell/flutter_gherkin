@@ -8,7 +8,7 @@ import '../flutter_world.dart';
 /// A hook that manages running the target flutter application
 /// that is under test
 class FlutterAppRunnerHook extends Hook {
-  FlutterRunProcessHandler _flutterRunProcessHandler;
+  FlutterRunProcessHandler? _flutterRunProcessHandler;
   bool haveRunFirstScenario = false;
 
   @override
@@ -55,34 +55,37 @@ class FlutterAppRunnerHook extends Hook {
     String scenario,
     Iterable<Tag> tags,
   ) async {
-    if (world is FlutterWorld) {
-      world.setFlutterProcessHandler(_flutterRunProcessHandler);
+    if (world is FlutterWorld && _flutterRunProcessHandler != null) {
+      world.setFlutterProcessHandler(_flutterRunProcessHandler!);
     }
   }
 
   Future<void> _runApp(FlutterTestConfiguration config) async {
     if (config.runningAppProtocolEndpointUri != null &&
-        config.runningAppProtocolEndpointUri.isNotEmpty) {
+        config.runningAppProtocolEndpointUri!.isNotEmpty) {
       stdout.writeln(
           "Connecting to running Flutter app under test at '${config.runningAppProtocolEndpointUri}', this might take a few moments");
-      config.setObservatoryDebuggerUri(config.runningAppProtocolEndpointUri);
+      config.setObservatoryDebuggerUri(config.runningAppProtocolEndpointUri!);
     } else {
       _flutterRunProcessHandler = FlutterRunProcessHandler()
         ..setLogFlutterProcessOutput(config.logFlutterProcessOutput)
         ..setVerboseFlutterLogs(config.verboseFlutterProcessLogs)
         ..setApplicationTargetFile(config.targetAppPath)
         ..setDriverConnectionDelay(config.flutterDriverReconnectionDelay)
-        ..setWorkingDirectory(config.targetAppWorkingDirectory)
         ..setBuildRequired(haveRunFirstScenario ? false : config.build)
         ..setKeepAppRunning(config.keepAppRunningAfterTests)
         ..setBuildFlavor(config.buildFlavor)
         ..setBuildMode(config.buildMode)
         ..setDeviceTargetId(config.targetDeviceId);
+      if (config.targetAppWorkingDirectory != null) {
+        _flutterRunProcessHandler = _flutterRunProcessHandler!
+          ..setWorkingDirectory(config.targetAppWorkingDirectory!);
+      }
 
       stdout.writeln(
           "Starting Flutter app under test '${config.targetAppPath}', this might take a few moments");
-      await _flutterRunProcessHandler.run();
-      final observatoryUri = await _flutterRunProcessHandler
+      await _flutterRunProcessHandler!.run();
+      final observatoryUri = await _flutterRunProcessHandler!
           .waitForObservatoryDebuggerUri(config.flutterBuildTimeout);
       config.setObservatoryDebuggerUri(observatoryUri);
     }
@@ -91,7 +94,7 @@ class FlutterAppRunnerHook extends Hook {
   Future<void> _terminateApp() async {
     if (_flutterRunProcessHandler != null) {
       stdout.writeln('Terminating Flutter app under test');
-      await _flutterRunProcessHandler.terminate();
+      await _flutterRunProcessHandler!.terminate();
       _flutterRunProcessHandler = null;
     }
   }
@@ -99,7 +102,7 @@ class FlutterAppRunnerHook extends Hook {
   Future<void> _restartApp() async {
     if (_flutterRunProcessHandler != null) {
       stdout.writeln('Restarting Flutter app under test');
-      await _flutterRunProcessHandler.restart();
+      await _flutterRunProcessHandler!.restart();
     }
   }
 

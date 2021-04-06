@@ -15,7 +15,7 @@ StepDefinitionGeneric TapWidgetWithTextStep() {
         r'I tap the (?:button|element|label|field|text|widget) that contains the text {string}$'),
     (input1, context) async {
       final finder = find.text(input1);
-      await context.world.driver.scrollIntoView(finder);
+      await context.world.driver?.scrollIntoView(finder);
       await FlutterDriverUtils.tap(
         context.world.driver,
         finder,

@@ -13,8 +13,8 @@ void main() {
         expect(config.hooks, isNull);
         config.prepare();
         expect(config.hooks, isNotNull);
-        expect(config.hooks.length, 1);
-        expect(config.hooks.elementAt(0), (x) => x is FlutterAppRunnerHook);
+        expect(config.hooks!.length, 1);
+        expect(config.hooks!.elementAt(0), (x) => x is FlutterAppRunnerHook);
       });
 
       test('common steps definition added', () {
@@ -23,25 +23,25 @@ void main() {
 
         config.prepare();
         expect(config.stepDefinitions, isNotNull);
-        expect(config.stepDefinitions.length, 23);
+        expect(config.stepDefinitions!.length, 23);
         expect(config.customStepParameterDefinitions, isNotNull);
-        expect(config.customStepParameterDefinitions.length, 2);
+        expect(config.customStepParameterDefinitions!.length, 2);
       });
 
       test('common step definition added to existing steps', () {
         final config = FlutterTestConfiguration()
           ..stepDefinitions = [MockStepDefinition()]
           ..customStepParameterDefinitions = [MockParameter()];
-        expect(config.stepDefinitions.length, 1);
+        expect(config.stepDefinitions!.length, 1);
 
         config.prepare();
         expect(config.stepDefinitions, isNotNull);
-        expect(config.stepDefinitions.length, 24);
-        expect(config.stepDefinitions.elementAt(0),
+        expect(config.stepDefinitions!.length, 24);
+        expect(config.stepDefinitions!.elementAt(0),
             (x) => x is MockStepDefinition);
         expect(config.customStepParameterDefinitions, isNotNull);
-        expect(config.customStepParameterDefinitions.length, 3);
-        expect(config.customStepParameterDefinitions.elementAt(0),
+        expect(config.customStepParameterDefinitions!.length, 3);
+        expect(config.customStepParameterDefinitions!.elementAt(0),
             (x) => x is MockParameter);
       });
     });

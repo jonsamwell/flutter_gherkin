@@ -6,7 +6,7 @@ StepDefinitionGeneric RestartAppStep() {
     'I restart the app',
     (context) async {
       await context.world.restartApp(
-        timeout: context.configuration?.timeout,
+        timeout: context.configuration.timeout,
       );
     },
   );

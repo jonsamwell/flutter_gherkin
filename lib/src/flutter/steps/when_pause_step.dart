@@ -10,7 +10,7 @@ import 'package:gherkin/gherkin.dart';
 StepDefinitionGeneric WhenPauseStep() {
   return when1(
     'I pause for {int} second(s)',
-    (wait, _) async {
+    (int wait, _) async {
       await Future.delayed(Duration(seconds: wait));
     },
   );
