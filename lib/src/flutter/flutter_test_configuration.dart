@@ -25,7 +25,6 @@ import 'package:flutter_gherkin/src/flutter/steps/when_tap_widget_step.dart';
 import 'package:flutter_gherkin/src/flutter/steps/when_tap_the_back_button_step.dart';
 import 'package:flutter_driver/flutter_driver.dart';
 import 'package:gherkin/gherkin.dart';
-import 'package:glob/glob.dart';
 
 import 'steps/then_expect_widget_to_be_present_step.dart';
 import 'steps/when_long_press_widget_step.dart';
@@ -41,7 +40,7 @@ class FlutterTestConfiguration extends TestConfiguration {
     String targetAppPath = 'test_driver/app.dart',
   }) {
     return FlutterTestConfiguration()
-      ..features = [Glob(featurePath)]
+      ..features = [RegExp(featurePath)]
       ..reporters = [
         StdoutReporter(MessageLevel.error),
         ProgressReporter(),
@@ -56,7 +55,7 @@ class FlutterTestConfiguration extends TestConfiguration {
       ..targetAppPath = targetAppPath
       ..stepDefinitions = steps
       ..restartAppBetweenScenarios = true
-      ..exitAfterTestRun = true;
+      ..stopAfterTestFailed = true;
   }
 
   /// restarts the application under test between each scenario.

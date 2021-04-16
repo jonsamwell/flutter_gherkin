@@ -139,9 +139,9 @@ packages:
       path: "../dart_gherkin"
       relative: true
     source: path
-    version: "2.0.0-nullsafety.0"
+    version: "2.0.0"
   glob:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: glob
       url: "https://pub.dartlang.org"
@@ -427,4 +427,4 @@ packages:
     version: "2.2.1"
 sdks:
   dart: ">=2.12.0 <3.0.0"
-  flutter: ">=2.0.0"
+  flutter: ">=2.0.4"

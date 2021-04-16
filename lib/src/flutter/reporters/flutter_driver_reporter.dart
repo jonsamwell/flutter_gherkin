@@ -29,11 +29,6 @@ class FlutterDriverReporter extends Reporter {
     driverLog = _driverLogMessageHandler;
   }
 
-  @override
-  Future<void> dispose() async {
-    driverLog = null;
-  }
-
   void _driverLogMessageHandler(String source, String message) {
     final level = _getMessageLevel(message);
     final log = '$source $message';
