@@ -28,6 +28,9 @@ export 'src/flutter/steps/wait_until_type_exists_step.dart';
 // Hooks
 export 'src/flutter/hooks/attach_screenshot_on_failed_step_hook.dart';
 
+// Flutter WidgetTester specific implementations
+export 'src/flutter/world/flutter_widget_tester_world.dart';
+
 // Flutter driver specific implementations
 export 'src/flutter/configuration/flutter_driver_test_configuration.dart';
 export 'src/flutter/adapters/flutter_driver_app_driver_adapter.dart';
