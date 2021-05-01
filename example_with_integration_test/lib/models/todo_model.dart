@@ -5,11 +5,11 @@ part 'todo_model.g.dart';
 
 @JsonSerializable()
 class Todo {
-  String id;
-  DateTime created;
-  DateTime updated;
-  String action;
-  TodoStatus status;
+  late String id;
+  late DateTime created;
+  late DateTime updated;
+  late String action;
+  late TodoStatus status;
 
   Todo();
 

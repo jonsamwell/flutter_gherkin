@@ -34,7 +34,7 @@ StepDefinitionGeneric GivenOpenDrawer() {
             'Open navigation menu',
             FindType.tooltip,
           ),
-          timeout: context.configuration?.timeout,
+          timeout: context.configuration.timeout,
         );
       }
 

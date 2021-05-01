@@ -1,4 +1,4 @@
-import 'package:flutter_gherkin/flutter_gherkin.dart';
+import 'package:flutter_gherkin/flutter_gherkin_with_driver.dart';
 import 'package:flutter_gherkin/src/flutter/parameters/existence_parameter.dart';
 import 'package:flutter_gherkin/src/flutter/parameters/swipe_direction_parameter.dart';
 import 'package:flutter_gherkin/src/flutter/steps/given_i_open_the_drawer_step.dart';
@@ -45,12 +45,12 @@ class FlutterTestConfiguration extends TestConfiguration {
   @override
   void prepare() {
     customStepParameterDefinitions =
-        List.from(customStepParameterDefinitions ?? [])
+        List.from(customStepParameterDefinitions ?? Iterable.empty())
           ..addAll([
             ExistenceParameter(),
             SwipeDirectionParameter(),
           ]);
-    stepDefinitions = List.from(stepDefinitions ?? [])
+    stepDefinitions = List.from(stepDefinitions ?? Iterable.empty())
       ..addAll([
         ThenExpectElementToHaveValue(),
         WhenTapBackButtonWidget(),

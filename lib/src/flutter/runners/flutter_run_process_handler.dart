@@ -41,20 +41,20 @@ class FlutterRunProcessHandler extends ProcessHandler {
     multiLine: false,
   );
 
-  Process _runningProcess;
-  Stream<String> _processStdoutStream;
+  Process? _runningProcess;
+  Stream<String>? _processStdoutStream;
   final List<StreamSubscription> _openSubscriptions = <StreamSubscription>[];
   bool _buildApp = true;
   bool _logFlutterProcessOutput = false;
   bool _verboseFlutterLogs = false;
   bool _keepAppRunning = false;
   BuildMode _buildMode = BuildMode.Debug;
-  String _workingDirectory;
-  String _appTarget;
-  String _buildFlavor;
-  String _deviceTargetId;
+  String? _workingDirectory;
+  String? _appTarget;
+  String? _buildFlavor;
+  String? _deviceTargetId;
   Duration _driverConnectionDelay = const Duration(seconds: 2);
-  String currentObservatoryUri;
+  String? currentObservatoryUri;
 
   void setLogFlutterProcessOutput(bool logFlutterProcessOutput) {
     _logFlutterProcessOutput = logFlutterProcessOutput;
@@ -64,15 +64,15 @@ class FlutterRunProcessHandler extends ProcessHandler {
     _appTarget = targetPath;
   }
 
-  void setDriverConnectionDelay(Duration duration) {
+  void setDriverConnectionDelay(Duration? duration) {
     _driverConnectionDelay = duration ?? _driverConnectionDelay;
   }
 
-  void setWorkingDirectory(String workingDirectory) {
+  void setWorkingDirectory(String? workingDirectory) {
     _workingDirectory = workingDirectory;
   }
 
-  void setBuildFlavor(String buildFlavor) {
+  void setBuildFlavor(String? buildFlavor) {
     _buildFlavor = buildFlavor;
   }
 
@@ -80,7 +80,7 @@ class FlutterRunProcessHandler extends ProcessHandler {
     _buildMode = buildMode;
   }
 
-  void setDeviceTargetId(String deviceTargetId) {
+  void setDeviceTargetId(String? deviceTargetId) {
     _deviceTargetId = deviceTargetId;
   }
 
@@ -110,11 +110,11 @@ class FlutterRunProcessHandler extends ProcessHandler {
       arguments.add('--no-build');
     }
 
-    if (_buildFlavor != null && _buildFlavor.isNotEmpty) {
+    if (_buildFlavor != null && _buildFlavor!.isNotEmpty) {
       arguments.add('--flavor=$_buildFlavor');
     }
 
-    if (_deviceTargetId != null && _deviceTargetId.isNotEmpty) {
+    if (_deviceTargetId != null && _deviceTargetId!.isNotEmpty) {
       arguments.add('--device-id=$_deviceTargetId');
     }
 
@@ -140,16 +140,16 @@ class FlutterRunProcessHandler extends ProcessHandler {
     );
 
     _processStdoutStream =
-        _runningProcess.stdout.transform(utf8.decoder).asBroadcastStream();
+        _runningProcess!.stdout.transform(utf8.decoder).asBroadcastStream();
 
-    _openSubscriptions.add(_runningProcess.stderr
+    _openSubscriptions.add(_runningProcess!.stderr
         .map((events) => String.fromCharCodes(events).trim())
         .where((event) => event.isNotEmpty)
         .listen((event) {
       if (event.contains(_errorMessageRegex)) {
         stderr.writeln('${FAIL_COLOR}Flutter build error: $event$RESET_COLOR');
       } else {
-        // This is most likely a depricated api usage warnings (from Gradle) and should not
+        // This is most likely a deprecated api usage warnings (from Gradle) and should not
         // cause the test run to fail.
         stdout.writeln('$WARN_COLOR$event$RESET_COLOR');
       }
@@ -161,19 +161,21 @@ class FlutterRunProcessHandler extends ProcessHandler {
     var exitCode = -1;
     _ensureRunningProcess();
     if (_runningProcess != null) {
-      _runningProcess.stdin.write('q');
+      _runningProcess!.stdin.write('q');
       _openSubscriptions.forEach((s) => s.cancel());
       _openSubscriptions.clear();
-      exitCode = await _runningProcess.exitCode;
+      exitCode = await _runningProcess!.exitCode;
       _runningProcess = null;
     }
 
     return exitCode;
   }
 
-  Future<bool> restart({Duration timeout = const Duration(seconds: 90)}) async {
+  Future<bool> restart({
+    Duration? timeout = const Duration(seconds: 90),
+  }) async {
     _ensureRunningProcess();
-    _runningProcess.stdin.write('R');
+    _runningProcess!.stdin.write('R');
     await _waitForStdOutMessage(
       _restartedApplicationSuccessRegex,
       'Timeout waiting for app restart',
@@ -196,18 +198,18 @@ class FlutterRunProcessHandler extends ProcessHandler {
       timeout,
     );
 
-    return currentObservatoryUri;
+    return currentObservatoryUri!;
   }
 
   Future<String> _waitForStdOutMessage(
     RegExp matcher,
     String timeoutMessage, [
-    Duration timeout = const Duration(seconds: 90),
+    Duration? timeout = const Duration(seconds: 90),
   ]) {
     _ensureRunningProcess();
     final completer = Completer<String>();
-    StreamSubscription sub;
-    sub = _processStdoutStream.timeout(
+    StreamSubscription? sub;
+    sub = _processStdoutStream!.timeout(
       timeout ?? const Duration(seconds: 90),
       onTimeout: (_) {
         sub?.cancel();
@@ -223,7 +225,7 @@ class FlutterRunProcessHandler extends ProcessHandler {
         if (matcher.hasMatch(logLine)) {
           sub?.cancel();
           if (!completer.isCompleted) {
-            completer.complete(matcher.firstMatch(logLine).group(1));
+            completer.complete(matcher.firstMatch(logLine)!.group(1));
           }
         } else if (_noConnectedDeviceRegex.hasMatch(logLine)) {
           sub?.cancel();

@@ -14,11 +14,11 @@ void main() {
 }
 
 class TodoApp extends StatelessWidget {
-  final ExternalApplicationManager externalApplicationManager;
+  final ExternalApplicationManager? externalApplicationManager;
   final Injector injector;
 
   TodoApp({
-    this.injector,
+    required this.injector,
     this.externalApplicationManager,
   }) : super() {
     ModuleContainer().initialise(injector);
@@ -40,7 +40,7 @@ class TodoApp extends StatelessWidget {
     return externalApplicationManager == null
         ? app
         : StreamBuilder(
-            stream: externalApplicationManager.applicationReset,
+            stream: externalApplicationManager!.applicationReset,
             builder: (ctx, _) => app,
           );
   }

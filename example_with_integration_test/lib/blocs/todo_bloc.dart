@@ -7,7 +7,7 @@ class TodoBloc {
   final Subject<void> _dataRefresher = BehaviorSubject.seeded(null);
   final Subject<Todo> _newModel = ReplaySubject(maxSize: 1);
   final TodoRepository _repository;
-  Stream<Iterable<Todo>> _todos;
+  late final Stream<Iterable<Todo>> _todos;
 
   Stream<Iterable<Todo>> get todos => _todos;
   Stream<Todo> get newModel => _newModel;

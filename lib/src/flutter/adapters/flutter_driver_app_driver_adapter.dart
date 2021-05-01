@@ -10,25 +10,26 @@ class FlutterDriverAppDriverAdapter
 
   @override
   Future<int> waitForAppToSettle({
-    Duration duration = const Duration(milliseconds: 100),
-    Duration timeout = const Duration(seconds: 30),
+    Duration? duration = const Duration(milliseconds: 100),
+    Duration? timeout = const Duration(seconds: 30),
   }) async {
     try {
       await rawDriver.waitUntilNoTransientCallbacks(timeout: timeout);
     } catch (_) {
-      return null;
+      return 1;
     }
 
-    return null;
+    return 0;
   }
 
   @override
-  Future<T> widget<T extends Object>(
+  Future<T> widget<T extends dynamic>(
     SerializableFinder finder, [
     ExpectedWidgetResultType expectResultType = ExpectedWidgetResultType.first,
   ]) {
     throw UnimplementedError(
-        'Flutter driver does not support directly interacting with the widget tree');
+      'Flutter driver does not support directly interacting with the widget tree',
+    );
   }
 
   @override
@@ -49,7 +50,7 @@ class FlutterDriverAppDriverAdapter
   @override
   Future<bool> isPresent(
     SerializableFinder finder, {
-    Duration timeout = const Duration(seconds: 1),
+    Duration? timeout = const Duration(seconds: 1),
   }) async {
     try {
       await rawDriver.waitFor(
@@ -65,7 +66,7 @@ class FlutterDriverAppDriverAdapter
   @override
   Future<bool> isAbsent(
     SerializableFinder finder, {
-    Duration timeout = const Duration(seconds: 1),
+    Duration? timeout = const Duration(seconds: 1),
   }) async {
     try {
       await rawDriver.waitForAbsent(
@@ -79,9 +80,9 @@ class FlutterDriverAppDriverAdapter
   }
 
   @override
-  Future<String> getText(
+  Future<String?> getText(
     SerializableFinder finder, {
-    Duration timeout = const Duration(seconds: 30),
+    Duration? timeout = const Duration(seconds: 30),
   }) async {
     await waitForAppToSettle(timeout: timeout);
 
@@ -95,7 +96,7 @@ class FlutterDriverAppDriverAdapter
   Future<void> enterText(
     SerializableFinder finder,
     String text, {
-    Duration timeout = const Duration(seconds: 30),
+    Duration? timeout = const Duration(seconds: 30),
   }) async {
     await tap(
       finder,
@@ -110,7 +111,7 @@ class FlutterDriverAppDriverAdapter
   @override
   Future<void> tap(
     SerializableFinder finder, {
-    Duration timeout = const Duration(seconds: 30),
+    Duration? timeout = const Duration(seconds: 30),
   }) async {
     await rawDriver.tap(finder, timeout: timeout);
     await waitForAppToSettle(timeout: timeout);
@@ -119,8 +120,8 @@ class FlutterDriverAppDriverAdapter
   @override
   Future<void> longPress(
     SerializableFinder finder, {
-    Duration pressDuration = const Duration(milliseconds: 500),
-    Duration timeout = const Duration(seconds: 30),
+    Duration? pressDuration = const Duration(milliseconds: 500),
+    Duration? timeout = const Duration(seconds: 30),
   }) async {
     await scroll(
       finder,
@@ -135,10 +136,10 @@ class FlutterDriverAppDriverAdapter
   @override
   Future<void> scroll(
     SerializableFinder finder, {
-    double dx,
-    double dy,
-    Duration duration = const Duration(milliseconds: 200),
-    Duration timeout = const Duration(seconds: 30),
+    double? dx,
+    double? dy,
+    Duration? duration = const Duration(milliseconds: 200),
+    Duration? timeout = const Duration(seconds: 30),
   }) async {
     await rawDriver.scroll(
       finder,
@@ -165,8 +166,6 @@ class FlutterDriverAppDriverAdapter
       case FindType.type:
         return find.byType(data.toString());
     }
-
-    throw Exception('unknown finder');
   }
 
   @override
@@ -202,10 +201,10 @@ class FlutterDriverAppDriverAdapter
   @override
   Future<void> scrollUntilVisible(
     SerializableFinder item, {
-    SerializableFinder scrollable,
-    double dx,
-    double dy,
-    Duration timeout = const Duration(seconds: 30),
+    SerializableFinder? scrollable,
+    double? dx,
+    double? dy,
+    Duration? timeout = const Duration(seconds: 30),
   }) async {
     await rawDriver.scrollUntilVisible(
       scrollable,
@@ -219,7 +218,7 @@ class FlutterDriverAppDriverAdapter
   @override
   Future<void> scrollIntoView(
     SerializableFinder finder, {
-    Duration timeout = const Duration(seconds: 30),
+    Duration? timeout = const Duration(seconds: 30),
   }) async {
     await rawDriver.scrollIntoView(
       finder,

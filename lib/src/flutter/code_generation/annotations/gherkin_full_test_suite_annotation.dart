@@ -4,7 +4,7 @@ import 'package:gherkin/gherkin.dart';
 /// to the style required by the integration_test package
 class GherkinTestSuite {
   /// Path to the feature files to generate tests for
-  final Iterable<String> featurePaths;
+  final Iterable<Pattern> featurePaths;
 
   /// The execution order of features - this default to random to avoid any inter-test dependencies
   final ExecutionOrder executionOrder;

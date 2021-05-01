@@ -1,12 +1,12 @@
 import 'package:flutter_driver/flutter_driver.dart';
-import 'package:flutter_gherkin/flutter_gherkin.dart';
+import 'package:flutter_gherkin/flutter_gherkin_with_driver.dart';
 
 import '../runners/flutter_run_process_handler.dart';
 
 /// Driver version of the FlutterWorld with a typed driver
 class FlutterDriverWorld extends FlutterTypedAdapterWorld<FlutterDriver,
     SerializableFinder, dynamic> {
-  FlutterRunProcessHandler _flutterRunProcessHandler;
+  FlutterRunProcessHandler? _flutterRunProcessHandler;
 
   void setFlutterDriver(FlutterDriver flutterDriver) {
     setAppAdapter(FlutterDriverAppDriverAdapter(flutterDriver));
@@ -20,7 +20,7 @@ class FlutterDriverWorld extends FlutterTypedAdapterWorld<FlutterDriver,
 
   @override
   Future<bool> restartApp({
-    Duration timeout = const Duration(seconds: 60),
+    Duration? timeout = const Duration(seconds: 60),
   }) async {
     await _closeDriver(timeout: timeout);
     final result = await _flutterRunProcessHandler?.restart(
@@ -28,12 +28,12 @@ class FlutterDriverWorld extends FlutterTypedAdapterWorld<FlutterDriver,
     );
 
     final driver = await FlutterDriver.connect(
-      dartVmServiceUrl: _flutterRunProcessHandler.currentObservatoryUri,
+      dartVmServiceUrl: _flutterRunProcessHandler!.currentObservatoryUri,
     );
 
     setFlutterDriver(driver);
 
-    return result;
+    return result!;
   }
 
   @override
@@ -45,8 +45,9 @@ class FlutterDriverWorld extends FlutterTypedAdapterWorld<FlutterDriver,
   }
 
   Future<void> _closeDriver({
-    Duration timeout = const Duration(seconds: 60),
+    Duration? timeout = const Duration(seconds: 60),
   }) async {
+    // ignore: unnecessary_null_comparison
     if (rawAppDriver != null) {
       await rawAppDriver.close().catchError(
         (e, st) {

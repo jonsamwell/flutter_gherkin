@@ -1,10 +1,11 @@
-import 'package:flutter_gherkin/flutter_gherkin_integration_test.dart';
+import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'package:flutter_gherkin/src/flutter/adapters/widget_tester_app_driver_adapter.dart';
 import 'package:flutter_gherkin/src/flutter/world/flutter_world.dart';
 import 'package:gherkin/gherkin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:collection/collection.dart';
 
 class TestDependencies {
   final World world;
@@ -21,15 +22,15 @@ abstract class GherkinIntegrationTestRunner {
       TagExpressionEvaluator();
   final TestConfiguration configuration;
   final void Function(World world) appMainFunction;
-  Reporter _reporter;
-  Hook _hook;
-  Iterable<ExecutableStep> _executableSteps;
-  Iterable<CustomParameter> _customParameters;
+  Reporter? _reporter;
+  Hook? _hook;
+  Iterable<ExecutableStep>? _executableSteps;
+  Iterable<CustomParameter>? _customParameters;
 
-  IntegrationTestWidgetsFlutterBinding _binding;
+  IntegrationTestWidgetsFlutterBinding? _binding;
 
-  Reporter get reporter => _reporter;
-  Hook get hook => _hook;
+  Reporter get reporter => _reporter!;
+  Hook get hook => _hook!;
 
   Timeout scenarioExecutionTimeout = const Timeout(Duration(minutes: 10));
 
@@ -43,8 +44,8 @@ abstract class GherkinIntegrationTestRunner {
     _customParameters =
         _registerCustomParameters(configuration.customStepParameterDefinitions);
     _executableSteps = _registerStepDefinitions(
-      configuration.stepDefinitions,
-      _customParameters,
+      configuration.stepDefinitions!,
+      _customParameters!,
     );
   }
 
@@ -68,7 +69,7 @@ abstract class GherkinIntegrationTestRunner {
   void onRunComplete() {
     _safeInvokeFuture(() async => await reporter.onTestRunFinished());
     _safeInvokeFuture(() async => await hook.onAfterRun(configuration));
-    setTestResultData(_binding);
+    setTestResultData(_binding!);
     _safeInvokeFuture(() async => await reporter.dispose());
   }
 
@@ -82,7 +83,7 @@ abstract class GherkinIntegrationTestRunner {
   @protected
   void runFeature(
     String name,
-    Iterable<String> tags,
+    Iterable<String>? tags,
     void Function() runFeature,
   ) {
     group(
@@ -90,7 +91,7 @@ abstract class GherkinIntegrationTestRunner {
       () {
         final debugInformation = RunnableDebugInformation('', 0, name);
         final featureTags =
-            (tags ?? Iterable<Tag>.empty()).map((t) => Tag(t, 0));
+            (tags ?? Iterable<Tag>.empty()).map((t) => Tag(t.toString(), 0));
         _safeInvokeFuture(
           () async => await reporter.onFeatureStarted(
             StartedMessage(
@@ -120,7 +121,7 @@ abstract class GherkinIntegrationTestRunner {
   @protected
   void runScenario(
     String name,
-    Iterable<String> tags,
+    Iterable<String>? tags,
     Future<void> Function(TestDependencies dependencies) runTest,
   ) {
     if (_evaluateTagFilterExpression(configuration.tagExpression, tags)) {
@@ -129,13 +130,13 @@ abstract class GherkinIntegrationTestRunner {
         (WidgetTester tester) async {
           final debugInformation = RunnableDebugInformation('', 0, name);
           final scenarioTags =
-              (tags ?? Iterable<Tag>.empty()).map((t) => Tag(t, 0));
+              (tags ?? Iterable<Tag>.empty()).map((t) => Tag(t.toString(), 0));
           final dependencies = await createTestDependencies(
             configuration,
             tester,
           );
 
-          await _hook.onBeforeScenario(
+          await hook.onBeforeScenario(
             configuration,
             name,
             scenarioTags,
@@ -146,7 +147,7 @@ abstract class GherkinIntegrationTestRunner {
             dependencies.world,
           );
 
-          await _hook.onAfterScenarioWorldCreated(
+          await hook.onAfterScenarioWorldCreated(
             dependencies.world,
             name,
             scenarioTags,
@@ -163,7 +164,7 @@ abstract class GherkinIntegrationTestRunner {
 
           await runTest(dependencies);
 
-          await _reporter.onScenarioFinished(
+          await reporter.onScenarioFinished(
             ScenarioFinishedMessage(
               name,
               debugInformation,
@@ -171,7 +172,7 @@ abstract class GherkinIntegrationTestRunner {
             ),
           );
 
-          await _hook.onAfterScenario(
+          await hook.onAfterScenario(
             configuration,
             name,
             scenarioTags,
@@ -184,7 +185,7 @@ abstract class GherkinIntegrationTestRunner {
     } else {
       _safeInvokeFuture(
         () async => reporter.message(
-          'Ignoring scenario `${name}` as tag expression `${configuration.tagExpression}` not satisfied',
+          'Ignoring scenario `$name` as tag expression `${configuration.tagExpression}` not satisfied',
           MessageLevel.info,
         ),
       );
@@ -205,12 +206,12 @@ abstract class GherkinIntegrationTestRunner {
     TestConfiguration configuration,
     WidgetTester tester,
   ) async {
-    World world;
+    World? world;
     final attachmentManager =
         await configuration.getAttachmentManager(configuration);
 
     if (configuration.createWorld != null) {
-      world = await configuration.createWorld(configuration);
+      world = await configuration.createWorld!(configuration);
     }
 
     world = world ?? FlutterWidgetTesterWorld();
@@ -231,9 +232,8 @@ abstract class GherkinIntegrationTestRunner {
     dynamic table,
     TestDependencies dependencies,
   ) async {
-    final executable = _executableSteps.firstWhere(
+    final executable = _executableSteps!.firstWhereOrNull(
       (s) => s.expression.isMatch(step),
-      orElse: () => null,
     );
 
     if (executable == null) {
@@ -280,11 +280,14 @@ abstract class GherkinIntegrationTestRunner {
   @protected
   void cleanupScenarioRun(TestDependencies dependencies) {
     _safeInvokeFuture(
-        () async => await dependencies.attachmentManager.dispose());
-    _safeInvokeFuture(() async => await dependencies.world.dispose());
+      () async => dependencies.attachmentManager.dispose(),
+    );
+    _safeInvokeFuture(
+      () async => dependencies.world.dispose(),
+    );
   }
 
-  Reporter _registerReporters(Iterable<Reporter> reporters) {
+  Reporter _registerReporters(Iterable<Reporter>? reporters) {
     final reporter = AggregatedReporter();
     if (reporters != null) {
       reporters.forEach((r) => reporter.addReporter(r));
@@ -293,7 +296,7 @@ abstract class GherkinIntegrationTestRunner {
     return reporter;
   }
 
-  Hook _registerHooks(Iterable<Hook> hooks) {
+  Hook _registerHooks(Iterable<Hook>? hooks) {
     final hook = AggregatedHook();
     if (hooks != null) {
       hook.addHooks(hooks);
@@ -303,7 +306,7 @@ abstract class GherkinIntegrationTestRunner {
   }
 
   Iterable<CustomParameter> _registerCustomParameters(
-    Iterable<CustomParameter> customParameters,
+    Iterable<CustomParameter>? customParameters,
   ) {
     final parameters = <CustomParameter>[];
 
@@ -332,7 +335,7 @@ abstract class GherkinIntegrationTestRunner {
     return stepDefinitions
         .map(
           (s) => ExecutableStep(
-            GherkinExpression(s.pattern, customParameters),
+            GherkinExpression(s.pattern as RegExp, customParameters),
             s,
           ),
         )
@@ -362,12 +365,13 @@ abstract class GherkinIntegrationTestRunner {
     StepResult result,
     TestDependencies dependencies,
   ) async {
-    await _hook.onAfterStep(
+    await hook.onAfterStep(
       dependencies.world,
       step,
       result,
     );
-    await _reporter.onStepFinished(
+
+    await reporter.onStepFinished(
       StepFinishedMessage(
         step,
         RunnableDebugInformation('', 0, step),
@@ -383,7 +387,7 @@ abstract class GherkinIntegrationTestRunner {
     table,
     Iterable<String> multiLineStrings,
   ) async {
-    await _hook.onBeforeStep(world, step);
+    await hook.onBeforeStep(world, step);
     await reporter.onStepStarted(
       StepStartedMessage(
         step,
@@ -402,11 +406,11 @@ abstract class GherkinIntegrationTestRunner {
   }
 
   bool _evaluateTagFilterExpression(
-    String tagExpression,
-    List<String> tags,
+    String? tagExpression,
+    Iterable<String>? tags,
   ) {
     return tagExpression == null || tagExpression.isEmpty
         ? true
-        : _tagExpressionEvaluator.evaluate(tagExpression, tags);
+        : _tagExpressionEvaluator.evaluate(tagExpression, tags!.toList());
   }
 }

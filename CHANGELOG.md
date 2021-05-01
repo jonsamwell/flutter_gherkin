@@ -27,7 +27,7 @@ targets:
       # Allows the code generator to target files outside of the lib folder
       - integration_test/**.dart
 ```
-3. Add the following file (and folder) `example_with_integration_test\test_driver\integration_test_driver.dart`.  This file is the entry point to run your tests.  See `https://flutter.dev/docs/testing/integration-tests` for more information.
+3. Add the following file (and folder) `\test_driver\integration_test_driver.dart`.  This file is the entry point to run your tests.  See `https://flutter.dev/docs/testing/integration-tests` for more information.
 ```dart
 import 'package:integration_test/integration_test_driver.dart' as integration_test_driver;
 

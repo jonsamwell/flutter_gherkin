@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:flutter_gherkin/flutter_gherkin.dart';
+import 'package:flutter_gherkin/flutter_gherkin_with_driver.dart';
 import 'package:flutter_gherkin/src/flutter/configuration/build_mode.dart';
 import 'package:flutter_gherkin/src/flutter/world/flutter_driver_world.dart';
 import 'package:flutter_gherkin/src/flutter/world/flutter_world.dart';
@@ -12,7 +12,7 @@ import 'package:glob/glob.dart';
 import 'flutter_test_configuration.dart';
 
 class FlutterDriverTestConfiguration extends FlutterTestConfiguration {
-  String _observatoryDebuggerUri;
+  String? _observatoryDebuggerUri;
 
   /// Provide a configuration object with default settings such as the reports and feature file location
   /// Additional setting on the configuration object can be set on the returned instance.
@@ -36,8 +36,7 @@ class FlutterDriverTestConfiguration extends FlutterTestConfiguration {
       ]
       ..targetAppPath = targetAppPath
       ..stepDefinitions = steps
-      ..restartAppBetweenScenarios = true
-      ..exitAfterTestRun = true;
+      ..restartAppBetweenScenarios = true;
   }
 
   /// restarts the application under test between each scenario.
@@ -51,11 +50,11 @@ class FlutterDriverTestConfiguration extends FlutterTestConfiguration {
 
   /// Option to define the working directory for the process that runs the app under test (optional)
   /// Handy if your app is separated from your tests as flutter needs to be able to find a pubspec file
-  String targetAppWorkingDirectory;
+  String? targetAppWorkingDirectory;
 
   /// The build flavor to run the tests against (optional)
-  /// Defaults to empty
-  String buildFlavor = '';
+  /// Defaults to null
+  String? buildFlavor;
 
   /// The default build mode used for running tests is --debug.
   /// We are exposing the option to run the tests also in --profile mode
@@ -66,8 +65,8 @@ class FlutterDriverTestConfiguration extends FlutterTestConfiguration {
   bool build = true;
 
   /// The target device id to run the tests against when multiple devices detected
-  /// Defaults to empty
-  String targetDeviceId = '';
+  /// Defaults to null
+  String? targetDeviceId;
 
   /// Will keep the Flutter application running when done testing
   /// Defaults to false
@@ -100,19 +99,19 @@ class FlutterDriverTestConfiguration extends FlutterTestConfiguration {
   /// An observatory url that the test runner can connect to instead of creating a new running instance of the target application
   /// Url takes the form of `http://127.0.0.1:51540/EM72VtRsUV0=/` and usually printed to stdout in the form `Connecting to service protocol: http://127.0.0.1:51540/EM72VtRsUV0=/`
   /// You will have to add the `--verbose` flag to the command to start your flutter app to see this output and ensure `enableFlutterDriverExtension()` is called by the running app
-  String runningAppProtocolEndpointUri;
+  String? runningAppProtocolEndpointUri;
 
   /// Called before any attempt to connect Flutter driver to the running application,  Depending on your configuration this
   /// method will be called before each scenario is run.
-  Future<void> Function() onBeforeFlutterDriverConnect;
+  Future<void> Function()? onBeforeFlutterDriverConnect;
 
   /// Called after the successful connection of Flutter driver to the running application.  Depending on your configuration this
   /// method will be called on each new connection usually before each scenario is run.
-  Future<void> Function(FlutterDriver driver) onAfterFlutterDriverConnect;
+  Future<void> Function(FlutterDriver driver)? onAfterFlutterDriverConnect;
 
   void setObservatoryDebuggerUri(String uri) => _observatoryDebuggerUri = uri;
 
-  Future<FlutterDriver> createFlutterDriver([String dartVmServiceUrl]) async {
+  Future<FlutterDriver> createFlutterDriver([String? dartVmServiceUrl]) async {
     final completer = Completer<FlutterDriver>();
     dartVmServiceUrl = (dartVmServiceUrl ?? _observatoryDebuggerUri) ??
         Platform.environment['VM_SERVICE_URL'];
@@ -120,12 +119,12 @@ class FlutterDriverTestConfiguration extends FlutterTestConfiguration {
     await runZonedGuarded(
       () async {
         if (onBeforeFlutterDriverConnect != null) {
-          await onBeforeFlutterDriverConnect();
+          await onBeforeFlutterDriverConnect!();
         }
 
         final driver = await _attemptDriverConnection(dartVmServiceUrl, 1, 3);
         if (onAfterFlutterDriverConnect != null) {
-          await onAfterFlutterDriverConnect(driver);
+          await onAfterFlutterDriverConnect!(driver);
         }
 
         completer.complete(driver);
@@ -142,14 +141,15 @@ class FlutterDriverTestConfiguration extends FlutterTestConfiguration {
 
   Future<FlutterWorld> createFlutterWorld(
     TestConfiguration config,
-    FlutterWorld world,
+    FlutterWorld? world,
   ) async {
     var flutterConfig = config as FlutterDriverTestConfiguration;
     world = world ?? FlutterDriverWorld();
 
     final driver = await createFlutterDriver(
       flutterConfig.runningAppProtocolEndpointUri != null &&
-              flutterConfig.runningAppProtocolEndpointUri.isNotEmpty
+              flutterConfig.runningAppProtocolEndpointUri != null &&
+              flutterConfig.runningAppProtocolEndpointUri!.isNotEmpty
           ? flutterConfig.runningAppProtocolEndpointUri
           : null,
     );
@@ -165,19 +165,19 @@ class FlutterDriverTestConfiguration extends FlutterTestConfiguration {
     _ensureCorrectConfiguration();
     final providedCreateWorld = createWorld;
     createWorld = (config) async {
-      FlutterWorld world;
+      FlutterWorld? world;
       if (providedCreateWorld != null) {
-        world = await providedCreateWorld(config);
+        world = await providedCreateWorld(config) as FlutterWorld;
       }
 
       return await createFlutterWorld(config, world);
     };
 
-    hooks = List.from(hooks ?? [])..add(FlutterAppRunnerHook());
+    hooks = List.from(hooks ?? Iterable.empty())..add(FlutterAppRunnerHook());
   }
 
   Future<FlutterDriver> _attemptDriverConnection(
-    String dartVmServiceUrl,
+    String? dartVmServiceUrl,
     int attempt,
     int maxAttempts,
   ) async {
@@ -189,7 +189,8 @@ class FlutterDriverTestConfiguration extends FlutterTestConfiguration {
           throw e;
         } else {
           print(
-            'Fluter driver error connecting to application at `$dartVmServiceUrl`, retrying after delay of $flutterDriverReconnectionDelay',
+            'Fluter driver error connecting to application at `$dartVmServiceUrl`,'
+            'retrying after delay of $flutterDriverReconnectionDelay',
           );
           await Future<void>.delayed(flutterDriverReconnectionDelay);
 
@@ -205,15 +206,17 @@ class FlutterDriverTestConfiguration extends FlutterTestConfiguration {
 
   void _ensureCorrectConfiguration() {
     if (runningAppProtocolEndpointUri != null &&
-        runningAppProtocolEndpointUri.isNotEmpty) {
+        runningAppProtocolEndpointUri!.isNotEmpty) {
       if (restartAppBetweenScenarios) {
         throw AssertionError(
-            'Cannot restart app between scenarios if using runningAppProtocolEndpointUri');
+          'Cannot restart app between scenarios if using runningAppProtocolEndpointUri',
+        );
       }
 
-      if (targetDeviceId != null && targetDeviceId.isNotEmpty) {
+      if (targetDeviceId != null && targetDeviceId!.isNotEmpty) {
         throw AssertionError(
-            'Cannot target specific device id if using runningAppProtocolEndpointUri');
+          'Cannot target specific device id if using runningAppProtocolEndpointUri',
+        );
       }
     }
   }

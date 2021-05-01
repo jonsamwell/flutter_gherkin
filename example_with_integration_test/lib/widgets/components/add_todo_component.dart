@@ -9,8 +9,8 @@ class AddTodoComponent extends StatefulWidget {
   final Stream<Todo> todo;
 
   const AddTodoComponent({
-    @required this.todo,
-    @required this.onAdded,
+    required this.todo,
+    required this.onAdded,
   }) : super();
 
   @override
@@ -63,12 +63,12 @@ class _AddTodoComponentState extends State<AddTodoComponent>
               ),
             ),
             FloatingActionButton(
-              child: Icon(Icons.add),
               key: const Key('add'),
               onPressed: onAdd,
               backgroundColor: Theme.of(context).primaryColor,
               focusElevation: 3,
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              child: const Icon(Icons.add),
             ),
           ],
         ),

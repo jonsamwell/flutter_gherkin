@@ -11,8 +11,8 @@ class HomeView extends StatefulWidget {
   final TodoBloc Function() blocFactory;
 
   const HomeView({
-    @required this.blocFactory,
-    Key key,
+    required this.blocFactory,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -56,7 +56,7 @@ class _HomeViewState extends State<HomeView> with ViewUtilsMixin {
               stream: bloc.todos,
               builder: (_, snapshot) {
                 if (snapshot.hasData) {
-                  final data = snapshot.data;
+                  final data = snapshot.data!;
                   if (data.isEmpty) {
                     return Center(
                       child: Column(
@@ -108,7 +108,7 @@ class _HomeViewState extends State<HomeView> with ViewUtilsMixin {
                             subscribeOnce(
                               bloc.remove(todo),
                               onDone: () {
-                                Scaffold.of(context).showSnackBar(
+                                ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text('Todo deleted'),
                                   ),
@@ -121,7 +121,7 @@ class _HomeViewState extends State<HomeView> with ViewUtilsMixin {
                               todo.action,
                               style: Theme.of(context)
                                   .textTheme
-                                  .bodyText1
+                                  .bodyText1!
                                   .copyWith(
                                     decoration:
                                         todo.status == TodoStatus.complete

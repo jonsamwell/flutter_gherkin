@@ -7,11 +7,11 @@ class ViewUtilsMixin {
   @protected
   StreamSubscription<T> subscribeOnce<T>(
     Stream<T> stream, {
-    void Function(T data) onData,
-    void Function(Object, StackTrace) onError,
-    void Function() onDone,
+    void Function(T data)? onData,
+    void Function(Object, StackTrace)? onError,
+    void Function()? onDone,
   }) {
-    StreamSubscription<T> sub;
+    StreamSubscription<T>? sub;
     var hasErrored = false;
     return sub = stream.listen(
       (data) {

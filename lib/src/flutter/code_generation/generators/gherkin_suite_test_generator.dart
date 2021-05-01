@@ -5,6 +5,7 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:flutter_gherkin/src/flutter/code_generation/annotations/gherkin_full_test_suite_annotation.dart';
 import 'package:gherkin/gherkin.dart';
 import 'package:glob/glob.dart';
+import 'package:glob/list_local_fs.dart';
 import 'package:source_gen/source_gen.dart';
 
 class NoOpReporter extends Reporter {}
@@ -45,25 +46,25 @@ void executeTestSuite(
     _languageService.initialise(
       annotation.read('featureDefaultLanguage').literalValue.toString(),
     );
-    final executionOrder = ExecutionOrder.values[annotation
+    final idx = annotation
         .read('executionOrder')
         .objectValue
-        .getField('index')
-        .toIntValue()];
+        .getField('index')!
+        .toIntValue()!;
+    final executionOrder = ExecutionOrder.values[idx];
     final featureFiles = annotation
         .read('featurePaths')
         .listValue
-        .map((path) => Glob(path.toStringValue()))
+        .map((path) => Glob(path.toStringValue()!))
         .map(
-          (glob) => glob
-              .listSync()
+          (glob) => glob.listSync()
               .map((entity) => File(entity.path).readAsStringSync())
               .toList(),
         )
         .reduce((value, element) => value..addAll(element));
 
     if (executionOrder == ExecutionOrder.random) {
-      featureFiles..shuffle();
+      featureFiles.shuffle();
     }
 
     final featureExecutionFunctionsBuilder = StringBuffer();
@@ -146,9 +147,9 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
   ''';
 
   final StringBuffer _buffer = StringBuffer();
-  int _id;
-  String _currentFeatureCode;
-  String _currentScenarioCode;
+  int? _id;
+  String? _currentFeatureCode;
+  String? _currentScenarioCode;
   final StringBuffer _scenarioBuffer = StringBuffer();
   final StringBuffer _stepBuffer = StringBuffer();
 
@@ -176,18 +177,21 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
   @override
   Future<void> visitFeature(
     String name,
-    String description,
+    String? description,
     Iterable<String> tags,
   ) async {
-    _currentFeatureCode =
-        _replaceVariable(FUNCTION_TEMPLATE, 'feature_number', _id.toString());
     _currentFeatureCode = _replaceVariable(
-      _currentFeatureCode,
+      FUNCTION_TEMPLATE,
+      'feature_number',
+      _id.toString(),
+    );
+    _currentFeatureCode = _replaceVariable(
+      _currentFeatureCode!,
       'feature_name',
       _escapeText(name),
     );
     _currentFeatureCode = _replaceVariable(
-      _currentFeatureCode,
+      _currentFeatureCode!,
       'tags',
       '<String>[${tags.map((e) => "'$e'").join(', ')}]',
     );
@@ -202,7 +206,7 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
       _escapeText(name),
     );
     _currentScenarioCode = _replaceVariable(
-      _currentScenarioCode,
+      _currentScenarioCode!,
       'tags',
       '<String>[${tags.map((e) => "'$e'").join(', ')}]',
     );
@@ -212,7 +216,7 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
   Future<void> visitScenarioStep(
     String name,
     Iterable<String> multiLineStrings,
-    GherkinTable table,
+    GherkinTable? table,
   ) async {
     var code = _replaceVariable(
       STEP_TEMPLATE,
@@ -236,7 +240,7 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
   void _flushFeature() {
     if (_currentFeatureCode != null) {
       _currentFeatureCode = _replaceVariable(
-        _currentFeatureCode,
+        _currentFeatureCode!,
         'scenarios',
         _scenarioBuffer.toString(),
       );
@@ -252,7 +256,7 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
     if (_currentScenarioCode != null) {
       if (_stepBuffer.isNotEmpty) {
         _currentScenarioCode = _replaceVariable(
-          _currentScenarioCode,
+          _currentScenarioCode!,
           'steps',
           _stepBuffer.toString(),
         );

@@ -31,7 +31,7 @@ StepDefinitionGeneric SiblingContainsTextStep() {
 
       final isPresent = await context.world.appDriver.isPresent(
         valueWidget,
-        timeout: context.configuration?.timeout ?? const Duration(seconds: 20),
+        timeout: context.configuration.timeout ?? const Duration(seconds: 20),
       );
 
       context.expect(isPresent, true);

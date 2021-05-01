@@ -61,34 +61,34 @@ abstract class AppDriverAdapter<TRawAdapter, TFinderType, TWidgetBaseType> {
 
   Future<bool> isPresent(
     TFinderType finder, {
-    Duration timeout = const Duration(seconds: 1),
+    Duration? timeout = const Duration(seconds: 1),
   });
 
   Future<bool> isAbsent(
     TFinderType finder, {
-    Duration timeout = const Duration(seconds: 1),
+    Duration? timeout = const Duration(seconds: 1),
   });
 
   Future<void> enterText(
     TFinderType finder,
     String text, {
-    Duration timeout = const Duration(seconds: 30),
+    Duration? timeout = const Duration(seconds: 30),
   });
 
-  Future<String> getText(
+  Future<String?> getText(
     TFinderType finder, {
-    Duration timeout = const Duration(seconds: 30),
+    Duration? timeout = const Duration(seconds: 30),
   });
 
   Future<void> tap(
     TFinderType finder, {
-    Duration timeout = const Duration(seconds: 30),
+    Duration? timeout = const Duration(seconds: 30),
   });
 
   Future<void> longPress(
     TFinderType finder, {
     Duration pressDuration = const Duration(milliseconds: 500),
-    Duration timeout = const Duration(seconds: 30),
+    Duration? timeout = const Duration(seconds: 30),
   });
 
   Future<void> pageBack();
@@ -98,8 +98,8 @@ abstract class AppDriverAdapter<TRawAdapter, TFinderType, TWidgetBaseType> {
     TFinderType finder, {
     double dx,
     double dy,
-    Duration duration = const Duration(milliseconds: 200),
-    Duration timeout = const Duration(seconds: 30),
+    Duration? duration = const Duration(milliseconds: 200),
+    Duration? timeout = const Duration(seconds: 30),
   });
 
   /// Repeatedly scrolls a [Scrollable] by delta until finder is visible.
@@ -110,26 +110,26 @@ abstract class AppDriverAdapter<TRawAdapter, TFinderType, TWidgetBaseType> {
     TFinderType scrollable,
     double dx,
     double dy,
-    Duration timeout = const Duration(seconds: 30),
+    Duration? timeout = const Duration(seconds: 30),
   });
 
   Future<void> scrollIntoView(
     TFinderType finder, {
-    Duration timeout = const Duration(seconds: 30),
+    Duration? timeout = const Duration(seconds: 30),
   });
 
   /// Will wait until the give condition returns `true` polling every `pollInterval`. If `condition` has not returned true
   /// within the given `timeout` this will cause the returned future to complete with a [TimeoutException].
   Future<void> waitUntil(
     Future<bool> Function() condition, {
-    Duration timeout = const Duration(seconds: 10),
-    Duration pollInterval = const Duration(milliseconds: 500),
+    Duration? timeout = const Duration(seconds: 10),
+    Duration? pollInterval = const Duration(milliseconds: 500),
   }) async {
     return Future.microtask(
       () async {
         final completer = Completer<void>();
         var maxAttempts =
-            (timeout.inMilliseconds / pollInterval.inMilliseconds).round();
+            (timeout!.inMilliseconds / pollInterval!.inMilliseconds).round();
         var attempts = 0;
 
         while (attempts < maxAttempts) {
@@ -143,7 +143,7 @@ abstract class AppDriverAdapter<TRawAdapter, TFinderType, TWidgetBaseType> {
         }
       },
     ).timeout(
-      timeout,
+      timeout!,
     );
   }
 

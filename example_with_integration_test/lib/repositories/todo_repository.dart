@@ -15,7 +15,7 @@ class TodoRepository {
       ReplaySubject<SharedPreferences>(maxSize: 1);
 
   TodoRepository() {
-    StreamSubscription<SharedPreferences> sub;
+    StreamSubscription<SharedPreferences>? sub;
     sub = SharedPreferences.getInstance().asStream().listen(
       (sp) {
         _storage.add(sp);

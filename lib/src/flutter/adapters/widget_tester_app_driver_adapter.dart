@@ -14,20 +14,18 @@ class WidgetTesterAppDriverAdapter
 
   @override
   Future<int> waitForAppToSettle({
-    Duration duration = const Duration(milliseconds: 100),
-    Duration timeout = const Duration(seconds: 30),
+    Duration? duration = const Duration(milliseconds: 100),
+    Duration? timeout = const Duration(seconds: 30),
   }) async {
     try {
-      await rawDriver.pumpAndSettle(
-        duration,
-        EnginePhase.sendSemanticsUpdate,
-        timeout,
+      return await rawDriver.pumpAndSettle(
+        duration!,
+        EnginePhase.paint,
+        timeout!,
       );
     } catch (_) {
-      return null;
+      return 1;
     }
-
-    return null;
   }
 
   @override
@@ -48,24 +46,25 @@ class WidgetTesterAppDriverAdapter
 
   @override
   Future<List<int>> screenshot() {
-    var renderObject = rawDriver.binding.renderViewElement.renderObject;
-    while (!renderObject.isRepaintBoundary) {
+    var renderObject = rawDriver.binding.renderViewElement?.renderObject;
+
+    while (renderObject != null && !renderObject.isRepaintBoundary) {
       renderObject = renderObject.parent as RenderObject;
-      assert(renderObject != null);
     }
-    assert(!renderObject.debugNeedsPaint);
-    final layer = renderObject.debugLayer as OffsetLayer;
+
+    assert(renderObject != null && !renderObject.debugNeedsPaint);
+    final layer = renderObject!.debugLayer as OffsetLayer;
 
     return layer
         .toImage(renderObject.semanticBounds)
         .then((value) => value.toByteData(format: ui.ImageByteFormat.png))
-        .then((value) => value.buffer.asUint8List());
+        .then((value) => value?.buffer.asUint8List() ?? List<int>.empty());
   }
 
   @override
   Future<bool> isPresent(
     Finder finder, {
-    Duration timeout = const Duration(seconds: 1),
+    Duration? timeout = const Duration(seconds: 1),
   }) async {
     return finder.evaluate().isNotEmpty;
   }
@@ -73,15 +72,15 @@ class WidgetTesterAppDriverAdapter
   @override
   Future<bool> isAbsent(
     Finder finder, {
-    Duration timeout = const Duration(seconds: 1),
+    Duration? timeout = const Duration(seconds: 1),
   }) async {
     return await isPresent(finder).then((value) => !value);
   }
 
   @override
-  Future<String> getText(
+  Future<String?> getText(
     Finder finder, {
-    Duration timeout = const Duration(seconds: 30),
+    Duration? timeout = const Duration(seconds: 30),
   }) async {
     await waitForAppToSettle(timeout: timeout);
 
@@ -102,7 +101,7 @@ class WidgetTesterAppDriverAdapter
   Future<void> enterText(
     Finder finder,
     String text, {
-    Duration timeout = const Duration(seconds: 30),
+    Duration? timeout = const Duration(seconds: 30),
   }) async {
     await tap(
       finder,
@@ -117,7 +116,7 @@ class WidgetTesterAppDriverAdapter
   @override
   Future<void> tap(
     Finder finder, {
-    Duration timeout = const Duration(seconds: 30),
+    Duration? timeout = const Duration(seconds: 30),
   }) async {
     await rawDriver.tap(finder);
     await waitForAppToSettle(timeout: timeout);
@@ -126,8 +125,8 @@ class WidgetTesterAppDriverAdapter
   @override
   Future<void> longPress(
     Finder finder, {
-    Duration pressDuration = const Duration(milliseconds: 500),
-    Duration timeout = const Duration(seconds: 30),
+    Duration? pressDuration = const Duration(milliseconds: 500),
+    Duration? timeout = const Duration(seconds: 30),
   }) async {
     await scroll(
       finder,
@@ -142,10 +141,10 @@ class WidgetTesterAppDriverAdapter
   @override
   Future<void> scroll(
     Finder finder, {
-    double dx,
-    double dy,
-    Duration duration = const Duration(milliseconds: 200),
-    Duration timeout = const Duration(seconds: 30),
+    double? dx,
+    double? dy,
+    Duration? duration = const Duration(milliseconds: 200),
+    Duration? timeout = const Duration(seconds: 30),
   }) async {
     final scrollableFinder = findByDescendant(
       finder,
@@ -154,7 +153,7 @@ class WidgetTesterAppDriverAdapter
     );
     final state = rawDriver.state(scrollableFinder) as ScrollableState;
     final position = state.position;
-    position.jumpTo(dy ?? dx);
+    position.jumpTo(dy ?? dx ?? 0);
 
     await rawDriver.pump();
   }
@@ -174,8 +173,6 @@ class WidgetTesterAppDriverAdapter
       case FindType.type:
         return find.byType(data);
     }
-
-    throw Exception('unknown finder');
   }
 
   @override
@@ -209,14 +206,14 @@ class WidgetTesterAppDriverAdapter
   @override
   Future<void> scrollUntilVisible(
     Finder item, {
-    Finder scrollable,
-    double dx,
-    double dy,
-    Duration timeout = const Duration(seconds: 30),
+    Finder? scrollable,
+    double? dx,
+    double? dy,
+    Duration? timeout = const Duration(seconds: 30),
   }) async {
     await rawDriver.scrollUntilVisible(
       item,
-      dy ?? dx,
+      dy ?? dx ?? 0,
       scrollable: scrollable,
     );
   }
@@ -224,7 +221,7 @@ class WidgetTesterAppDriverAdapter
   @override
   Future<void> scrollIntoView(
     Finder finder, {
-    Duration timeout = const Duration(seconds: 30),
+    Duration? timeout = const Duration(seconds: 30),
   }) async {
     await rawDriver.ensureVisible(finder);
     await waitForAppToSettle();
