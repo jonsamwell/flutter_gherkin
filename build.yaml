@@ -1,0 +1,10 @@
+# Read about `build.yaml` at https://pub.dev/packages/build_config
+builders:
+
+  gherkin_test_suite:
+    import: "package:flutter_gherkin/src/flutter/code_generation/builders/gherkin_test_suite_builder.dart"
+    builder_factories: ["gherkinTestSuiteBuilder"]
+    build_extensions: {".dart": ["gherkin_tests.g.part"]}
+    auto_apply: dependents
+    build_to: cache
+    applies_builders: ["source_gen|combining_builder"]

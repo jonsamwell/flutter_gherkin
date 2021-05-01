@@ -1,5 +1,5 @@
-import 'package:flutter_driver/flutter_driver.dart';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
+import 'package:flutter_gherkin/src/flutter/adapters/app_driver_adapter.dart';
 import 'package:gherkin/gherkin.dart';
 
 /// Taps a widget of type.
@@ -14,10 +14,13 @@ StepDefinitionGeneric TapWidgetOfTypeStep() {
     RegExp(
         r'I tap the (?:button|element|label|icon|field|text|widget) of type {string}$'),
     (input1, context) async {
-      await FlutterDriverUtils.tap(
-        context.world.driver,
-        find.byType(input1),
+      await context.world.appDriver.tap(
+        context.world.appDriver.findBy(
+          input1,
+          FindType.type,
+        ),
       );
+      await context.world.appDriver.waitForAppToSettle();
     },
   );
 }

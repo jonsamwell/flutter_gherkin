@@ -1,6 +1,5 @@
-import 'package:flutter_gherkin/src/flutter/flutter_world.dart';
-import 'package:flutter_gherkin/src/flutter/utils/driver_utils.dart';
-import 'package:flutter_driver/flutter_driver.dart';
+import 'package:flutter_gherkin/src/flutter/adapters/app_driver_adapter.dart';
+import 'package:flutter_gherkin/src/flutter/world/flutter_world.dart';
 import 'package:gherkin/gherkin.dart';
 
 /// Opens the applications main drawer
@@ -12,21 +11,34 @@ StepDefinitionGeneric GivenOpenDrawer() {
   return given1<String, FlutterWorld>(
     RegExp(r'I (open|close) the drawer'),
     (action, context) async {
-      final drawerFinder = find.byType('Drawer');
-      final isOpen = await FlutterDriverUtils.isPresent(
-          context.world.driver, drawerFinder);
+      final drawerFinder = context.world.appDriver.findBy(
+        'Drawer',
+        FindType.type,
+      );
+      final isOpen = await context.world.appDriver.isPresent(
+        drawerFinder,
+      );
+
       // https://github.com/flutter/flutter/issues/9002#issuecomment-293660833
       if (isOpen && action == 'close') {
         // Swipe to the left across the whole app to close the drawer
-        await context.world.driver.scroll(
-            drawerFinder, -300.0, 0.0, const Duration(milliseconds: 300));
+        await context.world.appDriver.scroll(
+          drawerFinder,
+          dx: -300.0,
+          dy: 0.0,
+          duration: const Duration(milliseconds: 300),
+        );
       } else if (!isOpen && action == 'open') {
-        await FlutterDriverUtils.tap(
-          context.world.driver,
-          find.byTooltip('Open navigation menu'),
-          timeout: context.configuration?.timeout,
+        await context.world.appDriver.tap(
+          context.world.appDriver.findBy(
+            'Open navigation menu',
+            FindType.tooltip,
+          ),
+          timeout: context.configuration.timeout,
         );
       }
+
+      await context.world.appDriver.waitForAppToSettle();
     },
   );
 }

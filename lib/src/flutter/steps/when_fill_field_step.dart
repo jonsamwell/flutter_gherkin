@@ -1,6 +1,5 @@
-import 'package:flutter_driver/flutter_driver.dart';
-import 'package:flutter_gherkin/src/flutter/flutter_world.dart';
-import 'package:flutter_gherkin/src/flutter/utils/driver_utils.dart';
+import 'package:flutter_gherkin/src/flutter/adapters/app_driver_adapter.dart';
+import 'package:flutter_gherkin/src/flutter/world/flutter_world.dart';
 import 'package:gherkin/gherkin.dart';
 
 /// Enters the given text into the widget with the key provided
@@ -12,13 +11,14 @@ StepDefinitionGeneric WhenFillFieldStep() {
   return given2<String, String, FlutterWorld>(
     'I fill the {string} field with {string}',
     (key, value, context) async {
-      final finder = find.byValueKey(key);
-      await context.world.driver.scrollIntoView(finder);
-      await FlutterDriverUtils.enterText(
-        context.world.driver,
+      final finder = context.world.appDriver.findBy(key, FindType.key);
+      await context.world.appDriver.scrollIntoView(finder);
+      await context.world.appDriver.enterText(
         finder,
         value,
       );
+
+      await context.world.appDriver.waitForAppToSettle();
     },
   );
 }

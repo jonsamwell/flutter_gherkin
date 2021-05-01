@@ -1,6 +1,5 @@
-import 'package:flutter_gherkin/src/flutter/flutter_world.dart';
-import 'package:flutter_gherkin/src/flutter/utils/driver_utils.dart';
-import 'package:flutter_driver/flutter_driver.dart';
+import 'package:flutter_gherkin/src/flutter/adapters/app_driver_adapter.dart';
+import 'package:flutter_gherkin/src/flutter/world/flutter_world.dart';
 import 'package:gherkin/gherkin.dart';
 
 /// Expects the element found with the given control key to have the given string value.
@@ -18,10 +17,9 @@ StepDefinitionGeneric ThenExpectElementToHaveValue() {
     RegExp(r'I expect the {string} to be {string}$'),
     (key, value, context) async {
       try {
-        final text = await FlutterDriverUtils.getText(
-          context.world.driver,
-          find.byValueKey(key),
-        );
+        final finder = context.world.appDriver.findBy(key, FindType.key);
+        final text = await context.world.appDriver.getText(finder);
+
         context.expect(text, value);
       } catch (e) {
         await context.reporter.message('Step error: $e', MessageLevel.error);

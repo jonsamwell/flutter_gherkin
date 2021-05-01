@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:gherkin/gherkin.dart';
 import 'package:meta/meta.dart';
-import '../flutter_world.dart';
+import '../world/flutter_world.dart';
 
 class AttachScreenshotOnFailedStepHook extends Hook {
   @override
@@ -25,7 +25,7 @@ class AttachScreenshotOnFailedStepHook extends Hook {
 
   @protected
   Future<String> takeScreenshot(World world) async {
-    final bytes = await (world as FlutterWorld).driver.screenshot();
+    final bytes = await (world as FlutterWorld).appDriver.screenshot();
 
     return base64Encode(bytes);
   }

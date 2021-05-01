@@ -1,6 +1,6 @@
-import 'package:flutter_driver/flutter_driver.dart';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
-import 'package:flutter_gherkin/src/flutter/flutter_world.dart';
+import 'package:flutter_gherkin/src/flutter/adapters/app_driver_adapter.dart';
+import 'package:flutter_gherkin/src/flutter/world/flutter_world.dart';
 import 'package:gherkin/gherkin.dart';
 
 /// Discovers a widget by its text within the same parent.
@@ -17,22 +17,21 @@ StepDefinitionGeneric SiblingContainsTextStep() {
   return given3<String, String, String, FlutterWorld>(
     'I expect a {string} that contains the text {string} to also contain the text {string}',
     (ancestorType, leadingText, valueText, context) async {
-      final ancestor = await find.ancestor(
-        of: find.text(leadingText),
-        matching: find.byType(ancestorType),
+      final ancestor = await context.world.appDriver.findByAncestor(
+        context.world.appDriver.findBy(leadingText, FindType.text),
+        context.world.appDriver.findBy(ancestorType, FindType.type),
         firstMatchOnly: true,
       );
 
-      final valueWidget = await find.descendant(
-        of: ancestor,
-        matching: find.text(valueText),
+      final valueWidget = await context.world.appDriver.findByDescendant(
+        ancestor,
+        context.world.appDriver.findBy(valueText, FindType.text),
         firstMatchOnly: true,
       );
 
-      final isPresent = await FlutterDriverUtils.isPresent(
-        context.world.driver,
+      final isPresent = await context.world.appDriver.isPresent(
         valueWidget,
-        timeout: context.configuration?.timeout ?? const Duration(seconds: 20),
+        timeout: context.configuration.timeout ?? const Duration(seconds: 20),
       );
 
       context.expect(isPresent, true);

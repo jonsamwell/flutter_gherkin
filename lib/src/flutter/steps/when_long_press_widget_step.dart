@@ -1,6 +1,5 @@
-import 'package:flutter_gherkin/src/flutter/flutter_world.dart';
-import 'package:flutter_gherkin/src/flutter/utils/driver_utils.dart';
-import 'package:flutter_driver/flutter_driver.dart';
+import 'package:flutter_gherkin/src/flutter/adapters/app_driver_adapter.dart';
+import 'package:flutter_gherkin/src/flutter/world/flutter_world.dart';
 import 'package:gherkin/gherkin.dart';
 
 /// Long presses the widget found with the given control key.
@@ -22,15 +21,11 @@ StepDefinitionGeneric WhenLongPressWidget() {
     RegExp(
         r'I long press the {string} (?:button|element|label|icon|field|text|widget)$'),
     (key, context) async {
-      final finder = find.byValueKey(key);
+      final finder = context.world.appDriver.findBy(key, FindType.key);
 
-      await context.world.driver.scrollIntoView(
-        finder,
-      );
-      await FlutterDriverUtils.longPress(
-        context.world.driver,
-        finder,
-      );
+      await context.world.appDriver.scrollIntoView(finder);
+      await context.world.appDriver.longPress(finder);
+      await context.world.appDriver.waitForAppToSettle();
     },
   );
 }
@@ -41,10 +36,9 @@ StepDefinitionGeneric WhenLongPressWidgetWithoutScroll() {
     RegExp(
         r'I long press the {string} (?:button|element|label|icon|field|text|widget) without scrolling it into view$'),
     (key, context) async {
-      final finder = find.byValueKey(key);
+      final finder = context.world.appDriver.findBy(key, FindType.key);
 
-      await FlutterDriverUtils.longPress(
-        context.world.driver,
+      await context.world.appDriver.longPress(
         finder,
       );
     },
@@ -57,13 +51,12 @@ StepDefinitionGeneric WhenLongPressWidgetForDuration() {
     RegExp(
         r'I long press the {string} (?:button|element|label|icon|field|text|widget) for {int} milliseconds$'),
     (key, milliseconds, context) async {
-      final finder = find.byValueKey(key);
+      final finder = context.world.appDriver.findBy(key, FindType.key);
 
-      await context.world.driver.scrollIntoView(
+      await context.world.appDriver.scrollIntoView(
         finder,
       );
-      await FlutterDriverUtils.longPress(
-        context.world.driver,
+      await context.world.appDriver.longPress(
         finder,
         pressDuration: Duration(milliseconds: milliseconds),
       );

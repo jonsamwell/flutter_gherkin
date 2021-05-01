@@ -1,3 +1,121 @@
+## [1.2.0] - 07/01/2021
+# BREAKING CHANGES
+
+- `Table` has been renamed to `GherkinTable` to avoid naming clashes
+
+In order to progress this library and add support for the new integration_test package various things have had to be changed to enable this will still supporting Flutter Driver.  The big of which is removing Flutter Driver instance from the `FlutterWorld` instance in favour of an adapter approach whereby driving of the app (whether that is via `flutter_driver` or `WidgetTester`) becomes agnostic see `https://github.com/jonsamwell/flutter_gherkin/blob/f1fb2d4a632362629f5d1a196a0c055f858ad1d7/lib/src/flutter/adapters/app_driver_adapter.dart`.
+
+- `FlutterDriverUtils` has been removed, use `world.appDriver` instead.  You can still access the raw driver if needed via `world.appDriver.rawDriver`
+- If you are using a custom world object and still want to use Flutter Driver it will need to extend `FlutterDriverWorld` instead of `FlutterWorld` this will give you type safety on the `world.appDriver.rawDriver` property
+
+The change to use the `integration_test` package is a fundamentally different approach.  Where using the `flutter_driver` implementation your app is launch in a different process and then controlled by remote RPC calls from flutter driver in a different process.  Using the new `integration_test` package your tests surround your app and become the app themselves.  This removes the need for RPC communication from an external process into the app as well as giving you access to the internal state of your app.  This is an altogether better approach, one that is quicker, more maintainable, scalable to device testing labs.  However, it brings with it, its own set of challenges when trying to make this library work with it.  Traditionally this library has evaluated the Gherkin feature files at run time, then used that evaluation to invoke actions against the app under test.  However, as the tests need to surround the app in the `integration_test` view of the world the Gherkin tests need to be generated at development time so they can be complied in to a test app.  Much like `json_serializable` creates classes that are able to work with json data.
+
+### Steps to get going
+
+1. Add the following `dev_dependencies` to your app's `pubspec.yaml` file
+  - integration_test
+  - build_runner
+  - flutter_gherkin
+2. Add the following `build.yaml` to the root of your project. This file allows the dart code generator to target files outside of your application's `lib` folder
+```yaml
+targets:
+  $default:
+    sources:
+      - lib/**
+      - pubspec.*
+      - $package$
+      # Allows the code generator to target files outside of the lib folder
+      - integration_test/**.dart
+```
+3. Add the following file (and folder) `\test_driver\integration_test_driver.dart`.  This file is the entry point to run your tests.  See `https://flutter.dev/docs/testing/integration-tests` for more information.
+```dart
+import 'package:integration_test/integration_test_driver.dart' as integration_test_driver;
+
+Future<void> main() {
+  // The Gherkin report data send back to this runner by the app after
+  // the tests have run will be saved to this directory
+  integration_test_driver.testOutputsDirectory = 'integration_test/gherkin/reports';
+
+  return integration_test_driver.integrationDriver(
+    timeout: Duration(minutes: 90),
+  );
+}
+```
+4. Create a folder call `integration_test` this will eventually contain all your Gherkin feature files and the generated test files.
+5. Add the following file (and folder) `integration_test\features\counter.feature` with the following below contents.  This is a basic feature file that will be transform in to a test file that can run a test against the sample app.
+```
+Feature: Counter
+
+Scenario: User can increment the counter
+  Given I expect the "counter" to be "0"
+  When I tap the "increment" button
+  Then I expect the "counter" to be "1"
+```
+6. Add the following file (and folder) `integration_test\gherkin_suite_test.dart`.  Notice the attribute `@GherkinTestSuite()` this indicates to the code generator to create a partial file for this file with the generated Gherkin tests in `part 'gherkin_suite_test.g.dart';`.  Don't worry about the initial errors as this will disappear when the tests are generated.
+```dart
+import 'package:flutter_gherkin/flutter_gherkin_integration_test.dart'; // notice new import name
+import 'package:flutter_test/flutter_test.dart';
+import 'package:gherkin/gherkin.dart';
+
+// The application under test.
+import 'package:example_with_integration_test/main.dart' as app;
+
+part 'gherkin_suite_test.g.dart';
+
+@GherkinTestSuite()
+void main() {
+  executeTestSuite(
+    FlutterTestConfiguration.DEFAULT([])
+      ..reporters = [
+        StdoutReporter(MessageLevel.error)
+          ..setWriteLineFn(print)
+          ..setWriteFn(print),
+        ProgressReporter()
+          ..setWriteLineFn(print)
+          ..setWriteFn(print),
+        TestRunSummaryReporter()
+          ..setWriteLineFn(print)
+          ..setWriteFn(print),
+        JsonReporter(
+          writeReport: (_, __) => Future<void>.value(),
+        ),
+      ],
+    (World world) => app.main(),
+  );
+}
+```
+7. We now need to generate the test by running the builder command from the command line in the root of your project.  Much like `json_serializable` this will create a `.g.dart` part file that will contain the Gherkin tests in code format which are able to via using the `integration_test` package.
+```
+flutter pub run build_runner build
+```
+8. The errors in the `integration_test\gherkin_suite_test.dart` file should have not gone away and it you look in `integration_test\gherkin_suite_test.g.dart` you will see the coded version of the Gherkin tests described in the feature file `integration_test\features\counter.feature`.
+9. We can now run the test using the below command from the root of your project.
+```
+flutter drive --driver=test_driver/integration_test_driver.dart --target=integration_test/gherkin_suite_test.dart
+```
+10. You can debug the tests by adding a breakpoint to line 12 in `integration_test\gherkin_suite_test.dart` and adding the below to your `.vscode\launch.json` file:
+```json
+{
+  "name": "Debug integration_test",
+  "program": "test_driver/integration_test_driver.dart",
+  "cwd": "example_with_integration_test/",
+  "request": "launch",
+  "type": "dart",
+  "args": [
+    "--target=integration_test/gherkin_suite_test.dart",
+  ],
+}
+```
+11. Custom world need to extend `FlutterWorld` note `FlutterDriverWorld`.
+12. If you change any of the feature files you will need to re-generate the tests using the below command
+```
+# you might need to run the clean command first if you have just changed feature files
+flutter pub run build_runner clean
+
+flutter pub run build_runner build
+```
+
+
 ## [1.1.9] - 24/11/2020
 * Fixes #93 & #92 - Error waiting for no transient callbacks from Flutter driver
 * Added option to leave Flutter app under test running when the tests finish see `keepAppRunningAfterTests` configuration property
