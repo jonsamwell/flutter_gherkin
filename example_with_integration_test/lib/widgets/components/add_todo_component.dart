@@ -28,7 +28,7 @@ class _AddTodoComponentState extends State<AddTodoComponent>
     widget.todo.takeUntil(disposed$).listen(
       (model) {
         setState(() {
-          _textEditingController.text = model.action ?? '';
+          _textEditingController.text = model.action;
         });
       },
     );

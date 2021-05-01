@@ -57,7 +57,8 @@ void executeTestSuite(
         .listValue
         .map((path) => Glob(path.toStringValue()!))
         .map(
-          (glob) => glob.listSync()
+          (glob) => glob
+              .listSync()
               .map((entity) => File(entity.path).readAsStringSync())
               .toList(),
         )
