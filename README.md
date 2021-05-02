@@ -44,7 +44,6 @@ This package will soon have a major release to support null-safety and then anot
     - [hooks](#hooks)
     - [reporters](#reporters)
     - [createWorld](#createworld)
-    - [exitAfterTestRun](#exitaftertestrun)
   + [Flutter specific configuration options](#flutter-specific-configuration-options)
     - [restartAppBetweenScenarios](#restartappbetweenscenarios)
     - [build](#build)
@@ -187,9 +186,8 @@ Future<void> main() {
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..customStepParameterDefinitions = [ColourParameter()]
     ..restartAppBetweenScenarios = true
-    ..targetAppPath = "test_driver/app.dart"
+    ..targetAppPath = "test_driver/app.dart";
     // ..tagExpression = "@smoke" // uncomment to see an example of running scenarios based on tag expressions
-    ..exitAfterTestRun = true; // set to false if debugging to exit cleanly
   return GherkinRunner().execute(config);
 }
 ```
@@ -248,8 +246,7 @@ Future<void> main() {
     ..reporters = [StdoutReporter()]
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..restartAppBetweenScenarios = true
-    ..targetAppPath = "test_driver/app.dart"
-    ..exitAfterTestRun = true; // set to false if debugging to exit cleanly
+    ..targetAppPath = "test_driver/app.dart";
   return GherkinRunner().execute(config);
 }
 ```
@@ -314,8 +311,8 @@ Future<void> main() {
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..customStepParameterDefinitions = [ColourParameter()]
     ..restartAppBetweenScenarios = true
-    ..targetAppPath = "test_driver/app.dart"
-    ..exitAfterTestRun = true; // set to false if debugging to exit cleanly
+    ..targetAppPath = "test_driver/app.dart";
+
   return GherkinRunner().execute(config);
 }
 ```
@@ -371,8 +368,8 @@ Future<void> main() {
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..customStepParameterDefinitions = [ColourParameter()]
     ..restartAppBetweenScenarios = true
-    ..targetAppPath = "test_driver/app.dart"
-    ..exitAfterTestRun = true; // set to false if debugging to exit cleanly
+    ..targetAppPath = "test_driver/app.dart";
+
   return GherkinRunner().execute(config);
 }
 ```
@@ -404,8 +401,8 @@ Future<void> main() {
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..customStepParameterDefinitions = [ColourParameter()]
     ..restartAppBetweenScenarios = true
-    ..targetAppPath = "test_driver/app.dart"
-    ..exitAfterTestRun = true;
+    ..targetAppPath = "test_driver/app.dart";
+
   return GherkinRunner().execute(config);
 }
 ```
@@ -430,8 +427,8 @@ Future<void> main() {
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..createWorld = (TestConfiguration config) async => await createMyWorldInstance(config)
     ..restartAppBetweenScenarios = true
-    ..targetAppPath = "test_driver/app.dart"
-    ..exitAfterTestRun = true;
+    ..targetAppPath = "test_driver/app.dart";
+    
   return GherkinRunner().execute(config);
 }
 ```
@@ -463,11 +460,6 @@ Specifies the number of Flutter driver connection attempts to a running app befo
 
 Defaults to `2 seconds`
 Specifies the amount of time to wait after a failed Flutter driver connection attempt to the running app
-
-#### exitAfterTestRun
-
-Defaults to `true`
-True to exit the program after all tests have run.  You may want to set this to false during debugging.
 
 ### Flutter specific configuration options
 
@@ -892,8 +884,7 @@ Future<void> main() {
     ..hooks = [HookExample()]
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..restartAppBetweenScenarios = true
-    ..targetAppPath = "test_driver/app.dart"
-    ..exitAfterTestRun = true;
+    ..targetAppPath = "test_driver/app.dart";
   return GherkinRunner().execute(config);
 }
 
@@ -1072,8 +1063,7 @@ final config = FlutterTestConfiguration.DEFAULT(
 )
   ..restartAppBetweenScenarios = false
   ..targetAppWorkingDirectory = '../'
-  ..runningAppProtocolEndpointUri = args[0]
-  ..exitAfterTestRun = true; 
+  ..runningAppProtocolEndpointUri = args[0]; 
   return GherkinRunner().execute(config);
 }
 ```
