@@ -26,6 +26,9 @@ Available as a Dart package https://pub.dartlang.org/packages/flutter_gherkin
       Then I end up with 2
 ```
 
+## Note - Package upgrades
+This package will soon have a major release to support null-safety and then another major release to support running tests using the integration_test package and `WidgetTester`.  We will still maintain compatibility for running tests using flutter_driver and do our best so that switching over to using the integration_test package will be seamless.  For this to happen we have had to refactor large chunks of the code base so unfortunately there will be some unavoidable breaking changes.
+
 ## Table of Contents
 
 <!-- TOC -->

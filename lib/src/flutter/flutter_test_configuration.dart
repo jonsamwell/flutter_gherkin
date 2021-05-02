@@ -37,7 +37,7 @@ class FlutterTestConfiguration extends TestConfiguration {
   /// Additional setting on the configuration object can be set on the returned instance.
   static FlutterTestConfiguration DEFAULT(
     Iterable<StepDefinitionGeneric<World>> steps, {
-    String featurePath = 'test_driver/features/**.feature',
+    String featurePath = 'features/**.feature',
     String targetAppPath = 'test_driver/app.dart',
   }) {
     return FlutterTestConfiguration()
@@ -55,8 +55,7 @@ class FlutterTestConfiguration extends TestConfiguration {
       ]
       ..targetAppPath = targetAppPath
       ..stepDefinitions = steps
-      ..restartAppBetweenScenarios = true
-      ..exitAfterTestRun = true;
+      ..restartAppBetweenScenarios = true;
   }
 
   /// restarts the application under test between each scenario.
