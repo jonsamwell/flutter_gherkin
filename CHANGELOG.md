@@ -1,3 +1,6 @@
+## [1.1.10] - 02/05/2021
+* Allow dart-define to be passed to the Flutter build (thanks @Pholey)
+
 ## [1.1.9] - 24/11/2020
 * Fixes #93 & #92 - Error waiting for no transient callbacks from Flutter driver
 * Added option to leave Flutter app under test running when the tests finish see `keepAppRunningAfterTests` configuration property

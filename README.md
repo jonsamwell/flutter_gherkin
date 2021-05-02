@@ -47,6 +47,7 @@ Available as a Dart package https://pub.dartlang.org/packages/flutter_gherkin
     - [build](#build)
     - [buildFlavor](#buildFlavor)
     - [buildMode](#buildMode)
+    - [dartDefineArgs](#dartDefineArgs)
     - [flutterBuildTimeout](#flutterBuildTimeout)
     - [logFlutterProcessOutput](#logFlutterProcessOutput)
     - [targetDeviceId](#targetDeviceId)
@@ -501,6 +502,12 @@ This optional argument lets you specify which flutter flavor you want to test ag
 Defaults to `BuildMode.Debug`
 
 This optional argument lets you specify which build mode you prefer while compiling your app. Flutter Gherkin supports `--debug` and `--profile` modes. Check [Flutter's build modes](https://flutter.dev/docs/testing/build-modes) documentation for more details.
+
+#### dartDefineArgs
+
+Defaults to `[]`
+
+`--dart-define` args to pass into the build parameters. Include the name and value for each. For example, `--dart-define=MY_VAR="true"` becomes `['MY_VAR="true"']`
 
 #### targetDeviceId
 
