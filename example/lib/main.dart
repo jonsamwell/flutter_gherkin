@@ -43,10 +43,10 @@ class _MyHomePageState extends State<MyHomePage> {
           padding: EdgeInsets.zero,
           children: <Widget>[
             DrawerHeader(
-              child: const Text('Drawer Header'),
               decoration: BoxDecoration(
                 color: Colors.blue,
               ),
+              child: const Text('Drawer Header'),
             ),
             ListTile(
               title: const Text('Item 1'),
@@ -86,7 +86,6 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             TextButton(
               key: Key('openPage2'),
-              child: Text('Open page 2'),
               onLongPress: () {
                 Future.delayed(
                     Duration(seconds: 12),
@@ -101,6 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   MaterialPageRoute(builder: (context) => PageTwo()),
                 );
               },
+              child: Text('Open page 2'),
             ),
             GestureDetector(
               onLongPress: () {
