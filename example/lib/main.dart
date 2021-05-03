@@ -84,7 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
               key: const Key('counter'),
               style: Theme.of(context).textTheme.headline4,
             ),
-            FlatButton(
+            TextButton(
               key: Key('openPage2'),
               child: Text('Open page 2'),
               onLongPress: () {

@@ -1,4 +1,11 @@
-## [1.1.10] - 02/05/2021
+## [1.2.0] - 02/05/2021
+
+* Upgraded to the null-safety version of dart_gherkin as such there are some breaking changes to be aware of (see https://github.com/jonsamwell/dart_gherkin/blob/master/CHANGELOG.md for the full list):
+  - BREAKING CHANGE: Table has been renamed to GherkinTable to avoid naming clashes
+  - BREAKING CHANGE: exitAfterTestRun configuration option has been removed as it need to import dart:io which is not available under certain environments (dartjs for example).
+  - BREAKING CHANGE: Reporter->onException() exception parameter is now an object rather than an exception
+  - POSSIBLE BREAKING CHANGE: Feature file discovery has been refactored to abstract it from the external Glob dependency. It now support the three native dart Patterns (String, RegExp & Glob). There is potential here your patterns may not work anymore due as the default IoFeatureFileAccessor assumes the current directory is the working directory to search from.
+
 * Allow dart-define to be passed to the Flutter build (thanks @Pholey)
 
 ## [1.1.9] - 24/11/2020
