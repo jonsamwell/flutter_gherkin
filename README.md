@@ -168,7 +168,6 @@ Now that we have a testable app, a feature file and a custom step definition we 
 import 'dart:async';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'package:gherkin/gherkin.dart';
-import 'package:glob/glob.dart';
 import 'hooks/hook_example.dart';
 import 'steps/colour_parameter.dart';
 import 'steps/given_I_pick_a_colour_step.dart';
@@ -176,7 +175,7 @@ import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/**.feature")]
+    ..features = [RegExp('features/*.*.feature')]
     ..reporters = [
       ProgressReporter(),
       TestRunSummaryReporter(),
@@ -192,7 +191,7 @@ Future<void> main() {
 }
 ```
 
-This code simple creates a configuration object and calls this library which will then promptly parse your feature files and run the tests.  The configuration file is important and explained in further detail below.  However, all that is happening is a `Glob` is provide which specifies the path to one or more feature files, it sets the reporters to the `ProgressReporter` report which prints the result of scenarios and steps to the standard output (console).  The `TestRunSummaryReporter` prints a summary of the run once all tests have been executed.  Finally it specifies the path to the testable app created above `test_driver/app.dart` .  This is important as it instructions the library which app to run the tests against.
+This code simple creates a configuration object and calls this library which will then promptly parse your feature files and run the tests.  The configuration file is important and explained in further detail below.  However, all that is happening is a `RegExp` is provide which specifies the path to one or more feature files, it sets the reporters to the `ProgressReporter` report which prints the result of scenarios and steps to the standard output (console).  The `TestRunSummaryReporter` prints a summary of the run once all tests have been executed.  Finally it specifies the path to the testable app created above `test_driver/app.dart` .  This is important as it instructions the library which app to run the tests against.
 
 Finally to actually run the tests run the below on the command line:
 
@@ -214,7 +213,7 @@ The parameters below can be specified in your configuration file:
 
 *Required*
 
-An iterable of `Glob` patterns that specify the location(s) of `*.feature` files to run.  See <https://pub.dartlang.org/packages/glob>
+An iterable of `Pattern` that specify the location(s) of `*.feature` files to run.  See <https://api.dart.dev/stable/2.12.4/dart-core/Pattern-class.html>
 
 #### tagExpression
 
@@ -236,13 +235,12 @@ Place instances of any custom step definition classes `Given` , `Then` , `When` 
 import 'dart:async';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'package:gherkin/gherkin.dart';
-import 'package:glob/glob.dart';
 import 'steps/given_I_pick_a_colour_step.dart';
 import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/**.feature")]
+    ..features = [RegExp('features/*.*.feature')]
     ..reporters = [StdoutReporter()]
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..restartAppBetweenScenarios = true
@@ -299,14 +297,13 @@ Place instances of any custom step parameters that you have defined.  These will
 import 'dart:async';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'package:gherkin/gherkin.dart';
-import 'package:glob/glob.dart';
 import 'steps/given_I_pick_a_colour_step.dart';
 import 'steps/tap_button_n_times_step.dart';
 import 'steps/colour_parameter.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/**.feature")]
+    ..features = [RegExp('features/*.*.feature')]
     ..reporters = [StdoutReporter()]
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..customStepParameterDefinitions = [ColourParameter()]
@@ -350,7 +347,6 @@ To take a screenshot on a step failing you can used the pre-defined hook `Attach
 import 'dart:async';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'package:gherkin/gherkin.dart';
-import 'package:glob/glob.dart';
 import 'hooks/hook_example.dart';
 import 'steps/colour_parameter.dart';
 import 'steps/given_I_pick_a_colour_step.dart';
@@ -358,7 +354,7 @@ import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/**.feature")]
+    ..features = [RegExp('features/*.*.feature')]
     ..reporters = [
       ProgressReporter(),
       TestRunSummaryReporter(),
@@ -388,7 +384,6 @@ You should provide at least one reporter in the configuration otherwise it'll be
 
 ``` dart
 import 'dart:async';
-import 'package:glob/glob.dart';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'steps/colour_parameter.dart';
 import 'steps/given_I_pick_a_colour_step.dart';
@@ -396,7 +391,7 @@ import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/**.feature")]
+    ..features = [RegExp('features/*.*.feature')]
     ..reporters = [StdoutReporter()]
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..customStepParameterDefinitions = [ColourParameter()]
@@ -415,14 +410,13 @@ While it is not recommended so share state between steps within the same scenari
 
 ``` dart
 import 'dart:async';
-import 'package:glob/glob.dart';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'steps/given_I_pick_a_colour_step.dart';
 import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/**.feature")]
+    ..features = [RegExp('features/*.*.feature')]
     ..reporters = [StdoutReporter()]
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..createWorld = (TestConfiguration config) async => await createMyWorldInstance(config)
@@ -872,14 +866,13 @@ Finally ensure the hook is added to the hook collection in your configuration fi
 import 'dart:async';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'package:gherkin/gherkin.dart';
-import 'package:glob/glob.dart';
 import 'hooks/hook_example.dart';
 import 'steps/given_I_pick_a_colour_step.dart';
 import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/**.feature")]
+    ..features = [RegExp('features/*.*.feature')]
     ..reporters = [ProgressReporter()]
     ..hooks = [HookExample()]
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]

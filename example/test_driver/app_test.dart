@@ -14,7 +14,7 @@ Future<void> main() {
 
   final config = FlutterTestConfiguration.DEFAULT(
     steps,
-    featurePath: 'features/**.feature',
+    featurePath: 'features/*.*.feature',
     targetAppPath: 'test_driver/app.dart',
   )
     ..hooks = [
