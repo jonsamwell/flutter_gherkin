@@ -4,7 +4,11 @@
   - BREAKING CHANGE: Table has been renamed to GherkinTable to avoid naming clashes
   - BREAKING CHANGE: exitAfterTestRun configuration option has been removed as it depends on importing dart:io which is not available under certain environments (dartjs for example).
   - BREAKING CHANGE: Reporter->onException() exception parameter is now an object rather than an exception
-  - POSSIBLE BREAKING CHANGE: Feature file discovery has been refactored to abstract it from the external Glob dependency. It now support the three native dart Patterns (String, RegExp & Glob). There is potential here for your patterns to not work anymore due as the default IoFeatureFileAccessor assumes the current directory is the working directory to search from.
+  - POSSIBLE BREAKING CHANGE: Feature file discovery has been refactored to abstract it from the external Glob dependency. It now support the three native dart Patterns (String, RegExp & Glob). There is potential here for your patterns to not work anymore due as the default IoFeatureFileAccessor assumes the current directory is the working directory to search from. For the most part this simple regex is probably enough to get you going.
+
+  ```
+  RegExp('features/*.*.feature')
+  ```
 
 * Allow dart-define to be passed to the Flutter build (thanks @Pholey)
 
