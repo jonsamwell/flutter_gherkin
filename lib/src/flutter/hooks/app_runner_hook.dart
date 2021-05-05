@@ -77,7 +77,8 @@ class FlutterAppRunnerHook extends Hook {
         ..setKeepAppRunning(config.keepAppRunningAfterTests)
         ..setBuildFlavor(config.buildFlavor)
         ..setBuildMode(config.buildMode)
-        ..setDeviceTargetId(config.targetDeviceId);
+        ..setDeviceTargetId(config.targetDeviceId)
+        ..setDartDefineArgs(config.dartDefineArgs);
 
       stdout.writeln(
           "Starting Flutter app under test '${config.targetAppPath}', this might take a few moments");
