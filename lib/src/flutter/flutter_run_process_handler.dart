@@ -119,13 +119,13 @@ class FlutterRunProcessHandler extends ProcessHandler {
       arguments.add('--flavor=$_buildFlavor');
     }
 
-    if (_dartDefineArgs != null && _dartDefineArgs.isNotEmpty) {
-      _dartDefineArgs.forEach((element) {
+    if (_dartDefineArgs != null && _dartDefineArgs!.isNotEmpty) {
+      _dartDefineArgs!.forEach((element) {
         arguments.add('--dart-define=$element');
       });
     }
 
-    if (_deviceTargetId != null && _deviceTargetId.isNotEmpty) {
+    if (_deviceTargetId != null && _deviceTargetId!.isNotEmpty) {
       arguments.add('--device-id=$_deviceTargetId');
     }
 
