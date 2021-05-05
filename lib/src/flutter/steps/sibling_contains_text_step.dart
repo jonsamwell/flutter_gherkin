@@ -17,13 +17,13 @@ StepDefinitionGeneric SiblingContainsTextStep() {
   return given3<String, String, String, FlutterWorld>(
     'I expect a {string} that contains the text {string} to also contain the text {string}',
     (ancestorType, leadingText, valueText, context) async {
-      final ancestor = await find.ancestor(
+      final ancestor = find.ancestor(
         of: find.text(leadingText),
         matching: find.byType(ancestorType),
         firstMatchOnly: true,
       );
 
-      final valueWidget = await find.descendant(
+      final valueWidget = find.descendant(
         of: ancestor,
         matching: find.text(valueText),
         firstMatchOnly: true,

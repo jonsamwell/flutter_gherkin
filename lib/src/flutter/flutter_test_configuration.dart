@@ -36,7 +36,7 @@ class FlutterTestConfiguration extends TestConfiguration {
   /// Additional setting on the configuration object can be set on the returned instance.
   static FlutterTestConfiguration DEFAULT(
     Iterable<StepDefinitionGeneric<World>> steps, {
-    String featurePath = 'test_driver/features/**.feature',
+    String featurePath = 'features/*.*.feature',
     String targetAppPath = 'test_driver/app.dart',
   }) {
     return FlutterTestConfiguration()
@@ -86,6 +86,10 @@ class FlutterTestConfiguration extends TestConfiguration {
   /// The target device id to run the tests against when multiple devices detected
   /// Defaults to empty
   String targetDeviceId = '';
+
+  /// `--dart-define` args to pass into the build parameters. Include the name and value
+  /// for each. For example, `--dart-define=MY_VAR="true"` becomes `['MY_VAR="true"']`
+  List<String> dartDefineArgs = [];
 
   /// Will keep the Flutter application running when done testing
   /// Defaults to false

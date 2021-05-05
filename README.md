@@ -26,6 +26,9 @@ Available as a Dart package https://pub.dartlang.org/packages/flutter_gherkin
       Then I end up with 2
 ```
 
+## Note - Package upgrades
+This package will soon have a major release to support null-safety and then another major release to support running tests using the integration_test package and `WidgetTester`.  We will still maintain compatibility for running tests using flutter_driver and do our best so that switching over to using the integration_test package will be seamless.  For this to happen we have had to refactor large chunks of the code base so unfortunately there will be some unavoidable breaking changes.
+
 ## Table of Contents
 
 <!-- TOC -->
@@ -41,12 +44,12 @@ Available as a Dart package https://pub.dartlang.org/packages/flutter_gherkin
     - [hooks](#hooks)
     - [reporters](#reporters)
     - [createWorld](#createworld)
-    - [exitAfterTestRun](#exitaftertestrun)
   + [Flutter specific configuration options](#flutter-specific-configuration-options)
     - [restartAppBetweenScenarios](#restartappbetweenscenarios)
     - [build](#build)
     - [buildFlavor](#buildFlavor)
     - [buildMode](#buildMode)
+    - [dartDefineArgs](#dartDefineArgs)
     - [flutterBuildTimeout](#flutterBuildTimeout)
     - [logFlutterProcessOutput](#logFlutterProcessOutput)
     - [targetDeviceId](#targetDeviceId)
@@ -165,7 +168,6 @@ Now that we have a testable app, a feature file and a custom step definition we 
 import 'dart:async';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'package:gherkin/gherkin.dart';
-import 'package:glob/glob.dart';
 import 'hooks/hook_example.dart';
 import 'steps/colour_parameter.dart';
 import 'steps/given_I_pick_a_colour_step.dart';
@@ -173,7 +175,7 @@ import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/**.feature")]
+    ..features = [RegExp('features/*.*.feature')]
     ..reporters = [
       ProgressReporter(),
       TestRunSummaryReporter(),
@@ -183,14 +185,13 @@ Future<void> main() {
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..customStepParameterDefinitions = [ColourParameter()]
     ..restartAppBetweenScenarios = true
-    ..targetAppPath = "test_driver/app.dart"
+    ..targetAppPath = "test_driver/app.dart";
     // ..tagExpression = "@smoke" // uncomment to see an example of running scenarios based on tag expressions
-    ..exitAfterTestRun = true; // set to false if debugging to exit cleanly
   return GherkinRunner().execute(config);
 }
 ```
 
-This code simple creates a configuration object and calls this library which will then promptly parse your feature files and run the tests.  The configuration file is important and explained in further detail below.  However, all that is happening is a `Glob` is provide which specifies the path to one or more feature files, it sets the reporters to the `ProgressReporter` report which prints the result of scenarios and steps to the standard output (console).  The `TestRunSummaryReporter` prints a summary of the run once all tests have been executed.  Finally it specifies the path to the testable app created above `test_driver/app.dart` .  This is important as it instructions the library which app to run the tests against.
+This code simple creates a configuration object and calls this library which will then promptly parse your feature files and run the tests.  The configuration file is important and explained in further detail below.  However, all that is happening is a `RegExp` is provide which specifies the path to one or more feature files, it sets the reporters to the `ProgressReporter` report which prints the result of scenarios and steps to the standard output (console).  The `TestRunSummaryReporter` prints a summary of the run once all tests have been executed.  Finally it specifies the path to the testable app created above `test_driver/app.dart` .  This is important as it instructions the library which app to run the tests against.
 
 Finally to actually run the tests run the below on the command line:
 
@@ -212,7 +213,7 @@ The parameters below can be specified in your configuration file:
 
 *Required*
 
-An iterable of `Glob` patterns that specify the location(s) of `*.feature` files to run.  See <https://pub.dartlang.org/packages/glob>
+An iterable of `Pattern` that specify the location(s) of `*.feature` files to run.  See <https://api.dart.dev/stable/2.12.4/dart-core/Pattern-class.html>
 
 #### tagExpression
 
@@ -223,7 +224,7 @@ An infix boolean expression which defines the features and scenarios to run base
 #### order
 
 Defaults to `ExecutionOrder.random`
-The order by which scenarios will be run. Running an a random order may highlight any inter-test dependencies that should be fixed.
+The order by which scenarios will be run. Running an a random order may highlight any inter-test dependencies that should be fixed.  Running with `ExecutionOrder.sorted` processes the feature files in `filename` order.
 
 #### stepDefinitions
 
@@ -234,18 +235,16 @@ Place instances of any custom step definition classes `Given` , `Then` , `When` 
 import 'dart:async';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'package:gherkin/gherkin.dart';
-import 'package:glob/glob.dart';
 import 'steps/given_I_pick_a_colour_step.dart';
 import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/**.feature")]
+    ..features = [RegExp('features/*.*.feature')]
     ..reporters = [StdoutReporter()]
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..restartAppBetweenScenarios = true
-    ..targetAppPath = "test_driver/app.dart"
-    ..exitAfterTestRun = true; // set to false if debugging to exit cleanly
+    ..targetAppPath = "test_driver/app.dart";
   return GherkinRunner().execute(config);
 }
 ```
@@ -298,20 +297,19 @@ Place instances of any custom step parameters that you have defined.  These will
 import 'dart:async';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'package:gherkin/gherkin.dart';
-import 'package:glob/glob.dart';
 import 'steps/given_I_pick_a_colour_step.dart';
 import 'steps/tap_button_n_times_step.dart';
 import 'steps/colour_parameter.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/**.feature")]
+    ..features = [RegExp('features/*.*.feature')]
     ..reporters = [StdoutReporter()]
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..customStepParameterDefinitions = [ColourParameter()]
     ..restartAppBetweenScenarios = true
-    ..targetAppPath = "test_driver/app.dart"
-    ..exitAfterTestRun = true; // set to false if debugging to exit cleanly
+    ..targetAppPath = "test_driver/app.dart";
+
   return GherkinRunner().execute(config);
 }
 ```
@@ -349,7 +347,6 @@ To take a screenshot on a step failing you can used the pre-defined hook `Attach
 import 'dart:async';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'package:gherkin/gherkin.dart';
-import 'package:glob/glob.dart';
 import 'hooks/hook_example.dart';
 import 'steps/colour_parameter.dart';
 import 'steps/given_I_pick_a_colour_step.dart';
@@ -357,7 +354,7 @@ import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/**.feature")]
+    ..features = [RegExp('features/*.*.feature')]
     ..reporters = [
       ProgressReporter(),
       TestRunSummaryReporter(),
@@ -367,8 +364,8 @@ Future<void> main() {
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..customStepParameterDefinitions = [ColourParameter()]
     ..restartAppBetweenScenarios = true
-    ..targetAppPath = "test_driver/app.dart"
-    ..exitAfterTestRun = true; // set to false if debugging to exit cleanly
+    ..targetAppPath = "test_driver/app.dart";
+
   return GherkinRunner().execute(config);
 }
 ```
@@ -387,7 +384,6 @@ You should provide at least one reporter in the configuration otherwise it'll be
 
 ``` dart
 import 'dart:async';
-import 'package:glob/glob.dart';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'steps/colour_parameter.dart';
 import 'steps/given_I_pick_a_colour_step.dart';
@@ -395,13 +391,13 @@ import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/**.feature")]
+    ..features = [RegExp('features/*.*.feature')]
     ..reporters = [StdoutReporter()]
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..customStepParameterDefinitions = [ColourParameter()]
     ..restartAppBetweenScenarios = true
-    ..targetAppPath = "test_driver/app.dart"
-    ..exitAfterTestRun = true;
+    ..targetAppPath = "test_driver/app.dart";
+
   return GherkinRunner().execute(config);
 }
 ```
@@ -414,20 +410,19 @@ While it is not recommended so share state between steps within the same scenari
 
 ``` dart
 import 'dart:async';
-import 'package:glob/glob.dart';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'steps/given_I_pick_a_colour_step.dart';
 import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/**.feature")]
+    ..features = [RegExp('features/*.*.feature')]
     ..reporters = [StdoutReporter()]
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..createWorld = (TestConfiguration config) async => await createMyWorldInstance(config)
     ..restartAppBetweenScenarios = true
-    ..targetAppPath = "test_driver/app.dart"
-    ..exitAfterTestRun = true;
+    ..targetAppPath = "test_driver/app.dart";
+    
   return GherkinRunner().execute(config);
 }
 ```
@@ -459,11 +454,6 @@ Specifies the number of Flutter driver connection attempts to a running app befo
 
 Defaults to `2 seconds`
 Specifies the amount of time to wait after a failed Flutter driver connection attempt to the running app
-
-#### exitAfterTestRun
-
-Defaults to `true`
-True to exit the program after all tests have run.  You may want to set this to false during debugging.
 
 ### Flutter specific configuration options
 
@@ -501,6 +491,12 @@ This optional argument lets you specify which flutter flavor you want to test ag
 Defaults to `BuildMode.Debug`
 
 This optional argument lets you specify which build mode you prefer while compiling your app. Flutter Gherkin supports `--debug` and `--profile` modes. Check [Flutter's build modes](https://flutter.dev/docs/testing/build-modes) documentation for more details.
+
+#### dartDefineArgs
+
+Defaults to `[]`
+
+`--dart-define` args to pass into the build parameters. Include the name and value for each. For example, `--dart-define=MY_VAR="true"` becomes `['MY_VAR="true"']`
 
 #### targetDeviceId
 
@@ -870,20 +866,18 @@ Finally ensure the hook is added to the hook collection in your configuration fi
 import 'dart:async';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'package:gherkin/gherkin.dart';
-import 'package:glob/glob.dart';
 import 'hooks/hook_example.dart';
 import 'steps/given_I_pick_a_colour_step.dart';
 import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/**.feature")]
+    ..features = [RegExp('features/*.*.feature')]
     ..reporters = [ProgressReporter()]
     ..hooks = [HookExample()]
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..restartAppBetweenScenarios = true
-    ..targetAppPath = "test_driver/app.dart"
-    ..exitAfterTestRun = true;
+    ..targetAppPath = "test_driver/app.dart";
   return GherkinRunner().execute(config);
 }
 
@@ -1062,8 +1056,7 @@ final config = FlutterTestConfiguration.DEFAULT(
 )
   ..restartAppBetweenScenarios = false
   ..targetAppWorkingDirectory = '../'
-  ..runningAppProtocolEndpointUri = args[0]
-  ..exitAfterTestRun = true; 
+  ..runningAppProtocolEndpointUri = args[0]; 
   return GherkinRunner().execute(config);
 }
 ```

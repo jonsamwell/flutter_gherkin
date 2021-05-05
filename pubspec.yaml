@@ -15,12 +15,12 @@ dependencies:
   flutter_driver:
     sdk: flutter
   meta: ">=1.1.6 <2.0.0"
-  gherkin: ^2.0.0
+  gherkin: ^2.0.1
   # gherkin:
   #   path: ../dart_gherkin
 
 dev_dependencies:
   test:
-  pedantic: ^1.9.2
+  pedantic: ^1.11.0
 
 flutter:
