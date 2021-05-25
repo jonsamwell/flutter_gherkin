@@ -1,15 +1,13 @@
 import 'package:flutter_gherkin/flutter_gherkin_with_driver.dart';
 import 'package:flutter_gherkin/src/flutter/hooks/app_runner_hook.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:test/test.dart' as test;
-
 import 'mocks/parameter_mock.dart';
 import 'mocks/step_definition_mock.dart';
 
 void main() {
   group('config', () {
     group('prepare', () {
-      test.test('flutter app runner hook added', () {
+      test('flutter app runner hook added', () {
         final config = FlutterDriverTestConfiguration();
         expect(config.hooks, isNull);
         config.prepare();
@@ -18,7 +16,7 @@ void main() {
         expect(config.hooks!.elementAt(0), (x) => x is FlutterAppRunnerHook);
       });
 
-      test.test('common steps definition added', () {
+      test('common steps definition added', () {
         final config = FlutterDriverTestConfiguration();
         expect(config.stepDefinitions, isNull);
 
@@ -29,7 +27,7 @@ void main() {
         expect(config.customStepParameterDefinitions!.length, 2);
       });
 
-      test.test('common step definition added to existing steps', () {
+      test('common step definition added to existing steps', () {
         final config = FlutterTestConfiguration()
           ..stepDefinitions = [MockStepDefinition()]
           ..customStepParameterDefinitions = [MockParameter()];

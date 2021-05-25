@@ -1,34 +1,26 @@
 name: flutter_gherkin
 description: A Gherkin / Cucumber parser and test runner for Dart and Flutter
-version: 2.0.0
+version: 3.0.0-rc.1
 homepage: https://github.com/jonsamwell/flutter_gherkin
 
 environment:
   sdk: '>=2.12.3 <3.0.0'
-  flutter: ">=2.0.0"
+  flutter: ">=2.2.0"
 
 dependencies:
   flutter:
     sdk: flutter
   integration_test:
     sdk: flutter
-  flutter_driver:
-    sdk: flutter
-  gherkin: ^2.0.0
+  # flutter_driver:
+  #   sdk: flutter
+  gherkin: ^2.0.2
   # gherkin:
     # path: ../dart_gherkin
   # gherkin:
   #   git:
   #     url: https://github.com/jonsamwell/dart_gherkin.git
   #     ref: f0b3f955191b53a78075ed2c9387ea8bee12f111
-
-dependency_overrides:
-  crypto: ^3.0.0 # flutter_driver still depends on 2.1.5 see https://github.com/flutter/flutter/issues/80293
-  convert: ^3.0.0 # flutter_driver still depends on >=2.0.0 see https://github.com/flutter/flutter/issues/80293
-  test_api: ^0.3.0 # flutter_test still depends on 0.2.19 see https://github.com/flutter/flutter/issues/80293
-  vm_service: ^6.0.0 # flutter_test still depends on 5.5.0 see https://github.com/flutter/flutter/issues/80293
-  test: ^1.17.3 # integration_test still depends on 1.16.6 see https://github.com/flutter/flutter/issues/71379
-  args: ^2.0.0 # flutter_driver still depends on 1.6.0 see https://github.com/flutter/flutter/issues/80293
 
 dev_dependencies:
   flutter_test:

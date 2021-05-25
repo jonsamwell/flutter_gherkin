@@ -1,3 +1,4 @@
+import 'package:example_with_integration_test/models/todo_status_enum.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:uuid/uuid.dart';
 import 'package:example_with_integration_test/models/todo_model.dart';
@@ -61,8 +62,11 @@ class TodoBloc {
   }
 
   Todo _createNewModel() {
-    return Todo()
-      ..created = DateTime.now().toUtc()
-      ..id = Uuid().v4();
+    return Todo(
+      created: DateTime.now().toUtc(),
+      id: Uuid().v4(),
+      status: TodoStatus.pending,
+      updated: DateTime.now().toUtc(),
+    );
   }
 }

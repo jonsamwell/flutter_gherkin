@@ -143,9 +143,9 @@ class FlutterDriverAppDriverAdapter
   }) async {
     await rawDriver.scroll(
       finder,
-      dx,
-      dy,
-      duration,
+      dx ?? 0,
+      dy ?? 0,
+      duration ?? const Duration(milliseconds: 200),
       timeout: timeout,
     );
     await waitForAppToSettle(timeout: timeout);
@@ -207,11 +207,11 @@ class FlutterDriverAppDriverAdapter
     Duration? timeout = const Duration(seconds: 30),
   }) async {
     await rawDriver.scrollUntilVisible(
-      scrollable,
+      scrollable!,
       item,
       timeout: timeout,
-      dxScroll: dx,
-      dyScroll: dy,
+      dxScroll: dx ?? 0,
+      dyScroll: dy ?? 0,
     );
   }
 

@@ -6,7 +6,8 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=2.12.3 <3.0.0'
+  flutter: ">=2.2.0"
 
 dependencies:
   flutter:
@@ -17,12 +18,6 @@ dependencies:
   shared_preferences: ^2.0.5
   uuid: ^3.0.4
   flutter_simple_dependency_injection: ^2.0.0
-
-dependency_overrides:
-  crypto: ^3.0.0 # flutter_driver still depends on 2.1.5 :-(
-  convert: ^3.0.0 # flutter_driver still depends on >=2.0.0 :-(
-  test: ^1.16.5 # gherkin still depends on 1.16.8 :-(
-  test_api: ^0.3.0 # flutter_test still depends on 0.2.19 :-(
 
 dev_dependencies:
   flutter_test:

@@ -7,12 +7,13 @@ part of 'todo_model.dart';
 // **************************************************************************
 
 Todo _$TodoFromJson(Map<String, dynamic> json) {
-  return Todo()
-    ..id = json['id'] as String
-    ..created = DateTime.parse(json['created'] as String)
-    ..updated = DateTime.parse(json['updated'] as String)
-    ..action = json['action'] as String
-    ..status = _$enumDecode(_$TodoStatusEnumMap, json['status']);
+  return Todo(
+    id: json['id'] as String,
+    created: DateTime.parse(json['created'] as String),
+    updated: DateTime.parse(json['updated'] as String),
+    status: _$enumDecode(_$TodoStatusEnumMap, json['status']),
+    action: json['action'] as String?,
+  );
 }
 
 Map<String, dynamic> _$TodoToJson(Todo instance) => <String, dynamic>{

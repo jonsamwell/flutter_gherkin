@@ -103,7 +103,7 @@ class _HomeViewState extends State<HomeView> with ViewUtilsMixin {
                               ],
                             ),
                           ),
-                          key: Key(todo.action),
+                          key: Key(todo.action!),
                           onDismissed: (direction) {
                             subscribeOnce(
                               bloc.remove(todo),
@@ -118,7 +118,7 @@ class _HomeViewState extends State<HomeView> with ViewUtilsMixin {
                           },
                           child: ListTile(
                             title: Text(
-                              todo.action,
+                              todo.action!,
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyText1!

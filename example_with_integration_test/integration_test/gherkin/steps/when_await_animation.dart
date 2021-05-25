@@ -3,7 +3,7 @@ import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'package:gherkin/gherkin.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// Shows are example of using the `WidgetTester` from the `World` context rather than
+/// Shows an example of using the `WidgetTester` from the `World` context rather than
 /// using the implementation agnostic `appDriver`
 final whenAnAnimationIsAwaited = when1<int, FlutterWidgetTesterWorld>(
   'I wait {int} seconds for the animation to complete',

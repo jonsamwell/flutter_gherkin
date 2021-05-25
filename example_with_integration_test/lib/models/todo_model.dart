@@ -5,13 +5,19 @@ part 'todo_model.g.dart';
 
 @JsonSerializable()
 class Todo {
-  late String id;
-  late DateTime created;
-  late DateTime updated;
-  late String action;
-  late TodoStatus status;
+  final String id;
+  final DateTime created;
+  final DateTime updated;
+  String? action;
+  TodoStatus status;
 
-  Todo();
+  Todo({
+    required this.id,
+    required this.created,
+    required this.updated,
+    required this.status,
+    this.action,
+  });
 
   factory Todo.fromJson(Map<String, dynamic> json) => _$TodoFromJson(json);
   Map<String, dynamic> toJson() => _$TodoToJson(this);

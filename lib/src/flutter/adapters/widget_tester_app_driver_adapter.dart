@@ -20,8 +20,6 @@ class WidgetTesterAppDriverAdapter
     try {
       return await rawDriver.pumpAndSettle(
         duration!,
-        EnginePhase.paint,
-        timeout!,
       );
     } catch (_) {
       return 1;
@@ -111,6 +109,9 @@ class WidgetTesterAppDriverAdapter
       finder,
       text,
     );
+    await waitForAppToSettle(
+      timeout: timeout,
+    );
   }
 
   @override
@@ -119,7 +120,9 @@ class WidgetTesterAppDriverAdapter
     Duration? timeout = const Duration(seconds: 30),
   }) async {
     await rawDriver.tap(finder);
-    await waitForAppToSettle(timeout: timeout);
+    await waitForAppToSettle(
+      timeout: timeout,
+    );
   }
 
   @override
