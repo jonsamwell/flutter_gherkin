@@ -109,13 +109,6 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
               null,
               dependencies,
             );
-
-            await runStep(
-              'When I test the default step timeout is not applied to step with custom timeout',
-              <String>[],
-              null,
-              dependencies,
-            );
           },
         );
       },
