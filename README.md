@@ -26,65 +26,6 @@ Available as a Dart package https://pub.dartlang.org/packages/flutter_gherkin
       Then I end up with 2
 ```
 
-## Table of Contents
-
-<!-- TOC -->
-
-* [Getting Started](#getting-started)
-  + [Configuration](#configuration)
-    - [features](#features)
-    - [tagExpression](#tagexpression)
-    - [order](#order)
-    - [stepDefinitions](#stepdefinitions)
-    - [defaultLanguage](#defaultLanguage)
-    - [customStepParameterDefinitions](#customstepparameterdefinitions)
-    - [hooks](#hooks)
-    - [reporters](#reporters)
-    - [createWorld](#createworld)
-    - [exitAfterTestRun](#exitaftertestrun)
-  + [Flutter specific configuration options](#flutter-specific-configuration-options)
-    - [restartAppBetweenScenarios](#restartappbetweenscenarios)
-    - [build](#build)
-    - [buildFlavor](#buildFlavor)
-    - [buildMode](#buildMode)
-    - [flutterBuildTimeout](#flutterBuildTimeout)
-    - [logFlutterProcessOutput](#logFlutterProcessOutput)
-    - [targetDeviceId](#targetDeviceId)
-    - [targetAppPath](#targetapppath)
-    - [runningAppProtocolEndpointUri](#runningAppProtocolEndpointUri)
-    - [onBeforeFlutterDriverConnect](#onBeforeFlutterDriverConnect)
-    - [onAfterFlutterDriverConnect](#onAfterFlutterDriverConnect)
-    - [flutterDriverMaxConnectionAttempts](#flutterDriverMaxConnectionAttempts)
-    - [flutterDriverReconnectionDelay](#flutterDriverReconnectionDelay)
-* [Features Files](#features-files)
-  + [Steps Definitions](#steps-definitions)
-    - [Given](#given)
-    - [Then](#then)
-    - [Expects Assertions](#expects-assertions)
-    - [Step Timeout](#step-timeout)
-    - [Multiline Strings](#multiline-strings)
-    - [Data tables](#data-tables)
-    - [Well known step parameters](#well-known-step-parameters)
-    - [Pluralization](#pluralization)
-    - [Custom Parameters](#custom-parameters)
-    - [World Context (per test scenario shared state)](#world-context-per-test-scenario-shared-state)
-    - [Assertions](#assertions)
-  + [Tags](#tags)
-  + [Languages](#languages)
-* [Hooks](#hooks)
-* [Attachments](#attachments)
-  + [Screenshot on step failure](#screenshot)
-* [Reporting](#reporting)
-* [Flutter](#flutter)
-  + [Restarting the app before each test](#restarting-the-app-before-each-test)
-    - [Flutter World](#flutter-world)
-  + [Pre-defined Steps](#pre-defined-steps)
-    - [Flutter Driver Utilities](#flutter-driver-utilities)
-  + [Debugging](#debugging)
-    - [Debugging the app under test](#debugging-the-app-under-test)
-
-<!-- /TOC -->
-
 ## intergration_test package support
 
 NOTE: This library now favours using the `integration_test` package and code generation over `flutter_driver` and runtime interpretation and as such the `flutter_driver` implementations will eventually be deprecated.
@@ -194,9 +135,69 @@ flutter pub run build_runner clean
 
 flutter pub run build_runner build
 ```
+## Note - Package upgrades
+This package will soon have a major release to support null-safety and then another major release to support running tests using the integration_test package and `WidgetTester`.  We will still maintain compatibility for running tests using flutter_driver and do our best so that switching over to using the integration_test package will be seamless.  For this to happen we have had to refactor large chunks of the code base so unfortunately there will be some unavoidable breaking changes.
 
+## Table of Contents
 
-### Getting Started
+<!-- TOC -->
+
+* [Getting Started](#getting-started)
+  + [Configuration](#configuration)
+    - [features](#features)
+    - [tagExpression](#tagexpression)
+    - [order](#order)
+    - [stepDefinitions](#stepdefinitions)
+    - [defaultLanguage](#defaultLanguage)
+    - [customStepParameterDefinitions](#customstepparameterdefinitions)
+    - [hooks](#hooks)
+    - [reporters](#reporters)
+    - [createWorld](#createworld)
+  + [Flutter specific configuration options](#flutter-specific-configuration-options)
+    - [restartAppBetweenScenarios](#restartappbetweenscenarios)
+    - [build](#build)
+    - [buildFlavor](#buildFlavor)
+    - [buildMode](#buildMode)
+    - [dartDefineArgs](#dartDefineArgs)
+    - [flutterBuildTimeout](#flutterBuildTimeout)
+    - [logFlutterProcessOutput](#logFlutterProcessOutput)
+    - [targetDeviceId](#targetDeviceId)
+    - [targetAppPath](#targetapppath)
+    - [runningAppProtocolEndpointUri](#runningAppProtocolEndpointUri)
+    - [onBeforeFlutterDriverConnect](#onBeforeFlutterDriverConnect)
+    - [onAfterFlutterDriverConnect](#onAfterFlutterDriverConnect)
+    - [flutterDriverMaxConnectionAttempts](#flutterDriverMaxConnectionAttempts)
+    - [flutterDriverReconnectionDelay](#flutterDriverReconnectionDelay)
+* [Features Files](#features-files)
+  + [Steps Definitions](#steps-definitions)
+    - [Given](#given)
+    - [Then](#then)
+    - [Expects Assertions](#expects-assertions)
+    - [Step Timeout](#step-timeout)
+    - [Multiline Strings](#multiline-strings)
+    - [Data tables](#data-tables)
+    - [Well known step parameters](#well-known-step-parameters)
+    - [Pluralization](#pluralization)
+    - [Custom Parameters](#custom-parameters)
+    - [World Context (per test scenario shared state)](#world-context-per-test-scenario-shared-state)
+    - [Assertions](#assertions)
+  + [Tags](#tags)
+  + [Languages](#languages)
+* [Hooks](#hooks)
+* [Attachments](#attachments)
+  + [Screenshot on step failure](#screenshot)
+* [Reporting](#reporting)
+* [Flutter](#flutter)
+  + [Restarting the app before each test](#restarting-the-app-before-each-test)
+    - [Flutter World](#flutter-world)
+  + [Pre-defined Steps](#pre-defined-steps)
+    - [Flutter Driver Utilities](#flutter-driver-utilities)
+  + [Debugging](#debugging)
+    - [Debugging the app under test](#debugging-the-app-under-test)
+
+<!-- /TOC -->
+
+## Getting Started
 
 See <https://docs.cucumber.io/gherkin/> for information on the Gherkin syntax and Behaviour Driven Development (BDD).  
 
@@ -204,7 +205,7 @@ See [example readme](example/README.md) for a quick start guide to running the e
 
 The first step is to create a version of your app that has flutter driver enabled so that it can be automated.  A good guide how to do this is show [here](https://flutter.io/cookbook/testing/integration-test-introduction/#4-instrument-the-app).  However in short, create a folder called `test_driver` and within that create a file called `app.dart` and paste in the below code.
 
-```dart
+``` dart
 import '../lib/main.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_driver/driver_extension.dart';
@@ -225,7 +226,7 @@ To get started with BDD in Flutter the first step is to write a feature file and
 
 First create a folder called `test_driver` (this is inline with the current integration test as we will need to use the Flutter driver to automate the app).  Within the folder create a folder called `features` , then create a file called `counter.feature` .
 
-```dart
+``` dart
 Feature: Counter
   The counter should be incremented when the button is pressed.
 
@@ -241,7 +242,7 @@ Granted the example is a little contrived but is serves to illustrate the proces
 
 This library has a couple of built in step definitions for convenience.  The first step uses the built in step, however the second step `When I tap the "increment" button 10 times` is a custom step and has to be implemented.  To implement a step we have to create a simple step definition class.
 
-```dart
+``` dart
 import 'package:flutter_driver/flutter_driver.dart';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'package:gherkin/gherkin.dart';
@@ -263,7 +264,7 @@ As you can see the `when2` method is invoked specifying two input parameters.  T
 
 The input parameters are retrieved via the pattern regex from well know parameter types `{string}` and `{int}` [explained below](#well-known-step-parameters).  They are just special syntax to indicate you are expecting a string and an integer at those points in the step text.  Therefore, when the step to execute is `When I tap the "increment" button 10 times` the parameters "increment" and 10 will be passed into the step as the correct types.  Note that in the pattern you can use any regex capture group to indicate any input parameter.  For example the regex ` `  ` RegExp(r"When I tap the {string} (button|icon) {int} times") `  ` ` indicates 3 parameters and would match to either of the below step text.
 
-```dart
+``` dart
 When I tap the "increment" button 10 times    // passes 3 parameters "increment", "button" & 10
 When I tap the "plus" icon 2 times       // passes 3 parameters "plus", "icon" & 2
 ```
@@ -272,11 +273,10 @@ It is worth noting that this library *does not* rely on mirrors (reflection) for
 
 Now that we have a testable app, a feature file and a custom step definition we need to create a class that will call this library and actually run the tests.  Create a file called `app_test.dart` and put the below code in.
 
-```dart
+``` dart
 import 'dart:async';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'package:gherkin/gherkin.dart';
-import 'package:glob/glob.dart';
 import 'hooks/hook_example.dart';
 import 'steps/colour_parameter.dart';
 import 'steps/given_I_pick_a_colour_step.dart';
@@ -284,7 +284,7 @@ import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/**.feature")]
+    ..features = [RegExp('features/*.*.feature')]
     ..reporters = [
       ProgressReporter(),
       TestRunSummaryReporter(),
@@ -294,18 +294,17 @@ Future<void> main() {
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..customStepParameterDefinitions = [ColourParameter()]
     ..restartAppBetweenScenarios = true
-    ..targetAppPath = "test_driver/app.dart"
+    ..targetAppPath = "test_driver/app.dart";
     // ..tagExpression = "@smoke" // uncomment to see an example of running scenarios based on tag expressions
-    ..exitAfterTestRun = true; // set to false if debugging to exit cleanly
   return GherkinRunner().execute(config);
 }
 ```
 
-This code simple creates a configuration object and calls this library which will then promptly parse your feature files and run the tests.  The configuration file is important and explained in further detail below.  However, all that is happening is a `Glob` is provide which specifies the path to one or more feature files, it sets the reporters to the `ProgressReporter` report which prints the result of scenarios and steps to the standard output (console).  The `TestRunSummaryReporter` prints a summary of the run once all tests have been executed.  Finally it specifies the path to the testable app created above `test_driver/app.dart` .  This is important as it instructions the library which app to run the tests against.
+This code simple creates a configuration object and calls this library which will then promptly parse your feature files and run the tests.  The configuration file is important and explained in further detail below.  However, all that is happening is a `RegExp` is provide which specifies the path to one or more feature files, it sets the reporters to the `ProgressReporter` report which prints the result of scenarios and steps to the standard output (console).  The `TestRunSummaryReporter` prints a summary of the run once all tests have been executed.  Finally it specifies the path to the testable app created above `test_driver/app.dart` .  This is important as it instructions the library which app to run the tests against.
 
 Finally to actually run the tests run the below on the command line:
 
-```bash
+``` bash
 dart test_driver/app_test.dart
 ```
 
@@ -323,7 +322,7 @@ The parameters below can be specified in your configuration file:
 
 *Required*
 
-An iterable of `Glob` patterns that specify the location(s) of `*.feature` files to run.  See <https://pub.dartlang.org/packages/glob>
+An iterable of `Pattern` that specify the location(s) of `*.feature` files to run.  See <https://api.dart.dev/stable/2.12.4/dart-core/Pattern-class.html>
 
 #### tagExpression
 
@@ -334,31 +333,27 @@ An infix boolean expression which defines the features and scenarios to run base
 #### order
 
 Defaults to `ExecutionOrder.random`
-
-The order by which scenarios will be run. Running an a random order may highlight any inter-test dependencies that should be fixed.
+The order by which scenarios will be run. Running an a random order may highlight any inter-test dependencies that should be fixed.  Running with `ExecutionOrder.sorted` processes the feature files in `filename` order.
 
 #### stepDefinitions
 
 Defaults to `Iterable<StepDefinitionBase>`
-
 Place instances of any custom step definition classes `Given` , `Then` , `When` , `And` , `But` that match to any custom steps defined in your feature files.
 
-```dart
+``` dart
 import 'dart:async';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'package:gherkin/gherkin.dart';
-import 'package:glob/glob.dart';
 import 'steps/given_I_pick_a_colour_step.dart';
 import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/**.feature")]
+    ..features = [RegExp('features/*.*.feature')]
     ..reporters = [StdoutReporter()]
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..restartAppBetweenScenarios = true
-    ..targetAppPath = "test_driver/app.dart"
-    ..exitAfterTestRun = true; // set to false if debugging to exit cleanly
+    ..targetAppPath = "test_driver/app.dart";
   return GherkinRunner().execute(config);
 }
 ```
@@ -366,13 +361,11 @@ Future<void> main() {
 #### defaultLanguage
 
 Defaults to `en`
-
 This specifies the default language the feature files are written in.  See https://cucumber.io/docs/gherkin/reference/#overview for supported languages.
 
 Note that this can be overridden in the feature itself by the use of a language block.
 
-```
-
+``` 
 # language: de
 Funktionalität: Calculator
   Tests the addition of two numbers
@@ -390,8 +383,7 @@ Funktionalität: Calculator
       | 20.937     | -1.937     | 19     |
 ```
 
-```
-
+``` 
 # language: fr
 Fonctionnalité: Counter
   The counter should be incremented when the button is pressed.
@@ -410,24 +402,23 @@ Defaults to `CustomParameter<dynamic>` .
 
 Place instances of any custom step parameters that you have defined.  These will be matched up to steps when scenarios are run and their result passed to the executable step.  See [Custom Parameters](#custom-parameters).
 
-```dart
+``` dart
 import 'dart:async';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'package:gherkin/gherkin.dart';
-import 'package:glob/glob.dart';
 import 'steps/given_I_pick_a_colour_step.dart';
 import 'steps/tap_button_n_times_step.dart';
 import 'steps/colour_parameter.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/**.feature")]
+    ..features = [RegExp('features/*.*.feature')]
     ..reporters = [StdoutReporter()]
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..customStepParameterDefinitions = [ColourParameter()]
     ..restartAppBetweenScenarios = true
-    ..targetAppPath = "test_driver/app.dart"
-    ..exitAfterTestRun = true; // set to false if debugging to exit cleanly
+    ..targetAppPath = "test_driver/app.dart";
+
   return GherkinRunner().execute(config);
 }
 ```
@@ -442,7 +433,7 @@ Attachment are pieces of data you can attach to a running scenario.  This could 
 
 Attachments would typically be attached via a `Hook` for example `onAfterStep` .
 
-```dart
+``` dart
 import 'package:gherkin/gherkin.dart';
 
 class AttachScreenshotOnFailedStepHook extends Hook {
@@ -461,11 +452,10 @@ class AttachScreenshotOnFailedStepHook extends Hook {
 
 To take a screenshot on a step failing you can used the pre-defined hook `AttachScreenshotOnFailedStepHook` and include it in the hook configuration of the tests config.  This hook will take a screenshot and add it as an attachment to the scenario.  If the `JsonReporter` is being used the screenshot will be embedded in the report which can be used to generate a HTML report which will ultimately display the screenshot under the failed step.
 
-```dart
+``` dart
 import 'dart:async';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'package:gherkin/gherkin.dart';
-import 'package:glob/glob.dart';
 import 'hooks/hook_example.dart';
 import 'steps/colour_parameter.dart';
 import 'steps/given_I_pick_a_colour_step.dart';
@@ -473,7 +463,7 @@ import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/**.feature")]
+    ..features = [RegExp('features/*.*.feature')]
     ..reporters = [
       ProgressReporter(),
       TestRunSummaryReporter(),
@@ -483,8 +473,8 @@ Future<void> main() {
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..customStepParameterDefinitions = [ColourParameter()]
     ..restartAppBetweenScenarios = true
-    ..targetAppPath = "test_driver/app.dart"
-    ..exitAfterTestRun = true; // set to false if debugging to exit cleanly
+    ..targetAppPath = "test_driver/app.dart";
+
   return GherkinRunner().execute(config);
 }
 ```
@@ -501,9 +491,8 @@ You should provide at least one reporter in the configuration otherwise it'll be
 
 *Note*: Feel free to PR new reporters!
 
-```dart
+``` dart
 import 'dart:async';
-import 'package:glob/glob.dart';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'steps/colour_parameter.dart';
 import 'steps/given_I_pick_a_colour_step.dart';
@@ -511,13 +500,13 @@ import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/**.feature")]
+    ..features = [RegExp('features/*.*.feature')]
     ..reporters = [StdoutReporter()]
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..customStepParameterDefinitions = [ColourParameter()]
     ..restartAppBetweenScenarios = true
-    ..targetAppPath = "test_driver/app.dart"
-    ..exitAfterTestRun = true;
+    ..targetAppPath = "test_driver/app.dart";
+
   return GherkinRunner().execute(config);
 }
 ```
@@ -528,22 +517,21 @@ Defaults to `null` .
 
 While it is not recommended so share state between steps within the same scenario we all in fact live in the real world and thus at time may need to share certain information such as login credentials etc for future steps to use.  The world context object is created once per scenario and then destroyed at the end of each scenario.  This configuration property allows you to specify a custom `World` class to create which can then be accessed in your step classes.
 
-```dart
+``` dart
 import 'dart:async';
-import 'package:glob/glob.dart';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'steps/given_I_pick_a_colour_step.dart';
 import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/**.feature")]
+    ..features = [RegExp('features/*.*.feature')]
     ..reporters = [StdoutReporter()]
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..createWorld = (TestConfiguration config) async => await createMyWorldInstance(config)
     ..restartAppBetweenScenarios = true
-    ..targetAppPath = "test_driver/app.dart"
-    ..exitAfterTestRun = true;
+    ..targetAppPath = "test_driver/app.dart";
+    
   return GherkinRunner().execute(config);
 }
 ```
@@ -551,13 +539,11 @@ Future<void> main() {
 #### logFlutterProcessOutput
 
 Defaults to `false`
-
 If `true` the output from the flutter process is logged to the stdout / stderr streams.  Useful when debugging app build or start failures
 
 #### flutterBuildTimeout
 
 Defaults to `90 seconds`
-
 Specifies the period of time to wait for the Flutter build to complete and the app to be installed and in a state to be tested.  Slower machines may need longer than the default 90 seconds to complete this process.
 
 #### onBeforeFlutterDriverConnect
@@ -571,20 +557,12 @@ An async method that is called after a successful attempt by Flutter driver to c
 #### flutterDriverMaxConnectionAttempts
 
 Defaults to `3`
-
 Specifies the number of Flutter driver connection attempts to a running app before the test is aborted
 
 #### flutterDriverReconnectionDelay
 
 Defaults to `2 seconds`
-
 Specifies the amount of time to wait after a failed Flutter driver connection attempt to the running app
-
-#### exitAfterTestRun
-
-Defaults to `true`
-
-True to exit the program after all tests have run.  You may want to set this to false during debugging.
 
 ### Flutter specific configuration options
 
@@ -599,19 +577,16 @@ To avoid tests starting on an app changed by a previous test it is suggested tha
 #### targetAppPath
 
 Defaults to `lib/test_driver/app.dart`
-
 This should point to the *testable* application that enables the Flutter driver extensions and thus is able to be automated.  This application wil be started when the test run is started and restarted if the `restartAppBetweenScenarios` configuration property is set to true.
 
 #### build
 
 Defaults to `true`
-
 This optional argument lets you specify if the target application should be built prior to running the first test.  This defaults to `true`
 
 #### keepAppRunningAfterTests
 
 Defaults to `false`
-
 This optional argument will keep the Flutter application running when done testing.  This defaults to `false`
 
 #### buildFlavor
@@ -622,9 +597,15 @@ This optional argument lets you specify which flutter flavor you want to test ag
 
 #### buildMode
 
-Defaults to `BuildMode. Debug`
+Defaults to `BuildMode.Debug`
 
 This optional argument lets you specify which build mode you prefer while compiling your app. Flutter Gherkin supports `--debug` and `--profile` modes. Check [Flutter's build modes](https://flutter.dev/docs/testing/build-modes) documentation for more details.
+
+#### dartDefineArgs
+
+Defaults to `[]`
+
+`--dart-define` args to pass into the build parameters. Include the name and value for each. For example, `--dart-define=MY_VAR="true"` becomes `['MY_VAR="true"']`
 
 #### targetDeviceId
 
@@ -636,7 +617,6 @@ This optional argument lets you specify device target id as `flutter run --devic
 
 An observatory url that the test runner can connect to instead of creating a new running instance of the target application
 The url takes the form of `http://127.0.0.1:51540/EM72VtRsUV0=/` and usually printed to stdout in the form `Connecting to service protocol: http://127.0.0.1:51540/EM72VtRsUV0=/`
-
 You will have to add the `--verbose` flag to the command to start your flutter app to see this output and ensure `enableFlutterDriverExtension()` is called by the running app
 
 ## Features Files
@@ -647,7 +627,7 @@ Step definitions are the coded representation of a textual step in a feature fil
 
 Note: Step definitions (in this implementation) are allowed up to 5 input parameters.  If you find yourself needing more than this you might want to consider making your step more isolated or using a `Table` parameter.
 
-```dart
+``` dart
 Given there are 6 kangaroos
 Then there are 6 kangaroos
 ```
@@ -660,13 +640,13 @@ However, the domain language you choose will influence what keyword works best i
 
 To implement a `Given` step you can inherit from the ` `  ` Given `  ` ` class.
 
-```dart
+``` dart
 Given Bob has logged in
 ```
 
 Would be implemented like so:
 
-```dart
+``` dart
 import 'package:gherkin/gherkin.dart';
 
 StepDefinitionGeneric GivenWellKnownUserIsLoggedIn() {
@@ -681,7 +661,7 @@ StepDefinitionGeneric GivenWellKnownUserIsLoggedIn() {
 
 If you need to have more than one Given in a block it is often best to use the additional keywords `And` or `But` .
 
-```dart
+``` dart
 Given Bob has logged in
 And opened the dashboard
 ```
@@ -690,13 +670,13 @@ And opened the dashboard
 
 `Then` steps are used to describe an expected outcome, or result.  They would typically have an assertion in which can pass or fail.
 
-```dart
+``` dart
 Then I expect 10 apples
 ```
 
 Would be implemented like so:
 
-```dart
+``` dart
 import 'package:gherkin/gherkin.dart';
 
 StepDefinitionGeneric ThenExpectAppleCount() {
@@ -721,7 +701,7 @@ By default a step will timeout if it exceed the `defaultTimeout` parameter in th
 
 For example, the below sets the step's timeout to 10 seconds.
 
-```dart
+``` dart
 import 'package:flutter_driver/flutter_driver.dart';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'package:gherkin/gherkin.dart';
@@ -735,8 +715,6 @@ StepDefinitionGeneric TapButtonNTimesStep() {
         await FlutterDriverUtils.tap(context.world.driver, locator);
       }
     },
-    configuration: StepDefinitionConfiguration()
-      ..timeout = const Duration(seconds: 10),
   );
 }
 ```
@@ -747,7 +725,7 @@ Multiline strings can follow a step and will be give to the step it proceeds as 
 
 For example:
 
-```dart
+``` dart
 Given I provide the following "review" comment
 """
 Some long review comment.
@@ -764,7 +742,7 @@ Maybe even include some numbers
 
 The matching step definition would then be:
 
-```dart
+``` dart
 import 'package:gherkin/gherkin.dart';
 
 StepDefinitionGeneric GivenTheMultiLineComment() {
@@ -779,7 +757,7 @@ StepDefinitionGeneric GivenTheMultiLineComment() {
 
 #### Data tables
 
-```dart
+``` dart
 import 'package:gherkin/gherkin.dart';
 
 /// This step expects a multiline string proceeding it
@@ -837,7 +815,7 @@ While the well know step parameter will be sufficient in most cases there are ti
 
 The below custom parameter defines a regex that matches the words "red", "green" or "blue". The matches word is passed into the function which is then able to convert the string into a Color object.  The name of the custom parameter is used to identity the parameter within the step text.  In the below example the word "colour" is used.  This is combined with the pre / post prefixes (which default to "{" and "}") to match to the custom parameter.
 
-```dart
+``` dart
 import 'package:gherkin/gherkin.dart';
 
 enum Colour { red, green, blue }
@@ -859,7 +837,7 @@ class ColourParameter extends CustomParameter<Colour> {
 
 The step definition would then use this custom parameter like so:
 
-```dart
+``` dart
 import 'package:gherkin/gherkin.dart';
 import 'colour_parameter.dart';
 
@@ -886,17 +864,12 @@ Tags are a great way of organizing your features and marking them with filterabl
 You can filter the scenarios by providing a tag expression to your configuration file.  Tag expression are simple infix expressions such as:
 
  `@smoke`
-
  `@smoke and @perf`
-
  `@billing or @onboarding`
-
  `@smoke and not @ignore`
-
 You can even us brackets to ensure the order of precedence
 
  `@smoke and not (@ignore or @todo)`
-
 You can use the usual boolean statement "and", "or", "not"
 
 Also see <https://docs.cucumber.io/cucumber/api/#tags>
@@ -909,8 +882,7 @@ You can set the default language of feature files in your project via the config
 
 For example these two features are the same the keywords are just written in different languages. Note the ` `  ` # language: de `  ` ` on the second feature.  English is the default language.
 
-```
-
+``` 
 Feature: Calculator
   Tests the addition of two numbers
 
@@ -928,8 +900,7 @@ Feature: Calculator
 
 ```
 
-```
-
+``` 
 # language: de
 Funktionalität: Calculator
   Tests the addition of two numbers
@@ -961,7 +932,7 @@ A hook is a point in the execution that custom code can be run.  Hooks can be ru
 
 To create a hook is easy.  Just inherit from `Hook` and override the method(s) that signifies the point in the process you want to run code at. Note that not all methods need to be override, just the points at which you want to run custom code.
 
-```dart
+``` dart
 import 'package:gherkin/gherkin.dart';
 
 class HookExample extends Hook {
@@ -1000,24 +971,22 @@ class HookExample extends Hook {
 
 Finally ensure the hook is added to the hook collection in your configuration file.
 
-```dart
+``` dart
 import 'dart:async';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'package:gherkin/gherkin.dart';
-import 'package:glob/glob.dart';
 import 'hooks/hook_example.dart';
 import 'steps/given_I_pick_a_colour_step.dart';
 import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/**.feature")]
+    ..features = [RegExp('features/*.*.feature')]
     ..reporters = [ProgressReporter()]
     ..hooks = [HookExample()]
     ..stepDefinitions = [TapButtonNTimesStep(), GivenIPickAColour()]
     ..restartAppBetweenScenarios = true
-    ..targetAppPath = "test_driver/app.dart"
-    ..exitAfterTestRun = true;
+    ..targetAppPath = "test_driver/app.dart";
   return GherkinRunner().execute(config);
 }
 
@@ -1097,7 +1066,7 @@ For convenience the library provides a static `FlutterDriverUtils` class that ab
 
 In VSCode simply add add this block to your launch.json file (if you testable app is called `app_test.dart` and within the `test_driver` folder, if not replace that with the correct file path).  Don't forget to put a break point somewhere!
 
-```json
+``` json
 {
   "name": "Debug Features Tests",
   "request": "launch",
@@ -1109,7 +1078,7 @@ In VSCode simply add add this block to your launch.json file (if you testable ap
 
 After which the file will most likely look like this
 
-```json
+``` json
 {
   // Use IntelliSense to learn about possible attributes.
   // Hover to view descriptions of existing attributes.
@@ -1139,3 +1108,78 @@ Setting the configuration property `runningAppProtocolEndpointUri` to the servic
 NOTE: ensure the app you are trying to connect to calls `enableFlutterDriverExtension()` when it starts up otherwise the Flutter Driver will not be able to connect to it.
 
 Also ensure that the `--verbose` flag is set when starting the app to test, this will then log the service protocol endpoint out to the console which is the uri you will need to set this property to.  It usually takes the form of `Connecting to service protocol: http://127.0.0.1:51540/EM72VtRsUV0=/` so set the `runningAppProtocolEndpointUri` to `http://127.0.0.1:51540/EM72VtRsUV0=/` and then start the tests.
+
+##### Interactive debugging
+One way to configure your test environment is to run the app under test in a separate terminal and run the gherkin in a different terminal. With this approach you can hot reload the app by entering `R` in the app terminal and run the steps repeatedly in the other terminal **with out** incurring the cost of the app start up.
+
+For the app under test, in this case `lib/main_test.dart`, it should look similar to this:
+
+```
+import 'package:flutter/material.dart';
+import 'package:flutter_driver/driver_extension.dart';
+void main() {
+  enableFlutterDriverExtension();
+runApp();
+```
+
+When you start this from the terminal, run like this:
+
+` flutter run -t lib/main_test.dart --verbose`
+
+As stated above, with the `--verbose` flag, you will want to find the service protocol endpoint.
+You should see similar output as this:
+
+```
+.....
+Connecting to service protocol: http://127.0.0.1:61658/RtsPT2zp_qs=/
+.....
+Flutter run key commands.
+[ +2 ms] r Hot reload. 🔥🔥🔥
+[ +1 ms] R Hot restart.
+[ ] h Repeat this help message.
+[ ] d Detach (terminate "flutter run" but leave application running).
+[ ] c Clear the screen
+[ ] q Quit (terminate the application on the device).
+[ ] An Observatory debugger and profiler on iPhone 8 Plus is available at: http://127.0.0.1:61660/xgrsw_qQ9sI=/
+[ ] Running with unsound null safety
+[ ] For more information see https://dart.dev/null-safety/unsound-null-safety
+```
+
+To run the gherkin tests, first update the `test_driver/app_test.dart` to something similar to this:
+
+```
+import 'dart:async';
+import 'dart:io';
+import 'package:flutter_gherkin/flutter_gherkin.dart';
+import 'package:gherkin/gherkin.dart';
+Future<void> main(List<String> args) async {
+if (args.isEmpty) {
+  print('please pass in the uri');
+  exit(1);
+}
+final Iterable<StepDefinitionGeneric<World>> steps = [];
+final config = FlutterTestConfiguration.DEFAULT(
+  steps,
+  featurePath: 'features//**.feature',
+  targetAppPath: 'test_driver/app.dart',
+)
+  ..restartAppBetweenScenarios = false
+  ..targetAppWorkingDirectory = '../'
+  ..runningAppProtocolEndpointUri = args[0]; 
+  return GherkinRunner().execute(config);
+}
+```
+
+Start a new terminal and navigate to the `test_driver` directory. 
+
+Notice the `app_test.dart` expects a parameter. This is to ease the changing uri which will occur each time the app under test is started.  If you use the `R` command, the `uri` does not change.
+
+You can copy the `uri` from the terminal window of the app under test.
+
+Run the command `dart app_test.dart <uri>`. As an example, the app under test has this line: 
+   `Connecting to service protocol: http://127.0.0.1:61658/RtsPT2zp_qs=/` 
+so you would copy `http://127.0.0.1:61658/RtsPT2zp_qs=/` and paste it as such: 
+
+`dart app_test.dart http://127.0.0.1:59862/luEyFXvK9Qc=/`.
+
+As you make changes in the app under test, just `R` (reload). In the test window you can rerun the tests and update the Scenarios quickly and easily.

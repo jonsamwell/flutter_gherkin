@@ -21,18 +21,17 @@ import 'package:flutter_gherkin/src/flutter/steps/when_pause_step.dart';
 import 'package:flutter_gherkin/src/flutter/steps/when_tap_widget_step.dart';
 import 'package:flutter_gherkin/src/flutter/steps/when_tap_the_back_button_step.dart';
 import 'package:gherkin/gherkin.dart';
-import 'package:glob/glob.dart';
 
 class FlutterTestConfiguration extends TestConfiguration {
   /// Provide a configuration object with default settings such as the reports and feature file location
   /// Additional setting on the configuration object can be set on the returned instance.
   static FlutterTestConfiguration DEFAULT(
     Iterable<StepDefinitionGeneric<World>> steps, {
-    String featurePath = 'integration_test/features/**.feature',
+    String featurePath = 'integration_test/features/*.*.feature',
     String targetAppPath = 'test_driver/integration_test_driver.dart',
   }) {
     return FlutterTestConfiguration()
-      ..features = [Glob(featurePath)]
+      ..features = [RegExp(featurePath)]
       ..reporters = [
         StdoutReporter(MessageLevel.error),
         ProgressReporter(),

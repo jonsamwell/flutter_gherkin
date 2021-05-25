@@ -7,7 +7,6 @@ import 'package:flutter_gherkin/src/flutter/world/flutter_world.dart';
 import 'package:flutter_gherkin/src/flutter/hooks/app_runner_hook.dart';
 import 'package:flutter_driver/flutter_driver.dart';
 import 'package:gherkin/gherkin.dart';
-import 'package:glob/glob.dart';
 
 import 'flutter_test_configuration.dart';
 
@@ -18,11 +17,11 @@ class FlutterDriverTestConfiguration extends FlutterTestConfiguration {
   /// Additional setting on the configuration object can be set on the returned instance.
   static FlutterDriverTestConfiguration DEFAULT(
     Iterable<StepDefinitionGeneric<World>> steps, {
-    String featurePath = 'test_driver/features/**.feature',
+    String featurePath = 'features/*.*.feature',
     String targetAppPath = 'test_driver/app.dart',
   }) {
     return FlutterDriverTestConfiguration()
-      ..features = [Glob(featurePath)]
+      ..features = [RegExp(featurePath)]
       ..reporters = [
         StdoutReporter(MessageLevel.error),
         ProgressReporter(),
@@ -45,8 +44,8 @@ class FlutterDriverTestConfiguration extends FlutterTestConfiguration {
   bool restartAppBetweenScenarios = true;
 
   /// The target app to run the tests against
-  /// Defaults to "lib/test_driver/app.dart"
-  String targetAppPath = 'lib/test_driver/app.dart';
+  /// Defaults to "test_driver/app.dart"
+  String targetAppPath = 'test_driver/app.dart';
 
   /// Option to define the working directory for the process that runs the app under test (optional)
   /// Handy if your app is separated from your tests as flutter needs to be able to find a pubspec file

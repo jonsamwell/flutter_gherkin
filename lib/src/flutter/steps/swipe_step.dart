@@ -1,4 +1,3 @@
-import 'package:meta/meta.dart';
 import 'package:flutter_driver/flutter_driver.dart';
 import 'package:flutter_gherkin/src/flutter/world/flutter_world.dart';
 import 'package:gherkin/gherkin.dart';
@@ -7,7 +6,6 @@ import '../parameters/swipe_direction_parameter.dart';
 
 mixin _SwipeHelper
     on When3WithWorld<SwipeDirection, int, String, FlutterWorld> {
-  @protected
   Future<void> swipeOnFinder(
     SerializableFinder finder,
     SwipeDirection direction,

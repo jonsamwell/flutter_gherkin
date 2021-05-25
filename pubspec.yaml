@@ -10,25 +10,24 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  integration_test:
-    sdk: flutter
-  # flutter_driver:
-  #   sdk: flutter
-  gherkin: ^2.0.2
-  # gherkin:
-    # path: ../dart_gherkin
-  # gherkin:
-  #   git:
-  #     url: https://github.com/jonsamwell/dart_gherkin.git
-  #     ref: f0b3f955191b53a78075ed2c9387ea8bee12f111
-
-dev_dependencies:
   flutter_test:
     sdk: flutter
-  meta: ^1.3.0 
-  pedantic: ^1.11.0
+  integration_test:
+    sdk: flutter
+  flutter_driver:
+    sdk: flutter
+  analyzer: ^1.5.0
+  collection: ^1.15.0
+  gherkin: ^2.0.2
   source_gen: ^1.0.0
   build: ^2.0.1
+  glob: ^2.0.1
+  # gherkin:
+    # path: ../dart_gherkin
+
+dev_dependencies:
+  meta: ^1.3.0 
+  pedantic: ^1.11.0
   build_config: ^1.0.0
 
 flutter:
