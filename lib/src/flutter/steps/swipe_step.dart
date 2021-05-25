@@ -17,7 +17,7 @@ mixin _SwipeHelper
       final offset =
           direction == SwipeDirection.right ? swipeAmount : (swipeAmount * -1);
 
-      await world.driver.scroll(
+      await world.driver?.scroll(
         finder,
         offset.toDouble(),
         0,
@@ -28,7 +28,7 @@ mixin _SwipeHelper
       final offset =
           direction == SwipeDirection.up ? swipeAmount : (swipeAmount * -1);
 
-      await world.driver.scroll(
+      await world.driver?.scroll(
         finder,
         0,
         offset.toDouble(),

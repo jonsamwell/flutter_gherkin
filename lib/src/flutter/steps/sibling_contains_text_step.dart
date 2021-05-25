@@ -32,7 +32,7 @@ StepDefinitionGeneric SiblingContainsTextStep() {
       final isPresent = await FlutterDriverUtils.isPresent(
         context.world.driver,
         valueWidget,
-        timeout: context.configuration?.timeout ?? const Duration(seconds: 20),
+        timeout: context.configuration.timeout ?? const Duration(seconds: 20),
       );
 
       context.expect(isPresent, true);

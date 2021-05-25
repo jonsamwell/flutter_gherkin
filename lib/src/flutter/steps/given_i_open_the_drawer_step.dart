@@ -18,13 +18,13 @@ StepDefinitionGeneric GivenOpenDrawer() {
       // https://github.com/flutter/flutter/issues/9002#issuecomment-293660833
       if (isOpen && action == 'close') {
         // Swipe to the left across the whole app to close the drawer
-        await context.world.driver.scroll(
+        await context.world.driver?.scroll(
             drawerFinder, -300.0, 0.0, const Duration(milliseconds: 300));
       } else if (!isOpen && action == 'open') {
         await FlutterDriverUtils.tap(
           context.world.driver,
           find.byTooltip('Open navigation menu'),
-          timeout: context.configuration?.timeout,
+          timeout: context.configuration.timeout,
         );
       }
     },

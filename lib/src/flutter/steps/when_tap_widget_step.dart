@@ -24,7 +24,7 @@ StepDefinitionGeneric WhenTapWidget() {
     (key, context) async {
       final finder = find.byValueKey(key);
 
-      await context.world.driver.scrollIntoView(
+      await context.world.driver?.scrollIntoView(
         finder,
       );
       await FlutterDriverUtils.tap(

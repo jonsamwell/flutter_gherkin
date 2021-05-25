@@ -4,12 +4,12 @@ import 'package:flutter_driver/flutter_driver.dart';
 
 class FlutterDriverUtils {
   static Future<bool> isPresent(
-    FlutterDriver driver,
+    FlutterDriver? driver,
     SerializableFinder finder, {
     Duration timeout = const Duration(seconds: 1),
   }) async {
     try {
-      await driver.waitFor(finder, timeout: timeout);
+      await driver?.waitFor(finder, timeout: timeout);
       return true;
     } catch (_) {
       return false;
@@ -17,12 +17,12 @@ class FlutterDriverUtils {
   }
 
   static Future<bool> isAbsent(
-    FlutterDriver driver,
+    FlutterDriver? driver,
     SerializableFinder finder, {
     Duration timeout = const Duration(seconds: 30),
   }) async {
     try {
-      await driver.waitForAbsent(finder, timeout: timeout);
+      await driver?.waitForAbsent(finder, timeout: timeout);
       return true;
     } catch (_) {
       return false;
@@ -30,11 +30,11 @@ class FlutterDriverUtils {
   }
 
   static Future<bool> waitForFlutter(
-    FlutterDriver driver, {
+    FlutterDriver? driver, {
     Duration timeout = const Duration(seconds: 30),
   }) async {
     try {
-      await driver.waitUntilNoTransientCallbacks(timeout: timeout);
+      await driver?.waitUntilNoTransientCallbacks(timeout: timeout);
       return true;
     } catch (_) {
       return false;
@@ -42,13 +42,13 @@ class FlutterDriverUtils {
   }
 
   static Future<void> enterText(
-    FlutterDriver driver,
+    FlutterDriver? driver,
     SerializableFinder finder,
     String text, {
     Duration timeout = const Duration(seconds: 30),
   }) async {
     await FlutterDriverUtils.tap(driver, finder, timeout: timeout);
-    await driver.enterText(text, timeout: timeout);
+    await driver?.enterText(text, timeout: timeout);
   }
 
   static Future<String> getText(
@@ -57,16 +57,16 @@ class FlutterDriverUtils {
     Duration timeout = const Duration(seconds: 30),
   }) async {
     await FlutterDriverUtils.waitForFlutter(driver, timeout: timeout);
-    final text = await driver.getText(finder, timeout: timeout);
-    return text;
+    return await driver.getText(finder, timeout: timeout);
   }
 
   static Future<void> tap(
-    FlutterDriver driver,
+    FlutterDriver? driver,
     SerializableFinder finder, {
-    Duration timeout = const Duration(seconds: 30),
+    Duration? timeout,
   }) async {
-    await driver.tap(finder, timeout: timeout);
+    timeout ??= const Duration(seconds: 30);
+    await driver?.tap(finder, timeout: timeout);
     await FlutterDriverUtils.waitForFlutter(driver, timeout: timeout);
   }
 
@@ -84,7 +84,7 @@ class FlutterDriverUtils {
   /// Will raise a complete with a [TimeoutException] if the
   /// condition does not return true with the timeout period.
   static Future<void> waitUntil(
-    FlutterDriver driver,
+    FlutterDriver? driver,
     Future<bool> Function() condition, {
     Duration timeout = const Duration(seconds: 10),
     Duration pollInterval = const Duration(milliseconds: 500),

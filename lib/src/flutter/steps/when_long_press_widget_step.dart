@@ -24,11 +24,11 @@ StepDefinitionGeneric WhenLongPressWidget() {
     (key, context) async {
       final finder = find.byValueKey(key);
 
-      await context.world.driver.scrollIntoView(
+      await context.world.driver!.scrollIntoView(
         finder,
       );
       await FlutterDriverUtils.longPress(
-        context.world.driver,
+        context.world.driver!,
         finder,
       );
     },
@@ -44,7 +44,7 @@ StepDefinitionGeneric WhenLongPressWidgetWithoutScroll() {
       final finder = find.byValueKey(key);
 
       await FlutterDriverUtils.longPress(
-        context.world.driver,
+        context.world.driver!,
         finder,
       );
     },
@@ -59,11 +59,11 @@ StepDefinitionGeneric WhenLongPressWidgetForDuration() {
     (key, milliseconds, context) async {
       final finder = find.byValueKey(key);
 
-      await context.world.driver.scrollIntoView(
+      await context.world.driver!.scrollIntoView(
         finder,
       );
       await FlutterDriverUtils.longPress(
-        context.world.driver,
+        context.world.driver!,
         finder,
         pressDuration: Duration(milliseconds: milliseconds),
       );

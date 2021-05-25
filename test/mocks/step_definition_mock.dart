@@ -5,7 +5,7 @@ typedef OnRunCode = Future<void> Function(Iterable parameters);
 class MockStepDefinition extends StepDefinitionBase<World> {
   bool hasRun = false;
   int runCount = 0;
-  final OnRunCode code;
+  final OnRunCode? code;
 
   MockStepDefinition([this.code, int expectedParameterCount = 0])
       : super(null, expectedParameterCount);
@@ -15,10 +15,10 @@ class MockStepDefinition extends StepDefinitionBase<World> {
     hasRun = true;
     runCount += 1;
     if (code != null) {
-      await code(parameters);
+      await code!(parameters);
     }
   }
 
   @override
-  RegExp get pattern => null;
+  RegExp get pattern => RegExp('');
 }

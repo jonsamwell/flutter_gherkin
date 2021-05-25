@@ -19,7 +19,7 @@ StepDefinitionGeneric ThenExpectElementToHaveValue() {
     (key, value, context) async {
       try {
         final text = await FlutterDriverUtils.getText(
-          context.world.driver,
+          context.world.driver!,
           find.byValueKey(key),
         );
         context.expect(text, value);

@@ -30,7 +30,7 @@ import 'steps/then_expect_widget_to_be_present_step.dart';
 import 'steps/when_long_press_widget_step.dart';
 
 class FlutterTestConfiguration extends TestConfiguration {
-  String _observatoryDebuggerUri;
+  String? _observatoryDebuggerUri;
 
   /// Provide a configuration object with default settings such as the reports and feature file location
   /// Additional setting on the configuration object can be set on the returned instance.
@@ -54,7 +54,8 @@ class FlutterTestConfiguration extends TestConfiguration {
       ]
       ..targetAppPath = targetAppPath
       ..stepDefinitions = steps
-      ..restartAppBetweenScenarios = true;
+      ..restartAppBetweenScenarios = true
+      ..stopAfterTestFailed = true;
   }
 
   /// restarts the application under test between each scenario.
@@ -68,7 +69,7 @@ class FlutterTestConfiguration extends TestConfiguration {
 
   /// Option to define the working directory for the process that runs the app under test (optional)
   /// Handy if your app is separated from your tests as flutter needs to be able to find a pubspec file
-  String targetAppWorkingDirectory;
+  String? targetAppWorkingDirectory;
 
   /// The build flavor to run the tests against (optional)
   /// Defaults to empty
@@ -121,19 +122,19 @@ class FlutterTestConfiguration extends TestConfiguration {
   /// An observatory url that the test runner can connect to instead of creating a new running instance of the target application
   /// Url takes the form of `http://127.0.0.1:51540/EM72VtRsUV0=/` and usually printed to stdout in the form `Connecting to service protocol: http://127.0.0.1:51540/EM72VtRsUV0=/`
   /// You will have to add the `--verbose` flag to the command to start your flutter app to see this output and ensure `enableFlutterDriverExtension()` is called by the running app
-  String runningAppProtocolEndpointUri;
+  String? runningAppProtocolEndpointUri;
 
   /// Called before any attempt to connect Flutter driver to the running application,  Depending on your configuration this
   /// method will be called before each scenario is run.
-  Future<void> Function() onBeforeFlutterDriverConnect;
+  Future<void> Function()? onBeforeFlutterDriverConnect;
 
   /// Called after the successful connection of Flutter driver to the running application.  Depending on your configuration this
   /// method will be called on each new connection usually before each scenario is run.
-  Future<void> Function(FlutterDriver driver) onAfterFlutterDriverConnect;
+  Future<void> Function(FlutterDriver driver)? onAfterFlutterDriverConnect;
 
   void setObservatoryDebuggerUri(String uri) => _observatoryDebuggerUri = uri;
 
-  Future<FlutterDriver> createFlutterDriver([String dartVmServiceUrl]) async {
+  Future<FlutterDriver> createFlutterDriver([String? dartVmServiceUrl]) async {
     final completer = Completer<FlutterDriver>();
     dartVmServiceUrl = (dartVmServiceUrl ?? _observatoryDebuggerUri) ??
         Platform.environment['VM_SERVICE_URL'];
@@ -141,12 +142,12 @@ class FlutterTestConfiguration extends TestConfiguration {
     await runZonedGuarded(
       () async {
         if (onBeforeFlutterDriverConnect != null) {
-          await onBeforeFlutterDriverConnect();
+          await onBeforeFlutterDriverConnect!();
         }
 
-        final driver = await _attemptDriverConnection(dartVmServiceUrl, 1, 3);
+        final driver = await _attemptDriverConnection(dartVmServiceUrl!, 1, 3);
         if (onAfterFlutterDriverConnect != null) {
-          await onAfterFlutterDriverConnect(driver);
+          await onAfterFlutterDriverConnect!(driver);
         }
 
         completer.complete(driver);
@@ -163,14 +164,14 @@ class FlutterTestConfiguration extends TestConfiguration {
 
   Future<FlutterWorld> createFlutterWorld(
     TestConfiguration config,
-    FlutterWorld world,
+    FlutterWorld? world,
   ) async {
     var flutterConfig = config as FlutterTestConfiguration;
     world = world ?? FlutterWorld();
 
     final driver = await createFlutterDriver(
       flutterConfig.runningAppProtocolEndpointUri != null &&
-              flutterConfig.runningAppProtocolEndpointUri.isNotEmpty
+              flutterConfig.runningAppProtocolEndpointUri!.isNotEmpty
           ? flutterConfig.runningAppProtocolEndpointUri
           : null,
     );
@@ -185,22 +186,22 @@ class FlutterTestConfiguration extends TestConfiguration {
     _ensureCorrectConfiguration();
     final providedCreateWorld = createWorld;
     createWorld = (config) async {
-      FlutterWorld world;
+      FlutterWorld? world;
       if (providedCreateWorld != null) {
-        world = await providedCreateWorld(config);
+        world = (await providedCreateWorld(config)) as FlutterWorld;
       }
 
       return await createFlutterWorld(config, world);
     };
 
-    hooks = List.from(hooks ?? [])..add(FlutterAppRunnerHook());
+    hooks = List.from(hooks ?? <Hook>[])..add(FlutterAppRunnerHook());
     customStepParameterDefinitions =
-        List.from(customStepParameterDefinitions ?? [])
+        List.from(customStepParameterDefinitions ?? <CustomParameter>[])
           ..addAll([
             ExistenceParameter(),
             SwipeDirectionParameter(),
           ]);
-    stepDefinitions = List.from(stepDefinitions ?? [])
+    stepDefinitions = List.from(stepDefinitions ?? <StepDefinitionGeneric>[])
       ..addAll([
         ThenExpectElementToHaveValue(),
         WhenTapBackButtonWidget(),
@@ -257,13 +258,13 @@ class FlutterTestConfiguration extends TestConfiguration {
 
   void _ensureCorrectConfiguration() {
     if (runningAppProtocolEndpointUri != null &&
-        runningAppProtocolEndpointUri.isNotEmpty) {
+        runningAppProtocolEndpointUri!.isNotEmpty) {
       if (restartAppBetweenScenarios) {
         throw AssertionError(
             'Cannot restart app between scenarios if using runningAppProtocolEndpointUri');
       }
 
-      if (targetDeviceId != null && targetDeviceId.isNotEmpty) {
+      if (targetDeviceId.isNotEmpty) {
         throw AssertionError(
             'Cannot target specific device id if using runningAppProtocolEndpointUri');
       }

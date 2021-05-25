@@ -4,10 +4,10 @@ import 'package:gherkin/gherkin.dart';
 import 'flutter_run_process_handler.dart';
 
 class FlutterWorld extends World {
-  FlutterDriver _driver;
-  FlutterRunProcessHandler _flutterRunProcessHandler;
+  FlutterDriver? _driver;
+  FlutterRunProcessHandler? _flutterRunProcessHandler;
 
-  FlutterDriver get driver => _driver;
+  FlutterDriver? get driver => _driver;
 
   void setFlutterDriver(FlutterDriver flutterDriver) {
     _driver = flutterDriver;
@@ -18,16 +18,15 @@ class FlutterWorld extends World {
     _flutterRunProcessHandler = flutterRunProcessHandler;
   }
 
-  Future<bool> restartApp({
-    Duration timeout = const Duration(seconds: 60),
-  }) async {
+  Future<bool?> restartApp({Duration? timeout}) async {
+    timeout ??= const Duration(seconds: 60);
     await _closeDriver(timeout: timeout);
     final result = await _flutterRunProcessHandler?.restart(
       timeout: timeout,
     );
 
     _driver = await FlutterDriver.connect(
-      dartVmServiceUrl: _flutterRunProcessHandler.currentObservatoryUri,
+      dartVmServiceUrl: _flutterRunProcessHandler?.currentObservatoryUri,
     );
 
     return result;
@@ -45,7 +44,7 @@ class FlutterWorld extends World {
   }) async {
     try {
       if (_driver != null) {
-        await _driver.close().catchError(
+        await _driver?.close().catchError(
           (e, st) {
             // Avoid an unhandled error
             return null;
