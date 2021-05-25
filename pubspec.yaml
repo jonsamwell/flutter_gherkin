@@ -15,7 +15,7 @@ dependencies:
   flutter_driver:
     sdk: flutter
   meta: ">=1.1.6 <2.0.0"
-  gherkin: ^2.0.1
+  gherkin: ^2.0.2
   # gherkin:
   #   path: ../dart_gherkin
 

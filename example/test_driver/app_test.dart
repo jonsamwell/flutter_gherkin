@@ -24,6 +24,8 @@ Future<void> main() {
     ..customStepParameterDefinitions = [
       ColourParameter(),
     ]
+    ..logFlutterProcessOutput = true
+    ..verboseFlutterProcessLogs = true
     ..restartAppBetweenScenarios = true
     ..targetAppWorkingDirectory = '../'
     ..targetAppPath = 'test_driver/app.dart';

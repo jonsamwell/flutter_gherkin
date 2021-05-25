@@ -7,13 +7,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Counter App',
-      home: MyHomePage(title: 'Counter App Home Page'),
+      home: MyHomePage('Counter App Home Page'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage(this.title) : super();
 
   final String title;
 

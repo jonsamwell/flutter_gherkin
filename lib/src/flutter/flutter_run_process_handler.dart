@@ -11,8 +11,9 @@ class FlutterRunProcessHandler extends ProcessHandler {
 
   // the flutter process usually outputs something like the below to indicate the app is ready to be connected to
   // `An Observatory debugger and profiler on AOSP on IA Emulator is available at: http://127.0.0.1:51322/BI_fyYaeoCE=/`
+  // `Observatory URL on device: http://127.0.0.1:37849/t2xp9hvaxNs=/`
   static final RegExp _observatoryDebuggerUriRegex = RegExp(
-    r'observatory (?:debugger|url) .* available .*[:]? (http[s]?:.*\/).*',
+    r'observatory .*[:] (http[s]?:.*\/).*',
     caseSensitive: false,
     multiLine: false,
   );

@@ -186,7 +186,7 @@ class FlutterTestConfiguration extends TestConfiguration {
     _ensureCorrectConfiguration();
     final providedCreateWorld = createWorld;
     createWorld = (config) async {
-      late FlutterWorld? world;
+      FlutterWorld? world;
       if (providedCreateWorld != null) {
         world = (await providedCreateWorld(config)) as FlutterWorld;
       }
