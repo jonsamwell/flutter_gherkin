@@ -18,7 +18,7 @@ class WidgetTesterAppDriverAdapter
     Duration? timeout = const Duration(seconds: 30),
   }) async {
     try {
-      return await rawDriver.pumpAndSettle(
+      return await nativeDriver.pumpAndSettle(
         duration!,
       );
     } catch (_) {
@@ -32,7 +32,7 @@ class WidgetTesterAppDriverAdapter
     ExpectedWidgetResultType expectResultType = ExpectedWidgetResultType.first,
   ]) {
     try {
-      final element = rawDriver.widget<T>(finder);
+      final element = nativeDriver.widget<T>(finder);
 
       return Future.value(element);
     } on StateError {
@@ -44,7 +44,7 @@ class WidgetTesterAppDriverAdapter
 
   @override
   Future<List<int>> screenshot() {
-    var renderObject = rawDriver.binding.renderViewElement?.renderObject;
+    var renderObject = nativeDriver.binding.renderViewElement?.renderObject;
 
     while (renderObject != null && !renderObject.isRepaintBoundary) {
       renderObject = renderObject.parent as RenderObject;
@@ -105,7 +105,7 @@ class WidgetTesterAppDriverAdapter
       finder,
       timeout: timeout,
     );
-    await rawDriver.enterText(
+    await nativeDriver.enterText(
       finder,
       text,
     );
@@ -119,7 +119,7 @@ class WidgetTesterAppDriverAdapter
     Finder finder, {
     Duration? timeout = const Duration(seconds: 30),
   }) async {
-    await rawDriver.tap(finder);
+    await nativeDriver.tap(finder);
     await waitForAppToSettle(
       timeout: timeout,
     );
@@ -154,11 +154,11 @@ class WidgetTesterAppDriverAdapter
       find.byType(Scrollable).first,
       matchRoot: true,
     );
-    final state = rawDriver.state(scrollableFinder) as ScrollableState;
+    final state = nativeDriver.state(scrollableFinder) as ScrollableState;
     final position = state.position;
     position.jumpTo(dy ?? dx ?? 0);
 
-    await rawDriver.pump();
+    await nativeDriver.pump();
   }
 
   @override
@@ -214,7 +214,7 @@ class WidgetTesterAppDriverAdapter
     double? dy,
     Duration? timeout = const Duration(seconds: 30),
   }) async {
-    await rawDriver.scrollUntilVisible(
+    await nativeDriver.scrollUntilVisible(
       item,
       dy ?? dx ?? 0,
       scrollable: scrollable,
@@ -226,13 +226,13 @@ class WidgetTesterAppDriverAdapter
     Finder finder, {
     Duration? timeout = const Duration(seconds: 30),
   }) async {
-    await rawDriver.ensureVisible(finder);
+    await nativeDriver.ensureVisible(finder);
     await waitForAppToSettle();
   }
 
   @override
   Future<void> pageBack() async {
-    await rawDriver.pageBack();
+    await nativeDriver.pageBack();
     await waitForAppToSettle();
   }
 }

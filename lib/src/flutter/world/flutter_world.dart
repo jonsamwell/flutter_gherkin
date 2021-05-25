@@ -34,7 +34,7 @@ class FlutterTypedAdapterWorld<TDriver, TFinder, TWidget> extends FlutterWorld {
   /// It is suggested you use `appDriver` for all interactions with the app under tests
   /// however if you need a specific api not available on `appDriver` this property
   /// exposes the actual class that can interact with the app under test
-  TDriver get rawAppDriver => _adapter!.rawDriver as TDriver;
+  TDriver get rawAppDriver => _adapter!.nativeDriver as TDriver;
 
   /// The adapter that is used to agnostically drive the app under test
   @override

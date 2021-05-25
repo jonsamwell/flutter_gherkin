@@ -13,14 +13,14 @@ enum ExpectedWidgetResultType {
   list,
 }
 
-abstract class AppDriverAdapter<TRawAdapter, TFinderType, TWidgetBaseType> {
-  TRawAdapter _driver;
+abstract class AppDriverAdapter<TNativeAdapter, TFinderType, TWidgetBaseType> {
+  TNativeAdapter _driver;
 
   AppDriverAdapter(this._driver);
 
-  TRawAdapter get rawDriver => _driver;
+  TNativeAdapter get nativeDriver => _driver;
 
-  void setRawDriver(TRawAdapter driver) {
+  void setNativeDriver(TNativeAdapter driver) {
     _driver = driver;
   }
 

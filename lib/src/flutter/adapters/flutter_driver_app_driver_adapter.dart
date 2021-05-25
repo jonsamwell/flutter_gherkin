@@ -14,7 +14,7 @@ class FlutterDriverAppDriverAdapter
     Duration? timeout = const Duration(seconds: 30),
   }) async {
     try {
-      await rawDriver.waitUntilNoTransientCallbacks(timeout: timeout);
+      await nativeDriver.waitUntilNoTransientCallbacks(timeout: timeout);
     } catch (_) {
       return 1;
     }
@@ -34,7 +34,7 @@ class FlutterDriverAppDriverAdapter
 
   @override
   void dispose() {
-    rawDriver.close().catchError(
+    nativeDriver.close().catchError(
       (e, st) {
         // Avoid an unhandled error
         return null;
@@ -44,7 +44,7 @@ class FlutterDriverAppDriverAdapter
 
   @override
   Future<List<int>> screenshot() {
-    return rawDriver.screenshot();
+    return nativeDriver.screenshot();
   }
 
   @override
@@ -53,7 +53,7 @@ class FlutterDriverAppDriverAdapter
     Duration? timeout = const Duration(seconds: 1),
   }) async {
     try {
-      await rawDriver.waitFor(
+      await nativeDriver.waitFor(
         finder,
         timeout: timeout,
       );
@@ -69,7 +69,7 @@ class FlutterDriverAppDriverAdapter
     Duration? timeout = const Duration(seconds: 1),
   }) async {
     try {
-      await rawDriver.waitForAbsent(
+      await nativeDriver.waitForAbsent(
         finder,
         timeout: timeout,
       );
@@ -86,7 +86,7 @@ class FlutterDriverAppDriverAdapter
   }) async {
     await waitForAppToSettle(timeout: timeout);
 
-    return await rawDriver.getText(
+    return await nativeDriver.getText(
       finder,
       timeout: timeout,
     );
@@ -102,7 +102,7 @@ class FlutterDriverAppDriverAdapter
       finder,
       timeout: timeout,
     );
-    await rawDriver.enterText(
+    await nativeDriver.enterText(
       text,
       timeout: timeout,
     );
@@ -113,7 +113,7 @@ class FlutterDriverAppDriverAdapter
     SerializableFinder finder, {
     Duration? timeout = const Duration(seconds: 30),
   }) async {
-    await rawDriver.tap(finder, timeout: timeout);
+    await nativeDriver.tap(finder, timeout: timeout);
     await waitForAppToSettle(timeout: timeout);
   }
 
@@ -141,7 +141,7 @@ class FlutterDriverAppDriverAdapter
     Duration? duration = const Duration(milliseconds: 200),
     Duration? timeout = const Duration(seconds: 30),
   }) async {
-    await rawDriver.scroll(
+    await nativeDriver.scroll(
       finder,
       dx ?? 0,
       dy ?? 0,
@@ -206,7 +206,7 @@ class FlutterDriverAppDriverAdapter
     double? dy,
     Duration? timeout = const Duration(seconds: 30),
   }) async {
-    await rawDriver.scrollUntilVisible(
+    await nativeDriver.scrollUntilVisible(
       scrollable!,
       item,
       timeout: timeout,
@@ -220,7 +220,7 @@ class FlutterDriverAppDriverAdapter
     SerializableFinder finder, {
     Duration? timeout = const Duration(seconds: 30),
   }) async {
-    await rawDriver.scrollIntoView(
+    await nativeDriver.scrollIntoView(
       finder,
       timeout: timeout,
     );
