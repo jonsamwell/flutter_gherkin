@@ -1,4 +1,4 @@
-## [1.2.0] - 02/05/2021
+## [2.0.0] - 25/05/2021
 
 * Upgraded to the null-safety version of dart_gherkin, as such there are some breaking changes to be aware of (see https://github.com/jonsamwell/dart_gherkin/blob/master/CHANGELOG.md for the full list):
   - BREAKING CHANGE: Table has been renamed to GherkinTable to avoid naming clashes
