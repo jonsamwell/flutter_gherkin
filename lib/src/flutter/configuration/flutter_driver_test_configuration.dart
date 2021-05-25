@@ -146,9 +146,7 @@ class FlutterDriverTestConfiguration extends FlutterTestConfiguration {
     world = world ?? FlutterDriverWorld();
 
     final driver = await createFlutterDriver(
-      flutterConfig.runningAppProtocolEndpointUri != null &&
-              flutterConfig.runningAppProtocolEndpointUri != null &&
-              flutterConfig.runningAppProtocolEndpointUri!.isNotEmpty
+      flutterConfig.runningAppProtocolEndpointUri?.isNotEmpty ?? false
           ? flutterConfig.runningAppProtocolEndpointUri
           : null,
     );
@@ -204,15 +202,14 @@ class FlutterDriverTestConfiguration extends FlutterTestConfiguration {
   }
 
   void _ensureCorrectConfiguration() {
-    if (runningAppProtocolEndpointUri != null &&
-        runningAppProtocolEndpointUri!.isNotEmpty) {
+    if (runningAppProtocolEndpointUri?.isNotEmpty ?? false) {
       if (restartAppBetweenScenarios) {
         throw AssertionError(
           'Cannot restart app between scenarios if using runningAppProtocolEndpointUri',
         );
       }
 
-      if (targetDeviceId != null && targetDeviceId!.isNotEmpty) {
+      if (targetDeviceId?.isNotEmpty ?? false) {
         throw AssertionError(
           'Cannot target specific device id if using runningAppProtocolEndpointUri',
         );

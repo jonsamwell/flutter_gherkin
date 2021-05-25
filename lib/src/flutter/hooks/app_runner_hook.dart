@@ -60,8 +60,7 @@ class FlutterAppRunnerHook extends Hook {
   }
 
   Future<void> _runApp(FlutterDriverTestConfiguration config) async {
-    if (config.runningAppProtocolEndpointUri != null &&
-        config.runningAppProtocolEndpointUri!.isNotEmpty) {
+    if (config.runningAppProtocolEndpointUri?.isNotEmpty ?? false) {
       stdout.writeln(
         "Connecting to running Flutter app under test at '${config.runningAppProtocolEndpointUri}', "
         'this might take a few moments',
