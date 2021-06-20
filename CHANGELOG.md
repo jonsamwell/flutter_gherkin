@@ -1,3 +1,8 @@
+## [3.0.0-rc.2] - 21/06/2021
+
+- Fixed late initialization error when invoking hooks
+- Updated float parameter parser so an exception is not thrown during parsing
+
 ## [3.0.0-rc.1] - 25/05/2021
 
   HUGE update so that the library now works and favours the flutter integration_test package over flutter_driver.  Unfortunately, this will be breaking change to existing users but it has many benefits such as a huge speed and stability improvements.
