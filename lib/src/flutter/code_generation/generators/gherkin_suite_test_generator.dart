@@ -214,8 +214,6 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
     bool isLast,
   ) async {
     _flushScenario();
-    print(isFirst);
-    print(isLast);
     _currentScenarioCode = _replaceVariable(
       SCENARIO_TEMPLATE,
       'onBefore',

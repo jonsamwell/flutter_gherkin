@@ -1,3 +1,7 @@
+## [3.0.0-rc.4] - 21/06/2021
+
+- Removed debug code
+
 ## [3.0.0-rc.3] - 21/06/2021
 
 - POSSIBLE BREAKING CHANGE: Removed tap call before enterText is invoked in `WidgetTesterAppDriverAdapter` this was due to the fact that it opens the on-screen keyboard which is not closed after the text is entered so it could be blocking further controls from view.
