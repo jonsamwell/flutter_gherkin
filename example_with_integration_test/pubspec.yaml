@@ -6,16 +6,16 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.12.3 <3.0.0'
-  flutter: ">=2.2.0"
+  sdk: '>=2.14.0 <3.0.0'
+  flutter: ">=2.5.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  json_serializable: ^4.1.1
-  json_annotation: ^4.0.1
-  rxdart: ^0.26.0
-  shared_preferences: ^2.0.5
+  json_serializable: ^5.0.0
+  json_annotation: ^4.1.0
+  rxdart: ^0.27.2
+  shared_preferences: ^2.0.7
   uuid: ^3.0.4
   flutter_simple_dependency_injection: ^2.0.0
 

@@ -26,7 +26,7 @@ Available as a Dart package https://pub.dartlang.org/packages/flutter_gherkin
       Then I end up with 2
 ```
 
-## intergration_test package support
+## integration_test package support
 
 NOTE: This library now favours using the `integration_test` package and code generation over `flutter_driver` and runtime interpretation and as such the `flutter_driver` implementations will eventually be deprecated.
 

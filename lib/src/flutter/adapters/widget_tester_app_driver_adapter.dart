@@ -101,10 +101,6 @@ class WidgetTesterAppDriverAdapter
     String text, {
     Duration? timeout = const Duration(seconds: 30),
   }) async {
-    await tap(
-      finder,
-      timeout: timeout,
-    );
     await nativeDriver.enterText(
       finder,
       text,

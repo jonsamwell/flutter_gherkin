@@ -123,7 +123,7 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
     runFeature(
       '{{feature_name}}:',
       {{tags}},
-      () async {
+      () {
         {{scenarios}}
       },
     );
@@ -136,6 +136,8 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
     (TestDependencies dependencies) async {
       {{steps}}
     },
+    onBefore: {{onBefore}},
+    onAfter: {{onAfter}},
   );
   ''';
   static const String STEP_TEMPLATE = '''
@@ -145,6 +147,12 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
     {{step_table}},
     dependencies,
   );
+  ''';
+  static const String ON_BEFORE_SCENARIO_RUN = '''
+  () async => onBeforeRunFeature('{{scenario_name}}', {{tags}},)
+  ''';
+  static const String ON_AFTER_SCENARIO_RUN = '''
+  () async => onAfterRunFeature('{{scenario_name}}',)
   ''';
 
   final StringBuffer _buffer = StringBuffer();
@@ -199,10 +207,27 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
   }
 
   @override
-  Future<void> visitScenario(String name, Iterable<String> tags) async {
+  Future<void> visitScenario(
+    String name,
+    Iterable<String> tags,
+    bool isFirst,
+    bool isLast,
+  ) async {
     _flushScenario();
+    print(isFirst);
+    print(isLast);
     _currentScenarioCode = _replaceVariable(
       SCENARIO_TEMPLATE,
+      'onBefore',
+      isFirst ? ON_BEFORE_SCENARIO_RUN : 'null',
+    );
+    _currentScenarioCode = _replaceVariable(
+      _currentScenarioCode!,
+      'onAfter',
+      isLast ? ON_AFTER_SCENARIO_RUN : 'null',
+    );
+    _currentScenarioCode = _replaceVariable(
+      _currentScenarioCode!,
       'scenario_name',
       _escapeText(name),
     );
@@ -227,7 +252,8 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
     code = _replaceVariable(
       code,
       'step_multi_line_strings',
-      '<String>[${multiLineStrings.map((s) => "'${_escapeText(s)}'").join(',')}]',
+      // '<String>[${multiLineStrings.map((s) => "'${_escapeText(s)}'").join(',')}]',
+      '<String>[${multiLineStrings.map((s) => '"""$s"""').join(',')}]',
     );
     code = _replaceVariable(
       code,

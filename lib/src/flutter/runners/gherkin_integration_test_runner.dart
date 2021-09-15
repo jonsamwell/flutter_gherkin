@@ -89,32 +89,40 @@ abstract class GherkinIntegrationTestRunner {
     group(
       name,
       () {
-        final debugInformation = RunnableDebugInformation('', 0, name);
-        final featureTags =
-            (tags ?? Iterable<Tag>.empty()).map((t) => Tag(t.toString(), 0));
-        _safeInvokeFuture(
-          () async => await reporter.onFeatureStarted(
-            StartedMessage(
-              Target.feature,
-              name,
-              debugInformation,
-              featureTags,
-            ),
-          ),
-        );
-
         runFeature();
-
-        _safeInvokeFuture(
-          () async => reporter.onFeatureFinished(
-            FinishedMessage(
-              Target.feature,
-              name,
-              debugInformation,
-            ),
-          ),
-        );
       },
+    );
+  }
+
+  @protected
+  Future<void> onBeforeRunFeature(
+    String name,
+    Iterable<String>? tags,
+  ) async {
+    final debugInformation = RunnableDebugInformation('', 0, name);
+    final featureTags =
+        (tags ?? Iterable<Tag>.empty()).map((t) => Tag(t.toString(), 0));
+    await reporter.onFeatureStarted(
+      StartedMessage(
+        Target.feature,
+        name,
+        debugInformation,
+        featureTags,
+      ),
+    );
+  }
+
+  @protected
+  Future<void> onAfterRunFeature(
+    String name,
+  ) async {
+    final debugInformation = RunnableDebugInformation('', 0, name);
+    await reporter.onFeatureFinished(
+      FinishedMessage(
+        Target.feature,
+        name,
+        debugInformation,
+      ),
     );
   }
 
@@ -122,12 +130,18 @@ abstract class GherkinIntegrationTestRunner {
   void runScenario(
     String name,
     Iterable<String>? tags,
-    Future<void> Function(TestDependencies dependencies) runTest,
-  ) {
+    Future<void> Function(TestDependencies dependencies) runTest, {
+    Future<void> Function()? onBefore,
+    Future<void> Function()? onAfter,
+  }) {
     if (_evaluateTagFilterExpression(configuration.tagExpression, tags)) {
       testWidgets(
         name,
         (WidgetTester tester) async {
+          if (onBefore != null) {
+            await onBefore();
+          }
+
           final debugInformation = RunnableDebugInformation('', 0, name);
           final scenarioTags =
               (tags ?? Iterable<Tag>.empty()).map((t) => Tag(t.toString(), 0));
@@ -179,6 +193,10 @@ abstract class GherkinIntegrationTestRunner {
           );
 
           cleanupScenarioRun(dependencies);
+
+          if (onAfter != null) {
+            await onAfter();
+          }
         },
         timeout: scenarioExecutionTimeout,
       );

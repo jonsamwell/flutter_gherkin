@@ -15,13 +15,14 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
   @override
   void onRun() {
     testFeature0();
+    testFeature1();
   }
 
   void testFeature0() {
     runFeature(
       'Creating todos:',
       <String>['@tag'],
-      () async {
+      () {
         runScenario(
           'User can create a new todo item',
           <String>['@tag', '@tag1', '@tag_two'],
@@ -47,6 +48,11 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
               dependencies,
             );
           },
+          onBefore: () async => onBeforeRunFeature(
+            'User can create a new todo item',
+            <String>['@tag', '@tag1', '@tag_two'],
+          ),
+          onAfter: null,
         );
 
         runScenario(
@@ -110,6 +116,64 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
               dependencies,
             );
           },
+          onBefore: null,
+          onAfter: () async => onAfterRunFeature(
+            'User can create multiple new todo items',
+          ),
+        );
+      },
+    );
+  }
+
+  void testFeature1() {
+    runFeature(
+      'Checking data:',
+      <String>['@tag'],
+      () {
+        runScenario(
+          'User can have data',
+          <String>['@tag', '@tag1'],
+          (TestDependencies dependencies) async {
+            await runStep(
+              'Given I have item with data',
+              <String>[
+                """{
+  "glossary": {
+    "title": "example glossary",
+    "GlossDiv": {
+      "title": "S",
+      "GlossList": {
+        "GlossEntry": {
+          "ID": "SGML",
+          "SortAs": "SGML",
+          "GlossTerm": "Standard Generalized Markup Language",
+          "Acronym": "SGML",
+          "Abbrev": "ISO 8879:1986",
+          "GlossDef": {
+            "para": "A meta-markup language, used to create markup languages such as DocBook.",
+            "GlossSeeAlso": [
+              "GML",
+              "XML"
+            ]
+          },
+          "GlossSee": "markup"
+        }
+      }
+    }
+  }
+}"""
+              ],
+              null,
+              dependencies,
+            );
+          },
+          onBefore: () async => onBeforeRunFeature(
+            'User can have data',
+            <String>['@tag', '@tag1'],
+          ),
+          onAfter: () async => onAfterRunFeature(
+            'User can have data',
+          ),
         );
       },
     );

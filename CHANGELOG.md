@@ -1,3 +1,9 @@
+## [3.0.0-rc.3] - 21/06/2021
+
+- POSSIBLE BREAKING CHANGE: Removed tap call before enterText is invoked in `WidgetTesterAppDriverAdapter` this was due to the fact that it opens the on-screen keyboard which is not closed after the text is entered so it could be blocking further controls from view.
+- Fix: #150: Better handling of JSON strings in multiline string segments in feature files
+- Fix: #141 & #128: Added example of how to generate html report from json report output and fixed all scenarios ending up in the last feature section of the json report
+
 ## [3.0.0-rc.2] - 21/06/2021
 
 - Fixed late initialization error when invoking hooks

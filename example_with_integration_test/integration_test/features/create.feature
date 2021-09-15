@@ -23,4 +23,32 @@ Feature: Creating todos
       | Buy apples      |
       | Buy carrots     |
     Given I wait 5 seconds for the animation to complete
-    # When I test the default step timeout is not applied to step with custom timeout
+# Given I have item with data
+#   """
+#   {
+#     "glossary": {
+#       "title": "example glossary",
+#       "GlossDiv": {
+#         "title": "S",
+#         "GlossList": {
+#           "GlossEntry": {
+#             "ID": "SGML",
+#             "SortAs": "SGML",
+#             "GlossTerm": "Standard Generalized Markup Language",
+#             "Acronym": "SGML",
+#             "Abbrev": "ISO 8879:1986",
+#             "GlossDef": {
+#               "para": "A meta-markup language, used to create markup languages such as DocBook.",
+#               "GlossSeeAlso": [
+#                 "GML",
+#                 "XML"
+#               ]
+#             },
+#             "GlossSee": "markup"
+#           }
+#         }
+#       }
+#     }
+#   }
+#   """
+# When I test the default step timeout is not applied to step with custom timeout
