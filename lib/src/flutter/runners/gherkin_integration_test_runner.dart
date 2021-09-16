@@ -150,52 +150,54 @@ abstract class GherkinIntegrationTestRunner {
             tester,
           );
 
-          await hook.onBeforeScenario(
-            configuration,
-            name,
-            scenarioTags,
-          );
-
-          await startApp(
-            tester,
-            dependencies.world,
-          );
-
-          await hook.onAfterScenarioWorldCreated(
-            dependencies.world,
-            name,
-            scenarioTags,
-          );
-
-          await reporter.onScenarioStarted(
-            StartedMessage(
-              Target.scenario,
+          try {
+            await hook.onBeforeScenario(
+              configuration,
               name,
-              debugInformation,
               scenarioTags,
-            ),
-          );
+            );
 
-          await runTest(dependencies);
+            await startApp(
+              tester,
+              dependencies.world,
+            );
 
-          await reporter.onScenarioFinished(
-            ScenarioFinishedMessage(
+            await hook.onAfterScenarioWorldCreated(
+              dependencies.world,
               name,
-              debugInformation,
-              true,
-            ),
-          );
+              scenarioTags,
+            );
 
-          await hook.onAfterScenario(
-            configuration,
-            name,
-            scenarioTags,
-          );
+            await reporter.onScenarioStarted(
+              StartedMessage(
+                Target.scenario,
+                name,
+                debugInformation,
+                scenarioTags,
+              ),
+            );
 
-          cleanupScenarioRun(dependencies);
+            await runTest(dependencies);
+          } finally {
+            await reporter.onScenarioFinished(
+              ScenarioFinishedMessage(
+                name,
+                debugInformation,
+                true,
+              ),
+            );
 
-          if (onAfter != null) {
-            await onAfter();
+            await hook.onAfterScenario(
+              configuration,
+              name,
+              scenarioTags,
+            );
+
+            if (onAfter != null) {
+              await onAfter();
+            }
+
+            cleanupScenarioRun(dependencies);
           }
         },
         timeout: scenarioExecutionTimeout,

@@ -7,14 +7,14 @@ packages:
       name: _fe_analyzer_shared
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "25.0.0"
+    version: "26.0.0"
   analyzer:
     dependency: "direct main"
     description:
       name: analyzer
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.0"
+    version: "2.3.0"
   archive:
     dependency: transitive
     description:
@@ -249,7 +249,7 @@ packages:
       name: pubspec_parse
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0"
+    version: "1.1.0"
   sky_engine:
     dependency: transitive
     description: flutter

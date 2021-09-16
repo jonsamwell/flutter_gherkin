@@ -1,3 +1,7 @@
+## [3.0.0-rc.5] - 22/06/2021
+
+- Ensure scenario support files (world etc) as always disposed ensure when test throws error 
+
 ## [3.0.0-rc.4] - 21/06/2021
 
 - Removed debug code
