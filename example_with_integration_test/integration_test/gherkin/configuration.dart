@@ -41,7 +41,7 @@ FlutterTestConfiguration gherkinTestConfiguration =
       ]
       ..createWorld = (config) => Future.value(CustomWorld());
 
-void Function(World) appInitializationFn = (World world) {
+Future<void> Function(World) appInitializationFn = (World world) async {
   // ensure a new injector instance is created each time
   final injector = Injector(DateTime.now().microsecondsSinceEpoch.toString());
   final externalApplicationManager = ExternalApplicationManager(injector);

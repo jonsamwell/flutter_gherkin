@@ -9,7 +9,7 @@ part of 'gherkin_suite_test.dart';
 class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
   _CustomGherkinIntegrationTestRunner(
     TestConfiguration configuration,
-    void Function(World) appMainFunction,
+    Future<void> Function(World) appMainFunction,
   ) : super(configuration, appMainFunction);
 
   @override
@@ -182,7 +182,7 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
 
 void executeTestSuite(
   TestConfiguration configuration,
-  void Function(World) appMainFunction,
+  Future<void> Function(World) appMainFunction,
 ) {
   _CustomGherkinIntegrationTestRunner(configuration, appMainFunction).run();
 }

@@ -1,4 +1,4 @@
-import 'package:flutter_driver/flutter_driver.dart';
+import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'package:flutter_gherkin/src/flutter/world/flutter_world.dart';
 import 'package:gherkin/gherkin.dart';
 
@@ -7,7 +7,7 @@ import '../parameters/swipe_direction_parameter.dart';
 mixin _SwipeHelper
     on When3WithWorld<SwipeDirection, int, String, FlutterWorld> {
   Future<void> swipeOnFinder(
-    SerializableFinder finder,
+    dynamic finder,
     SwipeDirection direction,
     int swipeAmount,
   ) async {
@@ -52,7 +52,7 @@ class SwipeOnKeyStep
     int swipeAmount,
     String key,
   ) async {
-    final finder = find.byValueKey(key);
+    final finder = this.world.appDriver.findBy(key, FindType.key);
     await swipeOnFinder(finder, direction, swipeAmount);
   }
 
@@ -75,7 +75,7 @@ class SwipeOnTextStep
     int swipeAmount,
     String text,
   ) async {
-    final finder = find.text(text);
+    final finder = this.world.appDriver.findBy(text, FindType.text);
     await swipeOnFinder(finder, direction, swipeAmount);
   }
 

@@ -21,7 +21,7 @@ abstract class GherkinIntegrationTestRunner {
   final TagExpressionEvaluator _tagExpressionEvaluator =
       TagExpressionEvaluator();
   final TestConfiguration configuration;
-  final void Function(World world) appMainFunction;
+  final Future<void> Function(World world) appMainFunction;
   Reporter? _reporter;
   Hook? _hook;
   Iterable<ExecutableStep>? _executableSteps;
@@ -31,6 +31,7 @@ abstract class GherkinIntegrationTestRunner {
 
   Reporter get reporter => _reporter!;
   Hook get hook => _hook!;
+  LiveTestWidgetsFlutterBindingFramePolicy? get framePolicy => null;
 
   Timeout scenarioExecutionTimeout = const Timeout(Duration(minutes: 10));
 
@@ -53,13 +54,17 @@ abstract class GherkinIntegrationTestRunner {
     _binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized()
         as IntegrationTestWidgetsFlutterBinding;
 
-    _safeInvokeFuture(() async => await reporter.onTestRunStarted());
+    _binding!.framePolicy =
+        framePolicy ?? LiveTestWidgetsFlutterBindingFramePolicy.benchmarkLive;
 
     tearDownAll(
       () {
         onRunComplete();
       },
     );
+
+    _safeInvokeFuture(() async => await hook.onBeforeRun(configuration));
+    _safeInvokeFuture(() async => await reporter.onTestRunStarted());
 
     onRun();
   }
@@ -217,7 +222,7 @@ abstract class GherkinIntegrationTestRunner {
     WidgetTester tester,
     World world,
   ) async {
-    appMainFunction(world);
+    await appMainFunction(world);
     await tester.pumpAndSettle();
   }
 

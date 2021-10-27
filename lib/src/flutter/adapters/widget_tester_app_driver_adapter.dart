@@ -18,9 +18,13 @@ class WidgetTesterAppDriverAdapter
     Duration? timeout = const Duration(seconds: 30),
   }) async {
     try {
-      return await nativeDriver.pumpAndSettle(
-        duration!,
+      final pumps = await nativeDriver.pumpAndSettle(
+        duration ?? const Duration(milliseconds: 100),
+        EnginePhase.sendSemanticsUpdate,
+        timeout ?? const Duration(seconds: 30),
       );
+
+      return pumps;
     } catch (_) {
       return 1;
     }

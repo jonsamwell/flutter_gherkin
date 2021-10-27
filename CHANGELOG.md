@@ -1,3 +1,10 @@
+## [3.0.0-rc.6] - 27/10/2021
+
+- BREAKING CHANGE: Made `appMainFunction` return a `Future<void>` so it can be async
+- Fix: #159: Swipe step not working
+- Ensure Hook.onBeforeRun is called before the run starts
+- Set Frame policy- defaults to `LiveTestWidgetsFlutterBindingFramePolicy.benchmarkLive` to slightly improve performance
+
 ## [3.0.0-rc.5] - 22/06/2021
 
 - Ensure scenario support files (world etc) as always disposed ensure when test throws error 
