@@ -10,13 +10,13 @@ import 'package:gherkin/gherkin.dart';
 ///
 /// Examples:
 ///
-///   `When I tap "controlKey" button"`
-///   `When I tap "controlKey" element"`
-///   `When I tap "controlKey" label"`
-///   `When I tap "controlKey" icon"`
-///   `When I tap "controlKey" field"`
-///   `When I tap "controlKey" text"`
-///   `When I tap "controlKey" widget"`
+///   `When I tap the "controlKey" button"`
+///   `When I tap the "controlKey" element"`
+///   `When I tap the "controlKey" label"`
+///   `When I tap the "controlKey" icon"`
+///   `When I tap the "controlKey" field"`
+///   `When I tap the "controlKey" text"`
+///   `When I tap the "controlKey" widget"`
 StepDefinitionGeneric WhenTapWidget() {
   return when1<String, FlutterWorld>(
     RegExp(
