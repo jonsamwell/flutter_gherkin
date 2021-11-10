@@ -1,3 +1,10 @@
+## [3.0.0-rc.7] - 10/11/2021
+
+- Fix: #165: Empty .feature files causing void functions which get compiled out at runtime and cause errors
+- Fix: #162: Incorrect feature name in HTML reports - many thanks to @AFASbart for suggesting the cause and fix.
+- Fix: #159: Swipe step is not working due to bad '??' statement
+- Fix: #155: Ensure stdout reporter only add ascii colour code when the target supports it
+
 ## [3.0.0-rc.6] - 27/10/2021
 
 - BREAKING CHANGE: Made `appMainFunction` return a `Future<void>` so it can be async

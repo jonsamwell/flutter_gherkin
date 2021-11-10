@@ -26,22 +26,29 @@ class TodoApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final app = MaterialApp(
-      title: 'Todo App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: injector.get<HomeView>(),
-    );
-
     // if the app is in test mode and an ExternalApplicationManager is passed in
     // let the app respond to external changes
     return externalApplicationManager == null
-        ? app
+        ? MaterialApp(
+            title: 'Todo App',
+            theme: ThemeData(
+              primarySwatch: Colors.blue,
+              visualDensity: VisualDensity.adaptivePlatformDensity,
+            ),
+            home: injector.get<HomeView>(),
+          )
         : StreamBuilder(
             stream: externalApplicationManager!.applicationReset,
-            builder: (ctx, _) => app,
+            builder: (ctx, _) {
+              return MaterialApp(
+                title: 'Todo App',
+                theme: ThemeData(
+                  primarySwatch: Colors.blue,
+                  visualDensity: VisualDensity.adaptivePlatformDensity,
+                ),
+                home: injector.get<HomeView>(),
+              );
+            },
           );
   }
 }

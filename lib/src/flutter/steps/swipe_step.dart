@@ -18,7 +18,6 @@ mixin _SwipeHelper
       await world.appDriver.scroll(
         finder,
         dx: offset.toDouble(),
-        dy: 0,
         duration: Duration(milliseconds: 500),
         timeout: timeout,
       );
@@ -28,7 +27,6 @@ mixin _SwipeHelper
 
       await world.appDriver.scroll(
         finder,
-        dx: 0,
         dy: offset.toDouble(),
         duration: Duration(milliseconds: 500),
         timeout: timeout,
@@ -58,7 +56,7 @@ class SwipeOnKeyStep
 
   @override
   RegExp get pattern =>
-      RegExp(r'I swipe {swipe_direction} by {int} pixels on the {string}$');
+      RegExp(r'I swipe {swipe_direction} by {int} pixels on the {string}');
 }
 
 /// Swipes in a cardinal direction on a widget discovered by its test.

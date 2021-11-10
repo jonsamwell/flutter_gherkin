@@ -149,10 +149,10 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
   );
   ''';
   static const String ON_BEFORE_SCENARIO_RUN = '''
-  () async => onBeforeRunFeature('{{scenario_name}}', {{tags}},)
+  () async => onBeforeRunFeature('{{feature_name}}', {{feature_tags}},)
   ''';
   static const String ON_AFTER_SCENARIO_RUN = '''
-  () async => onAfterRunFeature('{{scenario_name}}',)
+  () async => onAfterRunFeature('{{feature_name}}',)
   ''';
 
   final StringBuffer _buffer = StringBuffer();
@@ -188,26 +188,31 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
     String name,
     String? description,
     Iterable<String> tags,
+    int childScenarioCount,
   ) async {
-    _currentFeatureCode = _replaceVariable(
-      FUNCTION_TEMPLATE,
-      'feature_number',
-      _id.toString(),
-    );
-    _currentFeatureCode = _replaceVariable(
-      _currentFeatureCode!,
-      'feature_name',
-      _escapeText(name),
-    );
-    _currentFeatureCode = _replaceVariable(
-      _currentFeatureCode!,
-      'tags',
-      '<String>[${tags.map((e) => "'$e'").join(', ')}]',
-    );
+    if (childScenarioCount > 0) {
+      _currentFeatureCode = _replaceVariable(
+        FUNCTION_TEMPLATE,
+        'feature_number',
+        _id.toString(),
+      );
+      _currentFeatureCode = _replaceVariable(
+        _currentFeatureCode!,
+        'feature_name',
+        _escapeText(name),
+      );
+      _currentFeatureCode = _replaceVariable(
+        _currentFeatureCode!,
+        'tags',
+        '<String>[${tags.map((e) => "'$e'").join(', ')}]',
+      );
+    }
   }
 
   @override
   Future<void> visitScenario(
+    String featureName,
+    Iterable<String> featureTags,
     String name,
     Iterable<String> tags,
     bool isFirst,
@@ -223,6 +228,16 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
       _currentScenarioCode!,
       'onAfter',
       isLast ? ON_AFTER_SCENARIO_RUN : 'null',
+    );
+    _currentScenarioCode = _replaceVariable(
+      _currentScenarioCode!,
+      'feature_name',
+      _escapeText(featureName),
+    );
+    _currentScenarioCode = _replaceVariable(
+      _currentScenarioCode!,
+      'feature_tags',
+      '<String>[${featureTags.map((e) => "'$e'").join(', ')}]',
     );
     _currentScenarioCode = _replaceVariable(
       _currentScenarioCode!,

@@ -33,115 +33,147 @@ class _HomeViewState extends State<HomeView> with ViewUtilsMixin {
         ),
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            SizedBox(
-              height: 100,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                ),
-                child: AddTodoComponent(
-                  todo: bloc.newModel,
-                  onAdded: (todo) {
-                    subscribeOnce(bloc.add(todo));
-                  },
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                height: 100,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                  ),
+                  child: AddTodoComponent(
+                    todo: bloc.newModel,
+                    onAdded: (todo) {
+                      subscribeOnce(bloc.add(todo));
+                    },
+                  ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: 16,
-            ),
-            StreamBuilder<Iterable<Todo>>(
-              stream: bloc.todos,
-              builder: (_, snapshot) {
-                if (snapshot.hasData) {
-                  final data = snapshot.data!;
-                  if (data.isEmpty) {
-                    return Center(
-                      child: Column(
-                        children: [
-                          Icon(
-                            Icons.list,
-                            size: 64,
-                            color: Colors.black26,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Text(
-                              'No todos!',
-                              key: const Key('empty'),
-                              style: Theme.of(context).textTheme.headline6,
+              SizedBox(
+                height: 16,
+              ),
+              StreamBuilder<Iterable<Todo>>(
+                stream: bloc.todos,
+                builder: (_, snapshot) {
+                  if (snapshot.hasData) {
+                    final data = snapshot.data!;
+                    if (data.isEmpty) {
+                      return Center(
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.list,
+                              size: 64,
+                              color: Colors.black26,
                             ),
-                          ),
-                        ],
-                      ),
-                    );
+                            Padding(
+                              padding: const EdgeInsets.all(16),
+                              // child: Text(
+                              //   'No todos!',
+                              //   key: const Key('empty'),
+                              //   style: Theme.of(context).textTheme.headline6,
+                              // ),
+                              child: SizedBox(
+                                key: const Key('scrollable cards'),
+                                width: 300,
+                                height: 250,
+                                child: PageView.builder(
+                                  itemCount: 3,
+                                  itemBuilder: (ctx, index) {
+                                    return Container(
+                                      margin: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        color: index == 0
+                                            ? Colors.amber
+                                            : Colors.blueAccent,
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: SizedBox(
+                                        key: Key('Page ${index + 1}'),
+                                        width: 200,
+                                        height: 200,
+                                        child: Center(
+                                          child: Text(
+                                            'Page ${index + 1}',
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    } else {
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: data.length,
+                        itemBuilder: (ctx, index) {
+                          final todo = data.elementAt(index);
+                          return Dismissible(
+                            background: Container(
+                              color: Colors.red,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Icon(
+                                    Icons.delete,
+                                    color: Colors.white,
+                                  ),
+                                  Icon(
+                                    Icons.delete,
+                                    color: Colors.white,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            key: Key(todo.action!),
+                            onDismissed: (direction) {
+                              subscribeOnce(
+                                bloc.remove(todo),
+                                onDone: () {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Todo deleted'),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                            child: ListTile(
+                              title: Text(
+                                todo.action!,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText1!
+                                    .copyWith(
+                                      decoration:
+                                          todo.status == TodoStatus.complete
+                                              ? TextDecoration.lineThrough
+                                              : null,
+                                    ),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    }
                   } else {
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: data.length,
-                      itemBuilder: (ctx, index) {
-                        final todo = data.elementAt(index);
-                        return Dismissible(
-                          background: Container(
-                            color: Colors.red,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Icon(
-                                  Icons.delete,
-                                  color: Colors.white,
-                                ),
-                                Icon(
-                                  Icons.delete,
-                                  color: Colors.white,
-                                ),
-                              ],
-                            ),
-                          ),
-                          key: Key(todo.action!),
-                          onDismissed: (direction) {
-                            subscribeOnce(
-                              bloc.remove(todo),
-                              onDone: () {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text('Todo deleted'),
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                          child: ListTile(
-                            title: Text(
-                              todo.action!,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyText1!
-                                  .copyWith(
-                                    decoration:
-                                        todo.status == TodoStatus.complete
-                                            ? TextDecoration.lineThrough
-                                            : null,
-                                  ),
-                            ),
-                          ),
-                        );
-                      },
+                    return Center(
+                      child: Text('Loading...'),
                     );
                   }
-                } else {
-                  return Center(
-                    child: Text('Loading...'),
-                  );
-                }
-              },
-            ),
-          ],
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

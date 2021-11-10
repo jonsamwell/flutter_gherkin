@@ -151,7 +151,7 @@ class WidgetTesterAppDriverAdapter
   }) async {
     final scrollableFinder = findByDescendant(
       finder,
-      find.byType(Scrollable).first,
+      find.byType(Scrollable),
       matchRoot: true,
     );
     final state = nativeDriver.state(scrollableFinder) as ScrollableState;
