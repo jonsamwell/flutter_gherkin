@@ -81,7 +81,7 @@ void executeTestSuite(
         _languageService,
         _reporter,
       );
-      if (code != "") {
+      if (code.isNotEmpty) {
         featuresToExecute.writeln('testFeature${id - 1}();');
         featureExecutionFunctionsBuilder.writeln(code);
       }
