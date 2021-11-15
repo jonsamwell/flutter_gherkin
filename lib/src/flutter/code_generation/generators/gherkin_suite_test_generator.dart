@@ -71,6 +71,7 @@ void executeTestSuite(
     final featureExecutionFunctionsBuilder = StringBuffer();
     final generator = FeatureFileTestGenerator();
     var id = 0;
+    final featuresToExecute = new StringBuffer();
 
     for (var featureFileContent in featureFiles) {
       final code = await generator.generate(
@@ -80,7 +81,10 @@ void executeTestSuite(
         _languageService,
         _reporter,
       );
-      featureExecutionFunctionsBuilder.writeln(code);
+      if (code.isNotEmpty) {
+        featuresToExecute.writeln('testFeature${id - 1}();');
+        featureExecutionFunctionsBuilder.writeln(code);
+      }
     }
 
     return TEMPLATE
@@ -88,11 +92,7 @@ void executeTestSuite(
             featureExecutionFunctionsBuilder.toString())
         .replaceAll(
           '{{features_to_execute}}',
-          List.generate(
-            id,
-            (index) => 'testFeature$index();',
-            growable: false,
-          ).join('\n'),
+          featuresToExecute.toString(),
         );
   }
 }
