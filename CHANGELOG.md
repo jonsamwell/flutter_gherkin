@@ -1,3 +1,7 @@
+## [3.0.0-rc.8] - 18/11/2021
+
+- Fix: #165: Fix when generating empty feature files - many thanks to @AFASbart for the PR.
+
 ## [3.0.0-rc.7] - 10/11/2021
 
 - Fix: #165: Empty .feature files causing void functions which get compiled out at runtime and cause errors

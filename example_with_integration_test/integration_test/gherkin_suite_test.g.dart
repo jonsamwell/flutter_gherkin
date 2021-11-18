@@ -21,55 +21,6 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
 
   void testFeature0() {
     runFeature(
-      'Swiping:',
-      <String>['@tag'],
-      () {
-        runScenario(
-          'User can swipe cards left and right',
-          <String>['@tag', '@debug'],
-          (TestDependencies dependencies) async {
-            await runStep(
-              'Given I swipe right by 250 pixels on the "scrollable cards"`',
-              <String>[],
-              null,
-              dependencies,
-            );
-
-            await runStep(
-              'Then Then I expect the text "Page 2" to be present',
-              <String>[],
-              null,
-              dependencies,
-            );
-
-            await runStep(
-              'Given I swipe left by 250 pixels on the "scrollable cards"`',
-              <String>[],
-              null,
-              dependencies,
-            );
-
-            await runStep(
-              'Then Then I expect the text "Page 1" to be present',
-              <String>[],
-              null,
-              dependencies,
-            );
-          },
-          onBefore: () async => onBeforeRunFeature(
-            'Swiping',
-            <String>['@tag'],
-          ),
-          onAfter: () async => onAfterRunFeature(
-            'Swiping',
-          ),
-        );
-      },
-    );
-  }
-
-  void testFeature1() {
-    runFeature(
       'Checking data:',
       <String>['@tag'],
       () {
@@ -116,6 +67,55 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
           ),
           onAfter: () async => onAfterRunFeature(
             'Checking data',
+          ),
+        );
+      },
+    );
+  }
+
+  void testFeature1() {
+    runFeature(
+      'Swiping:',
+      <String>['@tag'],
+      () {
+        runScenario(
+          'User can swipe cards left and right',
+          <String>['@tag', '@debug'],
+          (TestDependencies dependencies) async {
+            await runStep(
+              'Given I swipe right by 250 pixels on the "scrollable cards"`',
+              <String>[],
+              null,
+              dependencies,
+            );
+
+            await runStep(
+              'Then Then I expect the text "Page 2" to be present',
+              <String>[],
+              null,
+              dependencies,
+            );
+
+            await runStep(
+              'Given I swipe left by 250 pixels on the "scrollable cards"`',
+              <String>[],
+              null,
+              dependencies,
+            );
+
+            await runStep(
+              'Then Then I expect the text "Page 1" to be present',
+              <String>[],
+              null,
+              dependencies,
+            );
+          },
+          onBefore: () async => onBeforeRunFeature(
+            'Swiping',
+            <String>['@tag'],
+          ),
+          onAfter: () async => onAfterRunFeature(
+            'Swiping',
           ),
         );
       },

@@ -70,8 +70,8 @@ void executeTestSuite(
 
     final featureExecutionFunctionsBuilder = StringBuffer();
     final generator = FeatureFileTestGenerator();
-    var id = 0;
     final featuresToExecute = new StringBuffer();
+    var id = 0;
 
     for (var featureFileContent in featureFiles) {
       final code = await generator.generate(
@@ -81,6 +81,7 @@ void executeTestSuite(
         _languageService,
         _reporter,
       );
+
       if (code.isNotEmpty) {
         featuresToExecute.writeln('testFeature${id - 1}();');
         featureExecutionFunctionsBuilder.writeln(code);
