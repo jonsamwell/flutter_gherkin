@@ -1,3 +1,7 @@
+## [3.0.0-rc.9] - 18/11/2021
+
+- Fix: #172: Fix for the `StdoutReporter` when running against the web
+
 ## [3.0.0-rc.8] - 18/11/2021
 
 - Fix: #165: Fix when generating empty feature files - many thanks to @AFASbart for the PR.
