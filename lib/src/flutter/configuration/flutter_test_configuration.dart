@@ -23,6 +23,33 @@ import 'package:flutter_gherkin/src/flutter/steps/when_tap_the_back_button_step.
 import 'package:gherkin/gherkin.dart';
 
 class FlutterTestConfiguration extends TestConfiguration {
+  @deprecated
+
+  /// ~~The path(s) to all the features.~~
+  /// ~~All three [Pattern]s are supported: [RegExp], [String], [Glob].~~
+  ///
+  /// Instead of using this variable, give the features in the `@GherkinTestSuite(features: <String>[])` option.
+  Iterable<Pattern> features = const <Pattern>[];
+
+  /// ~~The execution order of features - this default to random to avoid any inter-test dependencies~~
+  ///
+  /// Instead of using this variable, give the executionOrder in the `@GherkinTestSuite(executionOrder: ExecutionOrder.random)` option.
+  @deprecated
+  ExecutionOrder order = ExecutionOrder.random;
+
+  /// ~~Lists feature files paths, which match [features] patterns.~~
+  ///
+  /// Instead of using this variable, give the features in the `@GherkinTestSuite(features: <String>[])` option.
+  @deprecated
+  FeatureFileMatcher featureFileMatcher = const IoFeatureFileAccessor();
+
+  /// ~~The feature file reader.~~
+  /// ~~Takes files/resources paths from [featureFileIndexer] and returns their content as String.~~
+  ///
+  /// Instead of using this variable, give the features in the `@GherkinTestSuite(features: <String>[])` option.
+  @deprecated
+  FeatureFileReader featureFileReader = const IoFeatureFileAccessor();
+
   /// Provide a configuration object with default settings such as the reports and feature file location
   /// Additional setting on the configuration object can be set on the returned instance.
   static FlutterTestConfiguration DEFAULT(
