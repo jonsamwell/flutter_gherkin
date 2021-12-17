@@ -103,8 +103,9 @@ abstract class GherkinIntegrationTestRunner {
   Future<void> onBeforeRunFeature(
     String name,
     Iterable<String>? tags,
+    String path,
   ) async {
-    final debugInformation = RunnableDebugInformation('', 0, name);
+    final debugInformation = RunnableDebugInformation(path, 0, name);
     final featureTags =
         (tags ?? Iterable<Tag>.empty()).map((t) => Tag(t.toString(), 0));
     await reporter.onFeatureStarted(

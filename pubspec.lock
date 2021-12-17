@@ -157,9 +157,9 @@ packages:
   gherkin:
     dependency: "direct main"
     description:
-      name: gherkin
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "../dart_bort"
+      relative: true
+    source: path
     version: "2.0.8"
   glob:
     dependency: "direct main"

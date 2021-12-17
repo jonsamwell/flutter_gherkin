@@ -56,12 +56,8 @@ void executeTestSuite(
         .read('featurePaths')
         .listValue
         .map((path) => Glob(path.toStringValue()!))
-        .map(
-          (glob) => glob
-              .listSync()
-              .map((entity) => File(entity.path).readAsStringSync())
-              .toList(),
-        )
+        .map((glob) =>
+            glob.listSync().map((entity) => File(entity.path)).toList())
         .reduce((value, element) => value..addAll(element));
 
     if (executionOrder == ExecutionOrder.random) {
@@ -73,11 +69,11 @@ void executeTestSuite(
     final featuresToExecute = new StringBuffer();
     var id = 0;
 
-    for (var featureFileContent in featureFiles) {
+    for (var featureFile in featureFiles) {
       final code = await generator.generate(
         id++,
-        featureFileContent,
-        '',
+        featureFile.readAsStringSync(),
+        featureFile.absolute.path,
         _languageService,
         _reporter,
       );
@@ -150,7 +146,7 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
   );
   ''';
   static const String ON_BEFORE_SCENARIO_RUN = '''
-  () async => onBeforeRunFeature('{{feature_name}}', {{feature_tags}},)
+  () async => onBeforeRunFeature('{{feature_name}}', {{feature_tags}}, '{{feature_path}}')
   ''';
   static const String ON_AFTER_SCENARIO_RUN = '''
   () async => onAfterRunFeature('{{feature_name}}',)
@@ -218,6 +214,7 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
     Iterable<String> tags,
     bool isFirst,
     bool isLast,
+    String path,
   ) async {
     _flushScenario();
     _currentScenarioCode = _replaceVariable(
@@ -229,6 +226,11 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
       _currentScenarioCode!,
       'onAfter',
       isLast ? ON_AFTER_SCENARIO_RUN : 'null',
+    );
+    _currentScenarioCode = _replaceVariable(
+      _currentScenarioCode!,
+      'feature_path',
+      path.replaceAll(r"\", r"\\"),
     );
     _currentScenarioCode = _replaceVariable(
       _currentScenarioCode!,
