@@ -131,6 +131,7 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
     '{{scenario_name}}',
     {{tags}},
     (TestDependencies dependencies) async {
+      bool skipRemainingSteps = false;
       {{steps}}
     },
     onBefore: {{onBefore}},
@@ -138,12 +139,20 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
   );
   ''';
   static const String STEP_TEMPLATE = '''
-  await runStep(
+  try{
+    await runStep(
     '{{step_name}}',
     {{step_multi_line_strings}},
     {{step_table}},
     dependencies,
+    skipRemainingSteps,
   );
+  }catch(_){
+    print("");
+    print("BIGGUS EXXEPPTIONS");
+    print("");
+    skipRemainingSteps = true;
+  }
   ''';
   static const String ON_BEFORE_SCENARIO_RUN = '''
   () async => onBeforeRunFeature('{{feature_name}}', {{feature_tags}}, '{{feature_path}}')

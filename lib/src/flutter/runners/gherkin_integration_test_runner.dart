@@ -183,7 +183,11 @@ abstract class GherkinIntegrationTestRunner {
               ),
             );
 
-            await runTest(dependencies);
+            try {
+              await runTest(dependencies);
+            } catch (e) {
+              print(e);
+            }
           } finally {
             await reporter.onScenarioFinished(
               ScenarioFinishedMessage(
@@ -257,6 +261,7 @@ abstract class GherkinIntegrationTestRunner {
     Iterable<String> multiLineStrings,
     dynamic table,
     TestDependencies dependencies,
+    bool hasToSkip,
   ) async {
     final executable = _executableSteps!.firstWhereOrNull(
       (s) => s.expression.isMatch(step),
@@ -281,12 +286,18 @@ abstract class GherkinIntegrationTestRunner {
       multiLineStrings,
     );
 
-    final result = await executable.step.run(
-      dependencies.world,
-      reporter,
-      configuration.defaultTimeout,
-      parameters,
-    );
+    late StepResult result;
+
+    if (!hasToSkip) {
+      result = await executable.step.run(
+        dependencies.world,
+        reporter,
+        configuration.defaultTimeout,
+        parameters,
+      );
+    } else {
+      result = StepResult(0, StepExecutionResult.skipped);
+    }
 
     await _onAfterStepRun(
       step,

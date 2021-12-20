@@ -18,12 +18,12 @@ dependencies:
     sdk: flutter
   analyzer: ">=1.7.1 <3.0.0"
   collection: ^1.15.0
-  gherkin: ^2.0.9
+  # gherkin: ^2.0.9
   source_gen: ^1.1.1
   build: ^2.1.1
   glob: ^2.0.2
-  # gherkin:
-  #   path: ../dart_gherkin
+  gherkin:
+    path: ../dart_bort
 
 dev_dependencies:
   meta: ^1.7.0 
