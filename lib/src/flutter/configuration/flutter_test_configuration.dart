@@ -23,12 +23,12 @@ import 'package:flutter_gherkin/src/flutter/steps/when_tap_the_back_button_step.
 import 'package:gherkin/gherkin.dart';
 
 class FlutterTestConfiguration extends TestConfiguration {
-  @deprecated
-
+ 
   /// ~~The path(s) to all the features.~~
   /// ~~All three [Pattern]s are supported: [RegExp], [String], [Glob].~~
   ///
   /// Instead of using this variable, give the features in the `@GherkinTestSuite(features: <String>[])` option.
+  @deprecated
   Iterable<Pattern> features = const <Pattern>[];
 
   /// ~~The execution order of features - this default to random to avoid any inter-test dependencies~~
