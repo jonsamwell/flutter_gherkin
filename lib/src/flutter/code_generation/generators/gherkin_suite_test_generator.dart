@@ -134,8 +134,8 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
       bool skipRemainingSteps = false;
       {{steps}}
     },
-    onBefore: {{onBefore}},
-    onAfter: {{onAfter}},
+    {{onBefore}}
+    {{onAfter}}
   );
   ''';
   static const String STEP_TEMPLATE = '''
@@ -155,10 +155,10 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
   }
   ''';
   static const String ON_BEFORE_SCENARIO_RUN = '''
-  () async => onBeforeRunFeature('{{feature_name}}', {{feature_tags}}, '{{feature_path}}')
+  onBefore: () async => onBeforeRunFeature('{{feature_name}}', {{feature_tags}}, '{{feature_path}}'),
   ''';
   static const String ON_AFTER_SCENARIO_RUN = '''
-  () async => onAfterRunFeature('{{feature_name}}',)
+  onAfter: () async => onAfterRunFeature('{{feature_name}}',),
   ''';
 
   final StringBuffer _buffer = StringBuffer();
@@ -229,12 +229,12 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
     _currentScenarioCode = _replaceVariable(
       SCENARIO_TEMPLATE,
       'onBefore',
-      isFirst ? ON_BEFORE_SCENARIO_RUN : 'null',
+      isFirst ? ON_BEFORE_SCENARIO_RUN : '',
     );
     _currentScenarioCode = _replaceVariable(
       _currentScenarioCode!,
       'onAfter',
-      isLast ? ON_AFTER_SCENARIO_RUN : 'null',
+      isLast ? ON_AFTER_SCENARIO_RUN : '',
     );
     _currentScenarioCode = _replaceVariable(
       _currentScenarioCode!,
