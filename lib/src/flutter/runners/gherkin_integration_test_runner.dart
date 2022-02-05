@@ -206,6 +206,9 @@ abstract class GherkinIntegrationTestRunner {
           }
         },
         timeout: scenarioExecutionTimeout,
+        semanticsEnabled: configuration is FlutterTestConfiguration
+            ? (configuration as FlutterTestConfiguration).semanticsEnabled
+            : true,
       );
     } else {
       _safeInvokeFuture(

@@ -20,6 +20,7 @@ import 'package:flutter_gherkin/src/flutter/steps/when_long_press_widget_step.da
 import 'package:flutter_gherkin/src/flutter/steps/when_pause_step.dart';
 import 'package:flutter_gherkin/src/flutter/steps/when_tap_widget_step.dart';
 import 'package:flutter_gherkin/src/flutter/steps/when_tap_the_back_button_step.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:gherkin/gherkin.dart';
 
 class FlutterTestConfiguration extends TestConfiguration {
@@ -49,7 +50,11 @@ class FlutterTestConfiguration extends TestConfiguration {
   /// Instead of using this variable, give the features in the `@GherkinTestSuite(features: <String>[])` option.
   @deprecated
   FeatureFileReader featureFileReader = const IoFeatureFileAccessor();
-
+  
+  /// Enable semantics in a test by creating a [SemanticsHandle].
+  /// See:  [testWidgets] and [WidgetController.ensureSemantics].
+  bool semanticsEnabled = true;
+  
   /// Provide a configuration object with default settings such as the reports and feature file location
   /// Additional setting on the configuration object can be set on the returned instance.
   static FlutterTestConfiguration DEFAULT(
