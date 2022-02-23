@@ -25,7 +25,6 @@ StepDefinitionGeneric WhenLongPressWidget() {
 
       await context.world.appDriver.scrollIntoView(finder);
       await context.world.appDriver.longPress(finder);
-      await context.world.appDriver.waitForAppToSettle();
     },
   );
 }

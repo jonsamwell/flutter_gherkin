@@ -15,6 +15,7 @@ StepDefinitionGeneric TextExistsWithinStep() {
     RegExp(
         r'I expect the text {string} to be {existence} within the {string}$'),
     (text, exists, ancestorKey, context) async {
+      await context.world.appDriver.waitForAppToSettle();
       final finder = context.world.appDriver.findByDescendant(
         context.world.appDriver.findBy(ancestorKey, FindType.key),
         context.world.appDriver.findBy(text, FindType.text),

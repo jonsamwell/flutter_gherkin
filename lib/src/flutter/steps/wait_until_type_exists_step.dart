@@ -16,7 +16,6 @@ StepDefinitionGeneric WaitUntilTypeExistsStep() {
     (ofType, existence, context) async {
       await context.world.appDriver.waitUntil(
         () async {
-          await context.world.appDriver.waitForAppToSettle();
 
           return existence == Existence.absent
               ? context.world.appDriver.isAbsent(

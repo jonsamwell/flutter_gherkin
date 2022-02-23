@@ -226,7 +226,6 @@ abstract class GherkinIntegrationTestRunner {
     World world,
   ) async {
     await appMainFunction(world);
-    await tester.pumpAndSettle();
   }
 
   @protected

@@ -14,6 +14,7 @@ StepDefinitionGeneric TextExistsStep() {
   return then2<String, Existence, FlutterWorld>(
     RegExp(r'I expect the text {string} to be {existence}$'),
     (text, exists, context) async {
+      await context.world.appDriver.waitForAppToSettle();
       if (exists == Existence.present) {
         final isPresent = await context.world.appDriver.isPresent(
           context.world.appDriver.findBy(text, FindType.text),

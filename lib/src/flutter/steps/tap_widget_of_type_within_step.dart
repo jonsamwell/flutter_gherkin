@@ -18,7 +18,6 @@ StepDefinitionGeneric TapWidgetOfTypeWithinStep() {
         firstMatchOnly: true,
       );
       await context.world.appDriver.tap(finder);
-      await context.world.appDriver.waitForAppToSettle();
     },
   );
 }

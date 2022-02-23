@@ -17,8 +17,6 @@ StepDefinitionGeneric WhenFillFieldStep() {
         finder,
         value,
       );
-
-      await context.world.appDriver.waitForAppToSettle();
     },
   );
 }
