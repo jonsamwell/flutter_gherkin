@@ -4,7 +4,7 @@ version: 3.0.0-rc.9
 homepage: https://github.com/jonsamwell/flutter_gherkin
 
 environment:
-  sdk: '>=2.12.3 <3.0.0'
+  sdk: ">=2.12.3 <3.0.0"
   flutter: ">=2.2.0"
 
 dependencies:
@@ -18,15 +18,15 @@ dependencies:
     sdk: flutter
   analyzer: ">=1.7.1 <3.0.0"
   collection: ^1.15.0
-  gherkin: ^2.0.8
+  # gherkin: ^2.0.8
   source_gen: ^1.1.1
   build: ^2.1.1
   glob: ^2.0.2
-  # gherkin:
-    # path: ../dart_gherkin
+  gherkin:
+    path: ../dart_gherkin
 
 dev_dependencies:
-  meta: ^1.7.0 
+  meta: ^1.7.0
   pedantic: ^1.11.1
   build_config: ^1.0.0
 

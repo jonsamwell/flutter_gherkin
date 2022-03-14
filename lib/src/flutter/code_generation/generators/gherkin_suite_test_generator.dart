@@ -10,8 +10,7 @@ import 'package:source_gen/source_gen.dart';
 
 class NoOpReporter extends Reporter {}
 
-class GherkinSuiteTestGenerator
-    extends GeneratorForAnnotation<GherkinTestSuite> {
+class GherkinSuiteTestGenerator extends GeneratorForAnnotation<GherkinTestSuite> {
   static const String TEMPLATE = '''
 class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
   _CustomGherkinIntegrationTestRunner(
@@ -46,21 +45,14 @@ void executeTestSuite(
     _languageService.initialise(
       annotation.read('featureDefaultLanguage').literalValue.toString(),
     );
-    final idx = annotation
-        .read('executionOrder')
-        .objectValue
-        .getField('index')!
-        .toIntValue()!;
+    final idx = annotation.read('executionOrder').objectValue.getField('index')!.toIntValue()!;
     final executionOrder = ExecutionOrder.values[idx];
     final featureFiles = annotation
         .read('featurePaths')
         .listValue
         .map((path) => Glob(path.toStringValue()!))
         .map(
-          (glob) => glob
-              .listSync()
-              .map((entity) => File(entity.path).readAsStringSync())
-              .toList(),
+          (glob) => glob.listSync().map((entity) => File(entity.path).readAsStringSync()).toList(),
         )
         .reduce((value, element) => value..addAll(element));
 
@@ -88,10 +80,7 @@ void executeTestSuite(
       }
     }
 
-    return TEMPLATE
-        .replaceAll('{{feature_functions}}',
-            featureExecutionFunctionsBuilder.toString())
-        .replaceAll(
+    return TEMPLATE.replaceAll('{{feature_functions}}', featureExecutionFunctionsBuilder.toString()).replaceAll(
           '{{features_to_execute}}',
           featuresToExecute.toString(),
         );
@@ -218,6 +207,7 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
     Iterable<String> tags,
     bool isFirst,
     bool isLast,
+    String path,
   ) async {
     _flushScenario();
     _currentScenarioCode = _replaceVariable(
