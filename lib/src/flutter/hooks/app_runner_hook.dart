@@ -39,6 +39,7 @@ class FlutterAppRunnerHook extends Hook {
     TestConfiguration config,
     String scenario,
     Iterable<Tag> tags,
+    bool failed,
   ) async {
     final flutterConfig = _castConfig(config);
     haveRunFirstScenario = true;
