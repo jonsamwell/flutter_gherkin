@@ -97,7 +97,7 @@ Scenario: User can increment the counter
 ```
 6. Add the following file (and folder) `integration_test\gherkin_suite_test.dart`.  Notice the attribute `@GherkinTestSuite()` this indicates to the code generator to create a partial file for this file with the generated Gherkin tests in `part 'gherkin_suite_test.g.dart';`.  Don't worry about the initial errors as this will disappear when the tests are generated.
 ```dart
-import 'package:flutter_gherkin/flutter_gherkin_integration_test.dart'; // notice new import name
+import 'package:flutter_gherkin/flutter_gherkin.dart'; // notice new import name
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gherkin/gherkin.dart';
 
