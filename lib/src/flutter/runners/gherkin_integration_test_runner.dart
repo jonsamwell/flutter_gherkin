@@ -137,7 +137,7 @@ abstract class GherkinIntegrationTestRunner {
   void runScenario(
     String name,
     Iterable<String>? tags,
-    List<Future<StepResult> Function(TestDependencies dependencies, bool skip)>
+    List<Future<StepResult> Function(TestDependencies dependencies, bool skip,)>
         steps, {
     Future<void> Function()? onBefore,
     Future<void> Function()? onAfter,
@@ -272,7 +272,7 @@ abstract class GherkinIntegrationTestRunner {
 
   @protected
   Future<StepResult> runStep(String step, Iterable<String> multiLineStrings,
-      dynamic table, TestDependencies dependencies, bool hasToSkip) async {
+      dynamic table, TestDependencies dependencies, bool hasToSkip,) async {
     final executable = _executableSteps!.firstWhereOrNull(
       (s) => s.expression.isMatch(step),
     );
