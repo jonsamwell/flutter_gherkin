@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'package:flutter_gherkin/src/flutter/adapters/widget_tester_app_driver_adapter.dart';
 import 'package:flutter_gherkin/src/flutter/world/flutter_world.dart';
@@ -135,7 +137,8 @@ abstract class GherkinIntegrationTestRunner {
   void runScenario(
     String name,
     Iterable<String>? tags,
-    Future<void> Function(TestDependencies dependencies) runTest, {
+    List<Future<StepResult> Function(TestDependencies dependencies, bool skip,)>
+        steps, {
     Future<void> Function()? onBefore,
     Future<void> Function()? onAfter,
   }) {
@@ -146,6 +149,7 @@ abstract class GherkinIntegrationTestRunner {
           if (onBefore != null) {
             await onBefore();
           }
+          var failed = false;
 
           final debugInformation = RunnableDebugInformation('', 0, name);
           final scenarioTags =
@@ -181,14 +185,26 @@ abstract class GherkinIntegrationTestRunner {
                 scenarioTags,
               ),
             );
-
-            await runTest(dependencies);
+            var hasToSkip = false;
+            for (int i = 0; i < steps.length; i++) {
+              try {
+                final result = await steps[i](dependencies, hasToSkip);
+                if (_isNegativeResult(result.result)) {
+                  failed = true;
+                  hasToSkip = true;
+                }
+              } catch (e) {
+                failed = true;
+                hasToSkip = true;
+                // rethrow;
+              }
+            }
           } finally {
             await reporter.onScenarioFinished(
               ScenarioFinishedMessage(
                 name,
                 debugInformation,
-                true,
+                !failed,
               ),
             );
 
@@ -196,6 +212,7 @@ abstract class GherkinIntegrationTestRunner {
               configuration,
               name,
               scenarioTags,
+              !failed,
             );
 
             if (onAfter != null) {
@@ -254,12 +271,8 @@ abstract class GherkinIntegrationTestRunner {
   }
 
   @protected
-  Future<StepResult> runStep(
-    String step,
-    Iterable<String> multiLineStrings,
-    dynamic table,
-    TestDependencies dependencies,
-  ) async {
+  Future<StepResult> runStep(String step, Iterable<String> multiLineStrings,
+      dynamic table, TestDependencies dependencies, bool hasToSkip,) async {
     final executable = _executableSteps!.firstWhereOrNull(
       (s) => s.expression.isMatch(step),
     );
@@ -283,26 +296,41 @@ abstract class GherkinIntegrationTestRunner {
       multiLineStrings,
     );
 
-    final result = await executable.step.run(
-      dependencies.world,
-      reporter,
-      configuration.defaultTimeout,
-      parameters,
-    );
+    StepResult? result;
 
+    if (hasToSkip) {
+      result = new StepResult(
+          0, StepExecutionResult.skipped, "Previous step(s) failed.");
+    } else {
+      for (int i = 0; i < this.configuration.stepMaxRetries; i++) {
+        result = await executable.step.run(
+          dependencies.world,
+          reporter,
+          configuration.defaultTimeout,
+          parameters,
+        );
+        if (!_isNegativeResult(result.result)) {
+          break;
+        }
+      }
+    }
     await _onAfterStepRun(
       step,
-      result,
+      result!,
       dependencies,
     );
 
-    if (result.result == StepExecutionResult.fail) {
-      throw TestFailure('Step: $step \n\n${result.resultReason}');
-    } else if (result is ErroredStepResult) {
-      throw result.exception;
+    if (result is ErroredStepResult) {
+      // result.resultReason = result.exception.toString();
     }
 
     return result;
+  }
+
+  bool _isNegativeResult(StepExecutionResult result) {
+    return result == StepExecutionResult.error ||
+        result == StepExecutionResult.fail ||
+        result == StepExecutionResult.timeout;
   }
 
   @protected

@@ -22,8 +22,6 @@ dependencies:
   source_gen: ^1.1.1
   build: ^2.1.1
   glob: ^2.0.2
-  # gherkin:
-    # path: ../dart_gherkin
 
 dev_dependencies:
   meta: ^1.7.0 

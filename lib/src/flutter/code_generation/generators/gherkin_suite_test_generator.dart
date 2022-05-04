@@ -134,20 +134,22 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
   runScenario(
     '{{scenario_name}}',
     {{tags}},
-    (TestDependencies dependencies) async {
+    [
       {{steps}}
-    },
+    ],
     {{onBefore}}
     {{onAfter}}
   );
   ''';
   static const String STEP_TEMPLATE = '''
-  await runStep(
+(TestDependencies dependencies, bool hasToSkip) async {
+  return await runStep(
     '{{step_name}}',
     {{step_multi_line_strings}},
     {{step_table}},
     dependencies,
-  );
+    hasToSkip
+  );}
   ''';
   static const String ON_BEFORE_SCENARIO_RUN = '''
   onBefore: () async => onBeforeRunFeature('{{feature_name}}', {{feature_tags}},),
@@ -162,6 +164,7 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
   String? _currentScenarioCode;
   final StringBuffer _scenarioBuffer = StringBuffer();
   final StringBuffer _stepBuffer = StringBuffer();
+  final _steps = [];
 
   Future<String> generateTests(
     int id,
@@ -276,6 +279,7 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
     );
 
     _stepBuffer.writeln(code);
+    _steps.add(code);
   }
 
   void _flushFeature() {
@@ -295,11 +299,11 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
 
   void _flushScenario() {
     if (_currentScenarioCode != null) {
-      if (_stepBuffer.isNotEmpty) {
+      if (_steps.isNotEmpty) {
         _currentScenarioCode = _replaceVariable(
           _currentScenarioCode!,
           'steps',
-          _stepBuffer.toString(),
+          _steps.join(','),
         );
       }
 
