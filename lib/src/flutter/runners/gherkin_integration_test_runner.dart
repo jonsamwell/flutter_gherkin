@@ -302,7 +302,7 @@ abstract class GherkinIntegrationTestRunner {
       result = new StepResult(
           0, StepExecutionResult.skipped, "Previous step(s) failed.");
     } else {
-      for (int i = 0; i < this.configuration.stepMaxRetries; i++) {
+      for (int i = 0; i < this.configuration.stepMaxRetries + 1; i++) {
         result = await executable.step.run(
           dependencies.world,
           reporter,
@@ -311,6 +311,8 @@ abstract class GherkinIntegrationTestRunner {
         );
         if (!_isNegativeResult(result.result)) {
           break;
+        } else {
+          await Future.delayed(this.configuration.retryDelay);
         }
       }
     }
