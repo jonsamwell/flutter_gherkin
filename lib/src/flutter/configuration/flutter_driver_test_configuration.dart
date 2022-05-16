@@ -1,14 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter_gherkin/flutter_gherkin_with_driver.dart';
-import 'package:flutter_gherkin/src/flutter/configuration/build_mode.dart';
-import 'package:flutter_gherkin/src/flutter/world/flutter_driver_world.dart';
-import 'package:flutter_gherkin/src/flutter/world/flutter_world.dart';
-import 'package:flutter_gherkin/src/flutter/hooks/app_runner_hook.dart';
 import 'package:flutter_driver/flutter_driver.dart';
 import 'package:gherkin/gherkin.dart';
-
-import 'flutter_test_configuration.dart';
 
 class FlutterDriverTestConfiguration extends FlutterTestConfiguration {
   String? _observatoryDebuggerUri;
