@@ -21,6 +21,7 @@ class FlutterTestConfiguration extends TestConfiguration {
     Iterable<Hook>? hooks,
     Iterable<Reporter> reporters = const [],
     CreateWorld? createWorld,
+    this.semanticsEnabled,
   }) : super(
           features: features,
           featureDefaultLanguage: featureDefaultLanguage,
@@ -67,10 +68,6 @@ class FlutterTestConfiguration extends TestConfiguration {
           createWorld: createWorld,
         );
 
-  /// Enable semantics in a test by creating a [SemanticsHandle].
-  /// See:  [testWidgets] and [WidgetController.ensureSemantics].
-  bool semanticsEnabled = true;
-
   /// Provide a configuration object with default settings such as the reports and feature file location
   /// Additional setting on the configuration object can be set on the returned instance.
   static FlutterTestConfiguration DEFAULT(
@@ -86,17 +83,20 @@ class FlutterTestConfiguration extends TestConfiguration {
     String? tagExpression,
     Iterable<CustomParameter<dynamic>>? customStepParameterDefinitions,
     Iterable<Hook>? hooks,
+    Iterable<Reporter>? reporters,
     CreateWorld? createWorld,
+    bool semanticsEnabled = true,
   }) {
     return FlutterTestConfiguration(
       stepDefinitions: steps,
       features: [RegExp(featurePath)],
-      reporters: [
-        StdoutReporter(MessageLevel.error),
-        ProgressReporter(),
-        TestRunSummaryReporter(),
-        // JsonReporter(path: './report.json'),
-      ],
+      reporters: reporters ??
+          [
+            StdoutReporter(MessageLevel.error),
+            ProgressReporter(),
+            TestRunSummaryReporter(),
+            // JsonReporter(path: './report.json'),
+          ],
       featureDefaultLanguage: featureDefaultLanguage,
       order: order,
       defaultTimeout: defaultTimeout,
@@ -107,6 +107,11 @@ class FlutterTestConfiguration extends TestConfiguration {
       customStepParameterDefinitions: customStepParameterDefinitions,
       hooks: hooks,
       createWorld: createWorld,
+      semanticsEnabled: semanticsEnabled,
     );
   }
+
+  /// Enable semantics in a test by creating a [SemanticsHandle].
+  /// See:  [testWidgets] and [WidgetController.ensureSemantics].
+  final semanticsEnabled;
 }

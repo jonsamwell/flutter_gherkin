@@ -21,6 +21,7 @@ class FlutterDriverTestConfiguration extends FlutterTestConfiguration {
     Iterable<Hook>? hooks,
     Iterable<Reporter> reporters = const [],
     CreateWorld? createWorld,
+    bool semanticsEnabled = true,
     this.targetAppPath = 'test_driver/app.dart',
     this.restartAppBetweenScenarios = true,
   }) : super(
@@ -55,6 +56,7 @@ class FlutterDriverTestConfiguration extends FlutterTestConfiguration {
     Iterable<CustomParameter<dynamic>>? customStepParameterDefinitions,
     Iterable<Hook>? hooks,
     CreateWorld? createWorld,
+    bool semanticsEnabled = true,
   }) {
     return FlutterDriverTestConfiguration(
       stepDefinitions: steps,
@@ -82,6 +84,7 @@ class FlutterDriverTestConfiguration extends FlutterTestConfiguration {
       createWorld: createWorld,
       targetAppPath: targetAppPath,
       restartAppBetweenScenarios: true,
+      semanticsEnabled: semanticsEnabled,
     );
   }
 
