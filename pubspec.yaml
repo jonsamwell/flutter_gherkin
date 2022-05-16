@@ -16,7 +16,7 @@ dependencies:
     sdk: flutter
   flutter_driver:
     sdk: flutter
-  analyzer: ^4.0.0
+  analyzer: '>=2.1.0 <5.0.0'
   collection: ^1.15.0
   gherkin: ^2.0.8
   source_gen: ^1.1.1
