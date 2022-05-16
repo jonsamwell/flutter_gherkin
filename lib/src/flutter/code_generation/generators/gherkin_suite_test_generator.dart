@@ -8,7 +8,10 @@ import 'package:glob/glob.dart';
 import 'package:glob/list_local_fs.dart';
 import 'package:source_gen/source_gen.dart';
 
-class NoOpReporter extends Reporter {}
+class NoOpReporter extends MessageReporter {
+  @override
+  Future<void> message(String message, MessageLevel level) async {}
+}
 
 class GherkinSuiteTestGenerator
     extends GeneratorForAnnotation<GherkinTestSuite> {
@@ -104,7 +107,7 @@ class FeatureFileTestGenerator {
     String featureFileContents,
     String path,
     LanguageService languageService,
-    Reporter reporter,
+    MessageReporter reporter,
   ) async {
     final visitor = FeatureFileTestGeneratorVisitor();
 
@@ -171,7 +174,7 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
     String featureFileContents,
     String path,
     LanguageService languageService,
-    Reporter reporter,
+    MessageReporter reporter,
   ) async {
     _id = id;
     await visit(
@@ -215,13 +218,13 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
 
   @override
   Future<void> visitScenario(
-    String featureName,
-    Iterable<String> featureTags,
-    String name,
-    Iterable<String> tags,
-    bool isFirst,
-    bool isLast,
-  ) async {
+      String featureName,
+      Iterable<String> featureTags,
+      String name,
+      Iterable<String> tags, {
+        required bool isFirst,
+        required bool isLast,
+      }) async {
     _flushScenario();
     _currentScenarioCode = _replaceVariable(
       SCENARIO_TEMPLATE,

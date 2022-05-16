@@ -18,7 +18,9 @@ dependencies:
     sdk: flutter
   analyzer: '>=2.1.0 <5.0.0'
   collection: ^1.15.0
-  gherkin: ^2.0.8
+  gherkin:
+    git:
+      url: https://github.com/jonsamwell/dart_gherkin.git
   source_gen: ^1.1.1
   build: ^2.1.1
   glob: ^2.0.2

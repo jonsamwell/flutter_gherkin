@@ -13,16 +13,59 @@ import 'flutter_test_configuration.dart';
 class FlutterDriverTestConfiguration extends FlutterTestConfiguration {
   String? _observatoryDebuggerUri;
 
+  FlutterDriverTestConfiguration({
+    Iterable<Pattern> features = const <Pattern>[],
+    String featureDefaultLanguage = 'en',
+    ExecutionOrder order = ExecutionOrder.random,
+    Duration defaultTimeout = const Duration(seconds: 10),
+    FeatureFileMatcher featureFileMatcher = const IoFeatureFileAccessor(),
+    FeatureFileReader featureFileReader = const IoFeatureFileAccessor(),
+    bool stopAfterTestFailed = false,
+    String? tagExpression,
+    Iterable<StepDefinitionGeneric>? stepDefinitions,
+    Iterable<CustomParameter<dynamic>>? customStepParameterDefinitions,
+    Iterable<Hook>? hooks,
+    Iterable<Reporter> reporters = const [],
+    CreateWorld? createWorld,
+    this.targetAppPath = 'test_driver/app.dart',
+    this.restartAppBetweenScenarios = true,
+  }) : super(
+          features: features,
+          featureDefaultLanguage: featureDefaultLanguage,
+          order: order,
+          defaultTimeout: defaultTimeout,
+          featureFileMatcher: featureFileMatcher,
+          featureFileReader: featureFileReader,
+          stopAfterTestFailed: stopAfterTestFailed,
+          tagExpression: tagExpression,
+          stepDefinitions: stepDefinitions,
+          customStepParameterDefinitions: customStepParameterDefinitions,
+          hooks: hooks,
+          reporters: reporters,
+          createWorld: createWorld,
+        );
+
   /// Provide a configuration object with default settings such as the reports and feature file location
   /// Additional setting on the configuration object can be set on the returned instance.
   static FlutterDriverTestConfiguration DEFAULT(
     Iterable<StepDefinitionGeneric<World>> steps, {
     String featurePath = 'features/*.*.feature',
     String targetAppPath = 'test_driver/app.dart',
+    String featureDefaultLanguage = 'en',
+    ExecutionOrder order = ExecutionOrder.random,
+    Duration defaultTimeout = const Duration(seconds: 10),
+    FeatureFileMatcher featureFileMatcher = const IoFeatureFileAccessor(),
+    FeatureFileReader featureFileReader = const IoFeatureFileAccessor(),
+    bool stopAfterTestFailed = false,
+    String? tagExpression,
+    Iterable<CustomParameter<dynamic>>? customStepParameterDefinitions,
+    Iterable<Hook>? hooks,
+    CreateWorld? createWorld,
   }) {
-    return FlutterDriverTestConfiguration()
-      ..features = [RegExp(featurePath)]
-      ..reporters = [
+    return FlutterDriverTestConfiguration(
+      stepDefinitions: steps,
+      features: [RegExp(featurePath)],
+      reporters: [
         StdoutReporter(MessageLevel.error),
         ProgressReporter(),
         TestRunSummaryReporter(),
@@ -32,20 +75,30 @@ class FlutterDriverTestConfiguration extends FlutterTestConfiguration {
           logInfoMessages: false,
           logWarningMessages: false,
         ),
-      ]
-      ..targetAppPath = targetAppPath
-      ..stepDefinitions = steps
-      ..restartAppBetweenScenarios = true;
+      ],
+      featureDefaultLanguage: featureDefaultLanguage,
+      order: order,
+      defaultTimeout: defaultTimeout,
+      featureFileMatcher: featureFileMatcher,
+      featureFileReader: featureFileReader,
+      stopAfterTestFailed: stopAfterTestFailed,
+      tagExpression: tagExpression,
+      customStepParameterDefinitions: customStepParameterDefinitions,
+      hooks: hooks,
+      createWorld: createWorld,
+      targetAppPath: targetAppPath,
+      restartAppBetweenScenarios: true,
+    );
   }
 
   /// restarts the application under test between each scenario.
   /// Defaults to true to avoid the application being in an invalid state
   /// before each test
-  bool restartAppBetweenScenarios = true;
+  bool restartAppBetweenScenarios;
 
   /// The target app to run the tests against
   /// Defaults to "test_driver/app.dart"
-  String targetAppPath = 'test_driver/app.dart';
+  String targetAppPath;
 
   /// Option to define the working directory for the process that runs the app under test (optional)
   /// Handy if your app is separated from your tests as flutter needs to be able to find a pubspec file
@@ -160,17 +213,16 @@ class FlutterDriverTestConfiguration extends FlutterTestConfiguration {
   void prepare() {
     super.prepare();
     _ensureCorrectConfiguration();
-    final providedCreateWorld = createWorld;
-    createWorld = (config) async {
-      FlutterWorld? world;
-      if (providedCreateWorld != null) {
-        world = await providedCreateWorld(config) as FlutterWorld;
-      }
-
-      return await createFlutterWorld(config, world);
-    };
-
-    hooks = List.from(hooks ?? Iterable.empty())..add(FlutterAppRunnerHook());
+    // FIXME not possible to change final attribute
+    // final providedCreateWorld = createWorld;
+    // createWorld = (config) async {
+    //   FlutterWorld? world;
+    //   if (providedCreateWorld != null) {
+    //     world = await providedCreateWorld(config) as FlutterWorld;
+    //   }
+    //
+    //   return await createFlutterWorld(config, world);
+    // };
   }
 
   Future<FlutterDriver> _attemptDriverConnection(
