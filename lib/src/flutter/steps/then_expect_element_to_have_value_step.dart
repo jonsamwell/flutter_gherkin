@@ -22,7 +22,7 @@ StepDefinitionGeneric ThenExpectElementToHaveValue() {
 
         context.expect(text, value);
       } catch (e) {
-        await context.reporter.message('Step error: $e', MessageLevel.error);
+        // await context.reporter('Step error: $e', MessageLevel.error);
         rethrow;
       }
     },

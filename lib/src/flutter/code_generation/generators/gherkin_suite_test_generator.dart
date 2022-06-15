@@ -8,7 +8,18 @@ import 'package:glob/glob.dart';
 import 'package:glob/list_local_fs.dart';
 import 'package:source_gen/source_gen.dart';
 
-class NoOpReporter extends Reporter {}
+class NoOpReporter extends MessageReporter {
+  @override
+  Future<void> message(String message, MessageLevel level) async {
+    if(level == MessageLevel.info || level ==  MessageLevel.debug) {
+      print(message);
+    }else if(level == MessageLevel.warning) {
+      print('\x1B[33m$message\x1B[0m');
+        }else if(level == MessageLevel.error) {
+      print('\x1B[31m$message\x1B[0m');
+    }
+  }
+}
 
 class GherkinSuiteTestGenerator
     extends GeneratorForAnnotation<GherkinTestSuite> {
@@ -52,16 +63,12 @@ void executeTestSuite(
         .getField('index')!
         .toIntValue()!;
     final executionOrder = ExecutionOrder.values[idx];
-    final featureFiles = annotation
+   final featureFiles = annotation
         .read('featurePaths')
         .listValue
         .map((path) => Glob(path.toStringValue()!))
-        .map(
-          (glob) => glob
-              .listSync()
-              .map((entity) => File(entity.path).readAsStringSync())
-              .toList(),
-        )
+        .map((glob) =>
+            glob.listSync().map((entity) => File(entity.path)).toList())
         .reduce((value, element) => value..addAll(element));
 
     if (executionOrder == ExecutionOrder.random) {
@@ -73,11 +80,11 @@ void executeTestSuite(
     final featuresToExecute = new StringBuffer();
     var id = 0;
 
-    for (var featureFileContent in featureFiles) {
+    for (var featureFile in featureFiles) {
       final code = await generator.generate(
         id++,
-        featureFileContent,
-        '',
+        featureFile.readAsStringSync(),
+        featureFile.absolute.path,
         _languageService,
         _reporter,
       );
@@ -104,7 +111,7 @@ class FeatureFileTestGenerator {
     String featureFileContents,
     String path,
     LanguageService languageService,
-    Reporter reporter,
+    MessageReporter reporter,
   ) async {
     final visitor = FeatureFileTestGeneratorVisitor();
 
@@ -148,14 +155,14 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
     {{step_multi_line_strings}},
     {{step_table}},
     dependencies,
-    hasToSkip
+    hasToSkip,
   );}
   ''';
   static const String ON_BEFORE_SCENARIO_RUN = '''
   onBefore: () async => onBeforeRunFeature('{{feature_name}}', {{feature_tags}},),
   ''';
   static const String ON_AFTER_SCENARIO_RUN = '''
-  onAfter: () async => onAfterRunFeature('{{feature_name}}',),
+  onAfter: () async => onAfterRunFeature('{{feature_name}}', '{{path}}'),
   ''';
 
   final StringBuffer _buffer = StringBuffer();
@@ -171,7 +178,7 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
     String featureFileContents,
     String path,
     LanguageService languageService,
-    Reporter reporter,
+    MessageReporter reporter,
   ) async {
     _id = id;
     await visit(
@@ -214,14 +221,9 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
   }
 
   @override
-  Future<void> visitScenario(
-    String featureName,
-    Iterable<String> featureTags,
-    String name,
-    Iterable<String> tags,
-    bool isFirst,
-    bool isLast,
-  ) async {
+  Future<void> visitScenario(String featureName, Iterable<String> featureTags,
+      String name, Iterable<String> tags, String path,
+      {required bool isFirst, required bool isLast}) async {
     _flushScenario();
     _currentScenarioCode = _replaceVariable(
       SCENARIO_TEMPLATE,
@@ -237,6 +239,11 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
       _currentScenarioCode!,
       'feature_name',
       _escapeText(featureName),
+    );
+    _currentScenarioCode = _replaceVariable(
+      _currentScenarioCode!,
+      'path',
+      _escapeText(path),
     );
     _currentScenarioCode = _replaceVariable(
       _currentScenarioCode!,

@@ -1,8 +1,4 @@
-import 'dart:math';
-
 import 'package:flutter_gherkin/flutter_gherkin.dart';
-import 'package:flutter_gherkin/src/flutter/adapters/widget_tester_app_driver_adapter.dart';
-import 'package:flutter_gherkin/src/flutter/world/flutter_world.dart';
 import 'package:gherkin/gherkin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -24,14 +20,14 @@ abstract class GherkinIntegrationTestRunner {
       TagExpressionEvaluator();
   final TestConfiguration configuration;
   final Future<void> Function(World world) appMainFunction;
-  Reporter? _reporter;
+  AggregatedReporter _reporter = new AggregatedReporter();
   Hook? _hook;
   Iterable<ExecutableStep>? _executableSteps;
   Iterable<CustomParameter>? _customParameters;
 
   IntegrationTestWidgetsFlutterBinding? _binding;
 
-  Reporter get reporter => _reporter!;
+  AggregatedReporter get reporter => _reporter;
   Hook get hook => _hook!;
   LiveTestWidgetsFlutterBindingFramePolicy? get framePolicy => null;
 
@@ -42,7 +38,7 @@ abstract class GherkinIntegrationTestRunner {
     this.appMainFunction,
   ) {
     configuration.prepare();
-    _reporter = _registerReporters(configuration.reporters);
+    _registerReporters(configuration.reporters);
     _hook = _registerHooks(configuration.hooks);
     _customParameters =
         _registerCustomParameters(configuration.customStepParameterDefinitions);
@@ -66,7 +62,7 @@ abstract class GherkinIntegrationTestRunner {
     );
 
     _safeInvokeFuture(() async => await hook.onBeforeRun(configuration));
-    _safeInvokeFuture(() async => await reporter.onTestRunStarted());
+    _safeInvokeFuture(() async => await reporter.test.onStarted.maybeCall());
 
     onRun();
   }
@@ -74,7 +70,7 @@ abstract class GherkinIntegrationTestRunner {
   void onRun();
 
   void onRunComplete() {
-    _safeInvokeFuture(() async => await reporter.onTestRunFinished());
+    _safeInvokeFuture(() async => await reporter.test.onFinished.maybeCall());
     _safeInvokeFuture(() async => await hook.onAfterRun(configuration));
     setTestResultData(_binding!);
     _safeInvokeFuture(() async => await reporter.dispose());
@@ -82,7 +78,7 @@ abstract class GherkinIntegrationTestRunner {
 
   void setTestResultData(IntegrationTestWidgetsFlutterBinding binding) {
     if (reporter is SerializableReporter) {
-      final json = (reporter as SerializableReporter).toJson();
+      final json = (reporter as SerializableReporter).serialize();
       binding.reportData = {'gherkin_reports': json};
     }
   }
@@ -109,12 +105,11 @@ abstract class GherkinIntegrationTestRunner {
     final debugInformation = RunnableDebugInformation('', 0, name);
     final featureTags =
         (tags ?? Iterable<Tag>.empty()).map((t) => Tag(t.toString(), 0));
-    await reporter.onFeatureStarted(
-      StartedMessage(
-        Target.feature,
-        name,
-        debugInformation,
-        featureTags,
+    await reporter.feature.onStarted.maybeCall(
+      FeatureMessage(
+        name: name,
+        context: debugInformation,
+        tags: featureTags.toList(),
       ),
     );
   }
@@ -122,13 +117,14 @@ abstract class GherkinIntegrationTestRunner {
   @protected
   Future<void> onAfterRunFeature(
     String name,
+    String path
   ) async {
-    final debugInformation = RunnableDebugInformation('', 0, name);
-    await reporter.onFeatureFinished(
-      FinishedMessage(
-        Target.feature,
-        name,
-        debugInformation,
+    final debugInformation = RunnableDebugInformation(path, 0, name);
+    await reporter.test.onFinished.maybeCall(
+      TestMessage(
+        target: Target.feature,
+        name: name,
+        context: debugInformation,
       ),
     );
   }
@@ -138,7 +134,7 @@ abstract class GherkinIntegrationTestRunner {
     String name,
     Iterable<String>? tags,
     List<Future<StepResult> Function(TestDependencies dependencies, bool skip,)>
-        steps, {
+        steps, String path, {
     Future<void> Function()? onBefore,
     Future<void> Function()? onAfter,
   }) {
@@ -151,7 +147,7 @@ abstract class GherkinIntegrationTestRunner {
           }
           var failed = false;
 
-          final debugInformation = RunnableDebugInformation('', 0, name);
+          final debugInformation = RunnableDebugInformation(path, 0, name);
           final scenarioTags =
               (tags ?? Iterable<Tag>.empty()).map((t) => Tag(t.toString(), 0));
           final dependencies = await createTestDependencies(
@@ -177,12 +173,11 @@ abstract class GherkinIntegrationTestRunner {
               scenarioTags,
             );
 
-            await reporter.onScenarioStarted(
-              StartedMessage(
-                Target.scenario,
-                name,
-                debugInformation,
-                scenarioTags,
+            await reporter.scenario.onStarted.maybeCall(
+              ScenarioMessage(
+                name: name,
+                context: debugInformation,
+                tags: scenarioTags.toList(),
               ),
             );
             var hasToSkip = false;
@@ -200,11 +195,11 @@ abstract class GherkinIntegrationTestRunner {
               }
             }
           } finally {
-            await reporter.onScenarioFinished(
-              ScenarioFinishedMessage(
-                name,
-                debugInformation,
-                !failed,
+            await reporter.scenario.onFinished.maybeCall(
+              ScenarioMessage(
+                name: name,
+                context: debugInformation,
+                hasPassed: !failed,
               ),
             );
 
@@ -212,7 +207,7 @@ abstract class GherkinIntegrationTestRunner {
               configuration,
               name,
               scenarioTags,
-              !failed,
+              passed: !failed,
             );
 
             if (onAfter != null) {
@@ -300,7 +295,7 @@ abstract class GherkinIntegrationTestRunner {
 
     if (hasToSkip) {
       result = new StepResult(
-          0, StepExecutionResult.skipped, "Previous step(s) failed.");
+          0, StepExecutionResult.skipped, resultReason: "Previous step(s) failed.");
     } else {
       for (int i = 0; i < this.configuration.stepMaxRetries + 1; i++) {
         result = await executable.step.run(
@@ -345,13 +340,10 @@ abstract class GherkinIntegrationTestRunner {
     );
   }
 
-  Reporter _registerReporters(Iterable<Reporter>? reporters) {
-    final reporter = AggregatedReporter();
+  void _registerReporters(Iterable<Reporter>? reporters) {
     if (reporters != null) {
-      reporters.forEach((r) => reporter.addReporter(r));
+      reporters.forEach((r) => _reporter.addReporter(r));
     }
-
-    return reporter;
   }
 
   Hook _registerHooks(Iterable<Hook>? hooks) {
@@ -429,12 +421,12 @@ abstract class GherkinIntegrationTestRunner {
       result,
     );
 
-    await reporter.onStepFinished(
-      StepFinishedMessage(
-        step,
-        RunnableDebugInformation('', 0, step),
-        result,
-        dependencies.attachmentManager.getAttachmentsForContext(step),
+    await reporter.step.onStarted.maybeCall(
+      StepMessage(
+        name: step,
+        context: RunnableDebugInformation('', 0, step),
+        result: result,
+        attachments: dependencies.attachmentManager.getAttachmentsForContext(step).toList(),
       ),
     );
   }
@@ -446,10 +438,10 @@ abstract class GherkinIntegrationTestRunner {
     Iterable<String> multiLineStrings,
   ) async {
     await hook.onBeforeStep(world, step);
-    await reporter.onStepStarted(
-      StepStartedMessage(
-        step,
-        RunnableDebugInformation('', 0, step),
+    await reporter.step.onStarted.maybeCall(
+      StepMessage(
+        name: step,
+        context: RunnableDebugInformation('', 0, step),
         table: table,
         multilineString:
             multiLineStrings.isNotEmpty ? multiLineStrings.first : null,

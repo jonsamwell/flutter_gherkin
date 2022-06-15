@@ -24,32 +24,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gherkin/gherkin.dart';
 
 class FlutterTestConfiguration extends TestConfiguration {
- 
-  /// ~~The path(s) to all the features.~~
-  /// ~~All three [Pattern]s are supported: [RegExp], [String], [Glob].~~
-  ///
-  /// Instead of using this variable, give the features in the `@GherkinTestSuite(features: <String>[])` option.
-  @deprecated
-  Iterable<Pattern> features = const <Pattern>[];
-
-  /// ~~The execution order of features - this default to random to avoid any inter-test dependencies~~
-  ///
-  /// Instead of using this variable, give the executionOrder in the `@GherkinTestSuite(executionOrder: ExecutionOrder.random)` option.
-  @deprecated
-  ExecutionOrder order = ExecutionOrder.random;
-
-  /// ~~Lists feature files paths, which match [features] patterns.~~
-  ///
-  /// Instead of using this variable, give the features in the `@GherkinTestSuite(features: <String>[])` option.
-  @deprecated
-  FeatureFileMatcher featureFileMatcher = const IoFeatureFileAccessor();
-
-  /// ~~The feature file reader.~~
-  /// ~~Takes files/resources paths from [featureFileIndexer] and returns their content as String.~~
-  ///
-  /// Instead of using this variable, give the features in the `@GherkinTestSuite(features: <String>[])` option.
-  @deprecated
-  FeatureFileReader featureFileReader = const IoFeatureFileAccessor();
   
   /// Enable semantics in a test by creating a [SemanticsHandle].
   /// See:  [testWidgets] and [WidgetController.ensureSemantics].
@@ -63,7 +37,6 @@ class FlutterTestConfiguration extends TestConfiguration {
     String targetAppPath = 'test_driver/integration_test_driver.dart',
   }) {
     return FlutterTestConfiguration()
-      ..features = [RegExp(featurePath)]
       ..reporters = [
         StdoutReporter(MessageLevel.error),
         ProgressReporter(),
