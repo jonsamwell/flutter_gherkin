@@ -13,10 +13,13 @@ enum _FlutterDriverMessageLogLevel { info, warning, error }
 /// This can cause problems with CI servers for example as they will mark a process as failed if it logs to the
 /// stderr stream.  So Flutter driver will log a normal info message to the stderr and thus make
 /// the process fail from the perspective of a CI server.
-class FlutterDriverReporter extends Reporter {
+class FlutterDriverReporter extends Reporter
+    implements DisposableReporter, TestReporter {
   final bool logErrorMessages;
   final bool logWarningMessages;
   final bool logInfoMessages;
+
+  DriverLogCallback? defaultCallback;
 
   FlutterDriverReporter({
     this.logErrorMessages = true,
@@ -25,13 +28,18 @@ class FlutterDriverReporter extends Reporter {
   });
 
   @override
-  Future<void> onTestRunStarted() async {
-    driverLog = _driverLogMessageHandler;
-  }
+  ReportActionHandler<TestMessage> get test => ReportActionHandler(
+        onStarted: ([_]) async {
+          defaultCallback = driverLog;
+          driverLog = _driverLogMessageHandler;
+        },
+      );
 
   @override
   Future<void> dispose() async {
-    // driverLog = null;
+    if (defaultCallback != null) {
+      driverLog = defaultCallback!;
+    }
   }
 
   void _driverLogMessageHandler(String source, String message) {

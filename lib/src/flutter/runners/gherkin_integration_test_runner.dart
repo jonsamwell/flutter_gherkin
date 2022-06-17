@@ -49,8 +49,7 @@ abstract class GherkinIntegrationTestRunner {
   }
 
   Future<void> run() async {
-    _binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized()
-        as IntegrationTestWidgetsFlutterBinding;
+    _binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
     _binding!.framePolicy =
         framePolicy ?? LiveTestWidgetsFlutterBindingFramePolicy.benchmarkLive;
@@ -77,10 +76,8 @@ abstract class GherkinIntegrationTestRunner {
   }
 
   void setTestResultData(IntegrationTestWidgetsFlutterBinding binding) {
-    if (reporter is SerializableReporter) {
-      final json = (reporter as SerializableReporter).serialize();
-      binding.reportData = {'gherkin_reports': json};
-    }
+    final json = (reporter).serialize();
+    binding.reportData = {'gherkin_reports': json};
   }
 
   @protected
@@ -115,10 +112,7 @@ abstract class GherkinIntegrationTestRunner {
   }
 
   @protected
-  Future<void> onAfterRunFeature(
-    String name,
-    String path
-  ) async {
+  Future<void> onAfterRunFeature(String name, String path) async {
     final debugInformation = RunnableDebugInformation(path, 0, name);
     await reporter.test.onFinished.maybeCall(
       TestMessage(
@@ -130,11 +124,16 @@ abstract class GherkinIntegrationTestRunner {
   }
 
   @protected
-  void runScenario(
-    String name,
-    Iterable<String>? tags,
-    List<Future<StepResult> Function(TestDependencies dependencies, bool skip,)>
-        steps, String path, {
+  void runScenario({
+    required String name,
+    required Iterable<String>? tags,
+    required List<
+            Future<StepResult> Function(
+      TestDependencies dependencies,
+      bool skip,
+    )>
+        steps,
+    required String path,
     Future<void> Function()? onBefore,
     Future<void> Function()? onAfter,
   }) {
@@ -257,7 +256,15 @@ abstract class GherkinIntegrationTestRunner {
     world = world ?? FlutterWidgetTesterWorld();
     world.setAttachmentManager(attachmentManager);
 
-    (world as FlutterWorld).setAppAdapter(WidgetTesterAppDriverAdapter(tester));
+    (world as FlutterWorld).setAppAdapter(
+      WidgetTesterAppDriverAdapter(
+        rawAdapter: tester,
+        binding: _binding!,
+        waitImplicitlyAfterAction: configuration is FlutterTestConfiguration
+            ? (configuration).waitImplicitlyAfterAction
+            : true,
+      ),
+    );
 
     return TestDependencies(
       world,
@@ -266,8 +273,13 @@ abstract class GherkinIntegrationTestRunner {
   }
 
   @protected
-  Future<StepResult> runStep(String step, Iterable<String> multiLineStrings,
-      dynamic table, TestDependencies dependencies, bool hasToSkip,) async {
+  Future<StepResult> runStep(
+    String step,
+    Iterable<String> multiLineStrings,
+    dynamic table,
+    TestDependencies dependencies,
+    bool hasToSkip,
+  ) async {
     final executable = _executableSteps!.firstWhereOrNull(
       (s) => s.expression.isMatch(step),
     );
@@ -294,8 +306,8 @@ abstract class GherkinIntegrationTestRunner {
     StepResult? result;
 
     if (hasToSkip) {
-      result = new StepResult(
-          0, StepExecutionResult.skipped, resultReason: "Previous step(s) failed.");
+      result = new StepResult(0, StepExecutionResult.skipped,
+          resultReason: "Previous step(s) failed.");
     } else {
       for (int i = 0; i < this.configuration.stepMaxRetries + 1; i++) {
         result = await executable.step.run(
@@ -426,7 +438,9 @@ abstract class GherkinIntegrationTestRunner {
         name: step,
         context: RunnableDebugInformation('', 0, step),
         result: result,
-        attachments: dependencies.attachmentManager.getAttachmentsForContext(step).toList(),
+        attachments: dependencies.attachmentManager
+            .getAttachmentsForContext(step)
+            .toList(),
       ),
     );
   }

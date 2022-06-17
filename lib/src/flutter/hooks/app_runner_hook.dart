@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:io' if (dart.library.html) 'dart:html';
 import 'package:flutter_gherkin/src/flutter/configuration/flutter_driver_test_configuration.dart';
 import 'package:flutter_gherkin/src/flutter/runners/flutter_run_process_handler.dart';
 import 'package:flutter_gherkin/src/flutter/world/flutter_driver_world.dart';
@@ -38,9 +38,9 @@ class FlutterAppRunnerHook extends Hook {
   Future<void> onAfterScenario(
     TestConfiguration config,
     String scenario,
-    Iterable<Tag> tags,
-    {bool? passed,}
-  ) async {
+    Iterable<Tag> tags, {
+    bool? passed,
+  }) async {
     final flutterConfig = _castConfig(config);
     haveRunFirstScenario = true;
     if (_flutterRunProcessHandler != null &&

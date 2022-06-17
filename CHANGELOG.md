@@ -1,3 +1,12 @@
+## [3.0.0] - 17/06/2022
+
+- Fix #195: Adding missing export for `wait_until_key_exists_step.dart`
+- Fix #226: Allow compatibility with dev and master flutter branches
+- Feat #218: Allow retry steps in case of intermittent failure by setting the configuration properties `stepMaxRetries` & `retryDelay`
+- Fix #210 & #191: Ability to take screenshots on web
+- Fix #198: Allow the use of implicit pumpAndSettle methods in the app driver to be turned off using the configuration property `waitImplicitlyAfterAction`
+
+
 ## [3.0.0-rc.9] - 18/11/2021
 
 - Fix: #172: Fix for the `StdoutReporter` when running against the web

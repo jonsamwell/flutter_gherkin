@@ -11,11 +11,11 @@ import 'package:source_gen/source_gen.dart';
 class NoOpReporter extends MessageReporter {
   @override
   Future<void> message(String message, MessageLevel level) async {
-    if(level == MessageLevel.info || level ==  MessageLevel.debug) {
+    if (level == MessageLevel.info || level == MessageLevel.debug) {
       print(message);
-    }else if(level == MessageLevel.warning) {
+    } else if (level == MessageLevel.warning) {
       print('\x1B[33m$message\x1B[0m');
-        }else if(level == MessageLevel.error) {
+    } else if (level == MessageLevel.error) {
       print('\x1B[31m$message\x1B[0m');
     }
   }
@@ -63,7 +63,7 @@ void executeTestSuite(
         .getField('index')!
         .toIntValue()!;
     final executionOrder = ExecutionOrder.values[idx];
-   final featureFiles = annotation
+    final featureFiles = annotation
         .read('featurePaths')
         .listValue
         .map((path) => Glob(path.toStringValue()!))
@@ -139,9 +139,10 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
   ''';
   static const String SCENARIO_TEMPLATE = '''
   runScenario(
-    '{{scenario_name}}',
-    {{tags}},
-    [
+    name: '{{scenario_name}}',
+    path: '{{path}}',
+    tags:{{tags}},
+    steps: [
       {{steps}}
     ],
     {{onBefore}}
