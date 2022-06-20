@@ -1,7 +1,13 @@
 @tag
 Feature: Creating todos
 
-  @debug
+  Scenario: User can create single todo item
+    Given I fill the "todo" field with "Buy spinach"
+    When I tap the "add" button
+    Then I expect the todo list
+      | Todo        |
+      | Buy spinach |
+
   Scenario: User can create multiple new todo items
     Given I fill the "todo" field with "Buy carrots"
     When I tap the "add" button

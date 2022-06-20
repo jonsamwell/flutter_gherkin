@@ -154,9 +154,9 @@ class FlutterDriverAppDriverAdapter
   @override
   SerializableFinder findBy(
     dynamic data,
-    FindType type,
+    FindType findType,
   ) {
-    switch (type) {
+    switch (findType) {
       case FindType.key:
         return find.byValueKey(data.toString());
       case FindType.text:

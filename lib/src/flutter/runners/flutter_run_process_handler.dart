@@ -5,10 +5,6 @@ import 'package:flutter_gherkin/src/flutter/configuration/build_mode.dart';
 import 'package:gherkin/gherkin.dart';
 
 class FlutterRunProcessHandler extends ProcessHandler {
-  static const String FAIL_COLOR = '\u001b[33;31m'; // red
-  static const String WARN_COLOR = '\u001b[33;10m'; // yellow
-  static const String RESET_COLOR = '\u001b[33;0m';
-
   // the flutter process usually outputs something like the below to indicate the app is ready to be connected to
   // `An Observatory debugger and profiler on AOSP on IA Emulator is available at: http://127.0.0.1:51322/BI_fyYaeoCE=/`
   // `Observatory URL on device: http://127.0.0.1:37849/t2xp9hvaxNs=/`
@@ -49,10 +45,10 @@ class FlutterRunProcessHandler extends ProcessHandler {
   bool _logFlutterProcessOutput = false;
   bool _verboseFlutterLogs = false;
   bool _keepAppRunning = false;
-  BuildMode _buildMode = BuildMode.Debug;
+  BuildMode _buildMode = BuildMode.debug;
   String? _workingDirectory;
   String? _appTarget;
-  String? _buildFlavor;
+  String? _buildFlavour;
   String? _deviceTargetId;
   Duration _driverConnectionDelay = const Duration(seconds: 2);
   String? currentObservatoryUri;
@@ -73,8 +69,8 @@ class FlutterRunProcessHandler extends ProcessHandler {
     _workingDirectory = workingDirectory;
   }
 
-  void setBuildFlavor(String? buildFlavor) {
-    _buildFlavor = buildFlavor;
+  void setBuildFlavour(String? buildFlavour) {
+    _buildFlavour = buildFlavour;
   }
 
   void setBuildMode(BuildMode buildMode) {
@@ -101,9 +97,9 @@ class FlutterRunProcessHandler extends ProcessHandler {
   Future<void> run() async {
     final arguments = ['run', '--target=$_appTarget'];
 
-    if (_buildMode == BuildMode.Debug) {
+    if (_buildMode == BuildMode.debug) {
       arguments.add('--debug');
-    } else if (_buildMode == BuildMode.Profile) {
+    } else if (_buildMode == BuildMode.profile) {
       arguments.add('--profile');
     }
 
@@ -111,8 +107,8 @@ class FlutterRunProcessHandler extends ProcessHandler {
       arguments.add('--no-build');
     }
 
-    if (_buildFlavor != null && _buildFlavor!.isNotEmpty) {
-      arguments.add('--flavor=$_buildFlavor');
+    if (_buildFlavour != null && _buildFlavour!.isNotEmpty) {
+      arguments.add('--flavor=$_buildFlavour');
     }
 
     if (_deviceTargetId != null && _deviceTargetId!.isNotEmpty) {
@@ -148,11 +144,15 @@ class FlutterRunProcessHandler extends ProcessHandler {
         .where((event) => event.isNotEmpty)
         .listen((event) {
       if (event.contains(_errorMessageRegex)) {
-        stderr.writeln('${FAIL_COLOR}Flutter build error: $event$RESET_COLOR');
+        stderr.writeln(
+          '${StdoutReporter.kFailColor}Flutter build error: $event${StdoutReporter.kResetColor}',
+        );
       } else {
         // This is most likely a deprecated api usage warnings (from Gradle) and should not
         // cause the test run to fail.
-        stdout.writeln('$WARN_COLOR$event$RESET_COLOR');
+        stdout.writeln(
+          '${StdoutReporter.kWarnColor}$event${StdoutReporter.kResetColor}',
+        );
       }
     }));
   }
@@ -163,7 +163,9 @@ class FlutterRunProcessHandler extends ProcessHandler {
     _ensureRunningProcess();
     if (_runningProcess != null) {
       _runningProcess!.stdin.write('q');
-      _openSubscriptions.forEach((s) => s.cancel());
+      for (var s in _openSubscriptions) {
+        s.cancel();
+      }
       _openSubscriptions.clear();
       exitCode = await _runningProcess!.exitCode;
       _runningProcess = null;
@@ -232,12 +234,17 @@ class FlutterRunProcessHandler extends ProcessHandler {
           sub?.cancel();
           if (!completer.isCompleted) {
             stderr.writeln(
-                '${FAIL_COLOR}No connected devices found to run app on and tests against$RESET_COLOR');
+              '${StdoutReporter.kFailColor}'
+              'No connected devices found to run app on and tests against'
+              '${StdoutReporter.kResetColor}',
+            );
           }
         } else if (_moreThanOneDeviceConnectedDeviceRegex.hasMatch(logLine)) {
           sub?.cancel();
           if (!completer.isCompleted) {
-            stderr.writeln('$FAIL_COLOR$logLine$RESET_COLOR');
+            stderr.writeln(
+              '${StdoutReporter.kFailColor}$logLine${StdoutReporter.kResetColor}',
+            );
           }
         }
       },

@@ -8,7 +8,7 @@ part of 'gherkin_suite_test.dart';
 
 class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
   _CustomGherkinIntegrationTestRunner(
-    TestConfiguration configuration,
+    FlutterTestConfiguration configuration,
     Future<void> Function(World) appMainFunction,
   ) : super(configuration, appMainFunction);
 
@@ -21,58 +21,78 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
 
   void testFeature0() {
     runFeature(
-      'Swiping:',
-      <String>['@tag'],
-      () {
+      name: 'Swiping:',
+      tags: <String>['@tag'],
+      run: () {
         runScenario(
           name: 'User can swipe cards left and right',
           path:
-              'C:\Development\github\flutter_gherkin\example_with_integration_test\.\integration_test\features\swiping.feature',
-          tags: <String>['@tag'],
+              'C:\\Development\\github\\flutter_gherkin\\example_with_integration_test\\.\\integration_test\\features\\swiping.feature',
+          tags: <String>['@tag', '@debug'],
           steps: [
-            (TestDependencies dependencies, bool hasToSkip) async {
+            (
+              TestDependencies dependencies,
+              bool skip,
+            ) async {
               return await runStep(
-                'Given I swipe right by 250 pixels on the "scrollable cards"`',
-                <String>[],
-                null,
-                dependencies,
-                hasToSkip,
+                name:
+                    'Given I swipe right by 250 pixels on the "scrollable cards"`',
+                multiLineStrings: <String>[],
+                table: null,
+                dependencies: dependencies,
+                skip: skip,
               );
             },
-            (TestDependencies dependencies, bool hasToSkip) async {
+            (
+              TestDependencies dependencies,
+              bool skip,
+            ) async {
               return await runStep(
-                'Then Then I expect the text "Page 2" to be present',
-                <String>[],
-                null,
-                dependencies,
-                hasToSkip,
+                name: 'Then I expect the text "Page 2" to be present',
+                multiLineStrings: <String>[],
+                table: null,
+                dependencies: dependencies,
+                skip: skip,
               );
             },
-            (TestDependencies dependencies, bool hasToSkip) async {
+            (
+              TestDependencies dependencies,
+              bool skip,
+            ) async {
               return await runStep(
-                'Given I swipe left by 250 pixels on the "scrollable cards"`',
-                <String>[],
-                null,
-                dependencies,
-                hasToSkip,
+                name:
+                    'Given I swipe left by 250 pixels on the "scrollable cards"`',
+                multiLineStrings: <String>[],
+                table: null,
+                dependencies: dependencies,
+                skip: skip,
               );
             },
-            (TestDependencies dependencies, bool hasToSkip) async {
+            (
+              TestDependencies dependencies,
+              bool skip,
+            ) async {
               return await runStep(
-                'Then Then I expect the text "Page 1" to be present',
-                <String>[],
-                null,
-                dependencies,
-                hasToSkip,
+                name: 'Then I expect the text "Page 1" to be present',
+                multiLineStrings: <String>[],
+                table: null,
+                dependencies: dependencies,
+                skip: skip,
               );
-            }
+            },
           ],
           onBefore: () async => onBeforeRunFeature(
-            'Swiping',
-            <String>['@tag'],
+            name: 'Swiping',
+            path:
+                r'C:\\Development\\github\\flutter_gherkin\\example_with_integration_test\\.\\integration_test\\features\\swiping.feature',
+            tags: <String>['@tag'],
           ),
-          onAfter: () async => onAfterRunFeature('Swiping',
-              'C:\Development\github\flutter_gherkin\example_with_integration_test\.\integration_test\features\swiping.feature'),
+          onAfter: () async => onAfterRunFeature(
+            name: 'Swiping',
+            path:
+                r'C:\\Development\\github\\flutter_gherkin\\example_with_integration_test\\.\\integration_test\\features\\swiping.feature',
+            tags: <String>['@tag'],
+          ),
         );
       },
     );
@@ -80,92 +100,22 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
 
   void testFeature1() {
     runFeature(
-      'Creating todos:',
-      <String>['@tag'],
-      () {
+      name: 'Checking data:',
+      tags: <String>['@tag'],
+      run: () {
         runScenario(
-          name: 'User can create multiple new todo items',
+          name: 'User can have data',
           path:
-              'C:\Development\github\flutter_gherkin\example_with_integration_test\.\integration_test\features\create.feature',
-          tags: <String>['@tag', '@debug'],
+              'C:\\Development\\github\\flutter_gherkin\\example_with_integration_test\\.\\integration_test\\features\\check.feature',
+          tags: <String>['@tag', '@tag1'],
           steps: [
-            (TestDependencies dependencies, bool hasToSkip) async {
+            (
+              TestDependencies dependencies,
+              bool skip,
+            ) async {
               return await runStep(
-                'Given I fill the "todo" field with "Buy carrots"',
-                <String>[],
-                null,
-                dependencies,
-                hasToSkip,
-              );
-            },
-            (TestDependencies dependencies, bool hasToSkip) async {
-              return await runStep(
-                'When I tap the "add" button',
-                <String>[],
-                null,
-                dependencies,
-                hasToSkip,
-              );
-            },
-            (TestDependencies dependencies, bool hasToSkip) async {
-              return await runStep(
-                'And I fill the "todo" field with "Buy apples"',
-                <String>[],
-                null,
-                dependencies,
-                hasToSkip,
-              );
-            },
-            (TestDependencies dependencies, bool hasToSkip) async {
-              return await runStep(
-                'When I tap the "add" button',
-                <String>[],
-                null,
-                dependencies,
-                hasToSkip,
-              );
-            },
-            (TestDependencies dependencies, bool hasToSkip) async {
-              return await runStep(
-                'And I fill the "todo" field with "Buy blueberries"',
-                <String>[],
-                null,
-                dependencies,
-                hasToSkip,
-              );
-            },
-            (TestDependencies dependencies, bool hasToSkip) async {
-              return await runStep(
-                'When I tap the "add" button',
-                <String>[],
-                null,
-                dependencies,
-                hasToSkip,
-              );
-            },
-            (TestDependencies dependencies, bool hasToSkip) async {
-              return await runStep(
-                'Then I expect the todo list',
-                <String>[],
-                GherkinTable.fromJson(
-                    '[{"Todo":"Buy blueberries"},{"Todo":"Buy apples"},{"Todo":"Buy carrots"}]'),
-                dependencies,
-                hasToSkip,
-              );
-            },
-            (TestDependencies dependencies, bool hasToSkip) async {
-              return await runStep(
-                'Given I wait 5 seconds for the animation to complete',
-                <String>[],
-                null,
-                dependencies,
-                hasToSkip,
-              );
-            },
-            (TestDependencies dependencies, bool hasToSkip) async {
-              return await runStep(
-                'Given I have item with data',
-                <String>[
+                name: 'Given I have item with data',
+                multiLineStrings: <String>[
                   """{
   "glossary": {
     "title": "example glossary",
@@ -192,18 +142,24 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
   }
 }"""
                 ],
-                null,
-                dependencies,
-                hasToSkip,
+                table: null,
+                dependencies: dependencies,
+                skip: skip,
               );
-            }
+            },
           ],
           onBefore: () async => onBeforeRunFeature(
-            'Creating todos',
-            <String>['@tag'],
+            name: 'Checking data',
+            path:
+                r'C:\\Development\\github\\flutter_gherkin\\example_with_integration_test\\.\\integration_test\\features\\check.feature',
+            tags: <String>['@tag'],
           ),
-          onAfter: () async => onAfterRunFeature('Creating todos',
-              'C:\Development\github\flutter_gherkin\example_with_integration_test\.\integration_test\features\create.feature'),
+          onAfter: () async => onAfterRunFeature(
+            name: 'Checking data',
+            path:
+                r'C:\\Development\\github\\flutter_gherkin\\example_with_integration_test\\.\\integration_test\\features\\check.feature',
+            tags: <String>['@tag'],
+          ),
         );
       },
     );
@@ -211,19 +167,206 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
 
   void testFeature2() {
     runFeature(
-      'Checking data:',
-      <String>['@tag'],
-      () {
+      name: 'Creating todos:',
+      tags: <String>['@tag'],
+      run: () {
         runScenario(
-          name: 'User can have data',
+          name: 'User can create single todo item',
           path:
-              'C:\Development\github\flutter_gherkin\example_with_integration_test\.\integration_test\features\check.feature',
-          tags: <String>['@tag', '@tag1'],
+              'C:\\Development\\github\\flutter_gherkin\\example_with_integration_test\\.\\integration_test\\features\\create.feature',
+          tags: <String>['@tag'],
           steps: [
-            (TestDependencies dependencies, bool hasToSkip) async {
+            (
+              TestDependencies dependencies,
+              bool skip,
+            ) async {
               return await runStep(
-                'Given I have item with data',
-                <String>[
+                name: 'Given I fill the "todo" field with "Buy spinach"',
+                multiLineStrings: <String>[],
+                table: null,
+                dependencies: dependencies,
+                skip: skip,
+              );
+            },
+            (
+              TestDependencies dependencies,
+              bool skip,
+            ) async {
+              return await runStep(
+                name: 'When I tap the "add" button',
+                multiLineStrings: <String>[],
+                table: null,
+                dependencies: dependencies,
+                skip: skip,
+              );
+            },
+            (
+              TestDependencies dependencies,
+              bool skip,
+            ) async {
+              return await runStep(
+                name: 'Then I expect the todo list',
+                multiLineStrings: <String>[],
+                table: GherkinTable.fromJson('[{"Todo":"Buy spinach"}]'),
+                dependencies: dependencies,
+                skip: skip,
+              );
+            },
+          ],
+          onBefore: () async => onBeforeRunFeature(
+            name: 'Creating todos',
+            path:
+                r'C:\\Development\\github\\flutter_gherkin\\example_with_integration_test\\.\\integration_test\\features\\create.feature',
+            tags: <String>['@tag'],
+          ),
+        );
+
+        runScenario(
+          name: 'User can create multiple new todo items',
+          path:
+              'C:\\Development\\github\\flutter_gherkin\\example_with_integration_test\\.\\integration_test\\features\\create.feature',
+          tags: <String>['@tag'],
+          steps: [
+            (
+              TestDependencies dependencies,
+              bool skip,
+            ) async {
+              return await runStep(
+                name: 'Given I fill the "todo" field with "Buy spinach"',
+                multiLineStrings: <String>[],
+                table: null,
+                dependencies: dependencies,
+                skip: skip,
+              );
+            },
+            (
+              TestDependencies dependencies,
+              bool skip,
+            ) async {
+              return await runStep(
+                name: 'When I tap the "add" button',
+                multiLineStrings: <String>[],
+                table: null,
+                dependencies: dependencies,
+                skip: skip,
+              );
+            },
+            (
+              TestDependencies dependencies,
+              bool skip,
+            ) async {
+              return await runStep(
+                name: 'Then I expect the todo list',
+                multiLineStrings: <String>[],
+                table: GherkinTable.fromJson('[{"Todo":"Buy spinach"}]'),
+                dependencies: dependencies,
+                skip: skip,
+              );
+            },
+            (
+              TestDependencies dependencies,
+              bool skip,
+            ) async {
+              return await runStep(
+                name: 'Given I fill the "todo" field with "Buy carrots"',
+                multiLineStrings: <String>[],
+                table: null,
+                dependencies: dependencies,
+                skip: skip,
+              );
+            },
+            (
+              TestDependencies dependencies,
+              bool skip,
+            ) async {
+              return await runStep(
+                name: 'When I tap the "add" button',
+                multiLineStrings: <String>[],
+                table: null,
+                dependencies: dependencies,
+                skip: skip,
+              );
+            },
+            (
+              TestDependencies dependencies,
+              bool skip,
+            ) async {
+              return await runStep(
+                name: 'And I fill the "todo" field with "Buy apples"',
+                multiLineStrings: <String>[],
+                table: null,
+                dependencies: dependencies,
+                skip: skip,
+              );
+            },
+            (
+              TestDependencies dependencies,
+              bool skip,
+            ) async {
+              return await runStep(
+                name: 'When I tap the "add" button',
+                multiLineStrings: <String>[],
+                table: null,
+                dependencies: dependencies,
+                skip: skip,
+              );
+            },
+            (
+              TestDependencies dependencies,
+              bool skip,
+            ) async {
+              return await runStep(
+                name: 'And I fill the "todo" field with "Buy blueberries"',
+                multiLineStrings: <String>[],
+                table: null,
+                dependencies: dependencies,
+                skip: skip,
+              );
+            },
+            (
+              TestDependencies dependencies,
+              bool skip,
+            ) async {
+              return await runStep(
+                name: 'When I tap the "add" button',
+                multiLineStrings: <String>[],
+                table: null,
+                dependencies: dependencies,
+                skip: skip,
+              );
+            },
+            (
+              TestDependencies dependencies,
+              bool skip,
+            ) async {
+              return await runStep(
+                name: 'Then I expect the todo list',
+                multiLineStrings: <String>[],
+                table: GherkinTable.fromJson(
+                    '[{"Todo":"Buy blueberries"},{"Todo":"Buy apples"},{"Todo":"Buy carrots"}]'),
+                dependencies: dependencies,
+                skip: skip,
+              );
+            },
+            (
+              TestDependencies dependencies,
+              bool skip,
+            ) async {
+              return await runStep(
+                name: 'Given I wait 5 seconds for the animation to complete',
+                multiLineStrings: <String>[],
+                table: null,
+                dependencies: dependencies,
+                skip: skip,
+              );
+            },
+            (
+              TestDependencies dependencies,
+              bool skip,
+            ) async {
+              return await runStep(
+                name: 'Given I have item with data',
+                multiLineStrings: <String>[
                   """{
   "glossary": {
     "title": "example glossary",
@@ -250,18 +393,18 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
   }
 }"""
                 ],
-                null,
-                dependencies,
-                hasToSkip,
+                table: null,
+                dependencies: dependencies,
+                skip: skip,
               );
-            }
+            },
           ],
-          onBefore: () async => onBeforeRunFeature(
-            'Checking data',
-            <String>['@tag'],
+          onAfter: () async => onAfterRunFeature(
+            name: 'Creating todos',
+            path:
+                r'C:\\Development\\github\\flutter_gherkin\\example_with_integration_test\\.\\integration_test\\features\\create.feature',
+            tags: <String>['@tag'],
           ),
-          onAfter: () async => onAfterRunFeature('Checking data',
-              'C:\Development\github\flutter_gherkin\example_with_integration_test\.\integration_test\features\check.feature'),
         );
       },
     );
@@ -269,7 +412,7 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
 }
 
 void executeTestSuite(
-  TestConfiguration configuration,
+  FlutterTestConfiguration configuration,
   Future<void> Function(World) appMainFunction,
 ) {
   _CustomGherkinIntegrationTestRunner(configuration, appMainFunction).run();

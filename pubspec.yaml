@@ -27,5 +27,7 @@ dev_dependencies:
   meta: '>=1.7.0 < 2.0.0'
   pedantic: ^1.11.1
   build_config: ^1.0.0
+  flutter_lints: ^2.0.1
+  dart_code_metrics: ^4.15.2
 
 flutter:

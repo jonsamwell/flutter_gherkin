@@ -12,29 +12,29 @@ class FlutterTestConfiguration extends TestConfiguration {
     SwipeDirectionParameter(),
   ];
   static final _wellKnownStepDefinitions = [
-    ThenExpectElementToHaveValue(),
-    WhenTapBackButtonWidget(),
-    WhenTapWidget(),
-    WhenTapWidgetWithoutScroll(),
-    WhenLongPressWidget(),
-    WhenLongPressWidgetWithoutScroll(),
-    WhenLongPressWidgetForDuration(),
-    GivenOpenDrawer(),
-    WhenPauseStep(),
-    WhenFillFieldStep(),
-    ThenExpectWidgetToBePresent(),
-    RestartAppStep(),
-    SiblingContainsTextStep(),
     SwipeOnKeyStep(),
     SwipeOnTextStep(),
-    TapTextWithinWidgetStep(),
-    TapWidgetOfTypeStep(),
-    TapWidgetOfTypeWithinStep(),
-    TapWidgetWithTextStep(),
-    TextExistsStep(),
-    TextExistsWithinStep(),
-    WaitUntilKeyExistsStep(),
-    WaitUntilTypeExistsStep(),
+    thenExpectElementToHaveValue(),
+    whenTapBackButtonWidget(),
+    whenTapWidget(),
+    whenTapWidgetWithoutScroll(),
+    whenLongPressWidget(),
+    whenLongPressWidgetWithoutScroll(),
+    whenLongPressWidgetForDuration(),
+    givenOpenDrawer(),
+    whenPauseStep(),
+    whenFillFieldStep(),
+    thenExpectWidgetToBePresent(),
+    restartAppStep(),
+    siblingContainsTextStep(),
+    tapTextWithinWidgetStep(),
+    tapWidgetOfTypeStep(),
+    tapWidgetOfTypeWithinStep(),
+    tapWidgetWithTextStep(),
+    textExistsStep(),
+    textExistsWithinStep(),
+    waitUntilKeyExistsStep(),
+    waitUntilTypeExistsStep(),
   ];
 
   /// Enable semantics in a test by creating a [SemanticsHandle].
@@ -47,7 +47,7 @@ class FlutterTestConfiguration extends TestConfiguration {
 
   /// Provide a configuration object with default settings such as the reports and feature file location
   /// Additional setting on the configuration object can be set on the returned instance.
-  static FlutterTestConfiguration DEFAULT(
+  static FlutterTestConfiguration standard(
     Iterable<StepDefinitionGeneric<World>> steps, {
     String featurePath = 'integration_test/features/*.*.feature',
     String targetAppPath = 'test_driver/integration_test_driver.dart',
@@ -57,7 +57,6 @@ class FlutterTestConfiguration extends TestConfiguration {
         StdoutReporter(MessageLevel.error),
         ProgressReporter(),
         TestRunSummaryReporter(),
-        // JsonReporter(path: './report.json'),
       ],
       stepDefinitions: steps,
     );
@@ -80,10 +79,11 @@ class FlutterTestConfiguration extends TestConfiguration {
     Iterable<CustomParameter<dynamic>>? customStepParameterDefinitions,
     Iterable<StepDefinitionGeneric<World>>? stepDefinitions,
   }) : super(
-          customStepParameterDefinitions:
-              List.from(customStepParameterDefinitions ?? Iterable.empty())
-                ..addAll(_wellKnownParameters),
-          stepDefinitions: List.from(stepDefinitions ?? Iterable.empty())
-            ..addAll(_wellKnownStepDefinitions),
+          customStepParameterDefinitions: List.from(
+            customStepParameterDefinitions ?? const Iterable.empty(),
+          )..addAll(_wellKnownParameters),
+          stepDefinitions: List.from(
+            stepDefinitions ?? const Iterable.empty(),
+          )..addAll(_wellKnownStepDefinitions),
         );
 }

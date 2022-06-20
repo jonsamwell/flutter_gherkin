@@ -13,7 +13,7 @@ import 'steps/when_step_has_timeout.dart';
 import 'world/custom_world.dart';
 
 FlutterTestConfiguration gherkinTestConfiguration = FlutterTestConfiguration(
-  tagExpression: '@debug',
+  // tagExpression: '@debug',
   stepDefinitions: [
     thenIExpectTheTodos,
     whenAnAnimationIsAwaited,

@@ -26,7 +26,7 @@ class FlutterDriverTestConfiguration extends FlutterTestConfiguration {
     super.stepDefinitions,
     this.targetAppPath = 'test_driver/app.dart',
     this.targetAppWorkingDirectory,
-    this.buildFlavor,
+    this.buildFlavour,
     this.targetDeviceId,
     this.runningAppProtocolEndpointUri,
     this.onBeforeFlutterDriverConnect,
@@ -36,18 +36,19 @@ class FlutterDriverTestConfiguration extends FlutterTestConfiguration {
     this.keepAppRunningAfterTests = false,
     this.verboseFlutterProcessLogs = false,
     this.build = true,
-    this.buildMode = BuildMode.Debug,
+    this.buildMode = BuildMode.debug,
     this.flutterBuildTimeout = const Duration(seconds: 90),
     this.flutterDriverReconnectionDelay = const Duration(seconds: 2),
     this.flutterDriverMaxConnectionAttempts = 3,
   }) :
         // assert(featurePath != null && features != null),
         super(
-          features: features != null ? features : [RegExp(featurePath!)],
+          features: features ?? [RegExp(featurePath!)],
         );
 
   /// Provide a configuration object with default settings such as the reports and feature file location
   /// Additional setting on the configuration object can be set on the returned instance.
+  // ignore: non_constant_identifier_names
   static FlutterDriverTestConfiguration DEFAULT(
     Iterable<StepDefinitionGeneric<World>> steps, {
     String featurePath = 'features/*.*.feature',
@@ -88,9 +89,9 @@ class FlutterDriverTestConfiguration extends FlutterTestConfiguration {
   /// Handy if your app is separated from your tests as flutter needs to be able to find a pubspec file
   final String? targetAppWorkingDirectory;
 
-  /// The build flavor to run the tests against (optional)
+  /// The build flavour to run the tests against (optional)
   /// Defaults to null
-  final String? buildFlavor;
+  final String? buildFlavour;
 
   /// The default build mode used for running tests is --debug.
   /// We are exposing the option to run the tests also in --profile mode
@@ -201,25 +202,25 @@ class FlutterDriverTestConfiguration extends FlutterTestConfiguration {
     final providedCreateWorld = createWorld;
 
     return FlutterDriverTestConfiguration(
-      buildFlavor: this.buildFlavor,
-      customStepParameterDefinitions: this.customStepParameterDefinitions,
-      defaultTimeout: this.defaultTimeout,
-      featureDefaultLanguage: this.featureDefaultLanguage,
-      featureFileMatcher: this.featureFileMatcher,
-      featureFileReader: this.featureFileReader,
-      features: this.features,
-      onAfterFlutterDriverConnect: this.onAfterFlutterDriverConnect,
-      onBeforeFlutterDriverConnect: this.onBeforeFlutterDriverConnect,
-      order: this.order,
-      reporters: this.reporters,
-      restartAppBetweenScenarios: this.restartAppBetweenScenarios,
-      runningAppProtocolEndpointUri: this.runningAppProtocolEndpointUri,
-      stepDefinitions: this.stepDefinitions,
-      stopAfterTestFailed: this.stopAfterTestFailed,
-      tagExpression: this.tagExpression,
-      targetAppPath: this.targetAppPath,
-      targetAppWorkingDirectory: this.targetAppWorkingDirectory,
-      targetDeviceId: this.targetDeviceId,
+      buildFlavour: buildFlavour,
+      customStepParameterDefinitions: customStepParameterDefinitions,
+      defaultTimeout: defaultTimeout,
+      featureDefaultLanguage: featureDefaultLanguage,
+      featureFileMatcher: featureFileMatcher,
+      featureFileReader: featureFileReader,
+      features: features,
+      onAfterFlutterDriverConnect: onAfterFlutterDriverConnect,
+      onBeforeFlutterDriverConnect: onBeforeFlutterDriverConnect,
+      order: order,
+      reporters: reporters,
+      restartAppBetweenScenarios: restartAppBetweenScenarios,
+      runningAppProtocolEndpointUri: runningAppProtocolEndpointUri,
+      stepDefinitions: stepDefinitions,
+      stopAfterTestFailed: stopAfterTestFailed,
+      tagExpression: tagExpression,
+      targetAppPath: targetAppPath,
+      targetAppWorkingDirectory: targetAppWorkingDirectory,
+      targetDeviceId: targetDeviceId,
       createWorld: (config) async {
         FlutterWorld? world;
         if (providedCreateWorld != null) {
@@ -228,7 +229,10 @@ class FlutterDriverTestConfiguration extends FlutterTestConfiguration {
 
         return await createFlutterWorld(config, world);
       },
-      hooks: List.from(hooks ?? Iterable.empty())..add(FlutterAppRunnerHook()),
+      hooks: List.from(hooks ?? const Iterable.empty())
+        ..add(
+          FlutterAppRunnerHook(),
+        ),
     );
   }
 
@@ -244,8 +248,9 @@ class FlutterDriverTestConfiguration extends FlutterTestConfiguration {
         if (attempt > maxAttempts) {
           throw e;
         } else {
+          // ignore: avoid_print
           print(
-            'Fluter driver error connecting to application at `$dartVmServiceUrl`,'
+            'Flutter driver error connecting to application at `$dartVmServiceUrl`,'
             'retrying after delay of $flutterDriverReconnectionDelay',
           );
           await Future<void>.delayed(flutterDriverReconnectionDelay);

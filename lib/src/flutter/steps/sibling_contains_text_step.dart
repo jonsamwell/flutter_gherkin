@@ -11,7 +11,7 @@ import 'package:gherkin/gherkin.dart';
 /// Examples:
 ///
 ///   `Then I expect a "Row" that contains the text "X" to also contain the text "Y"`
-StepDefinitionGeneric SiblingContainsTextStep() {
+StepDefinitionGeneric siblingContainsTextStep() {
   return given3<String, String, String, FlutterWorld>(
     'I expect a {string} that contains the text {string} to also contain the text {string}',
     (ancestorType, leadingText, valueText, context) async {

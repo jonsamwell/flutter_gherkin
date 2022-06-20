@@ -8,7 +8,7 @@ import 'package:gherkin/gherkin.dart';
 /// Examples:
 ///   When I pause for 10 seconds
 ///   When I pause for 120 seconds
-StepDefinitionGeneric WhenPauseStep() {
+StepDefinitionGeneric whenPauseStep() {
   return when1<int, FlutterWorld>(
     'I (?:pause|wait) for {int} second(?:s)?',
     (wait, context) async {

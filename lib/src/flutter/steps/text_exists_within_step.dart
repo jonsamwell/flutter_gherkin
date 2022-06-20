@@ -8,8 +8,8 @@ import '../parameters/existence_parameter.dart';
 /// Examples:
 ///
 ///   `Then I expect the text "Logout" to be present within the "user_settings_list"`
-///   `But I expect the text "Signup" to be absent within the "login_screen"`
-StepDefinitionGeneric TextExistsWithinStep() {
+///   `But I expect the text "Sign up" to be absent within the "login_screen"`
+StepDefinitionGeneric textExistsWithinStep() {
   return then3<String, Existence, String, FlutterWorld>(
     RegExp(
         r'I expect the text {string} to be {existence} within the {string}$'),

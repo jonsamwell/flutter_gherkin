@@ -1,5 +1,6 @@
 import 'dart:io';
 
+// ignore: implementation_imports
 import 'package:build/src/builder/build_step.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:flutter_gherkin/src/flutter/code_generation/annotations/gherkin_full_test_suite_annotation.dart';
@@ -12,10 +13,13 @@ class NoOpReporter extends MessageReporter {
   @override
   Future<void> message(String message, MessageLevel level) async {
     if (level == MessageLevel.info || level == MessageLevel.debug) {
+      // ignore: avoid_print
       print(message);
     } else if (level == MessageLevel.warning) {
+      // ignore: avoid_print
       print('\x1B[33m$message\x1B[0m');
     } else if (level == MessageLevel.error) {
+      // ignore: avoid_print
       print('\x1B[31m$message\x1B[0m');
     }
   }
@@ -23,10 +27,10 @@ class NoOpReporter extends MessageReporter {
 
 class GherkinSuiteTestGenerator
     extends GeneratorForAnnotation<GherkinTestSuite> {
-  static const String TEMPLATE = '''
+  static const String template = '''
 class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
   _CustomGherkinIntegrationTestRunner(
-    TestConfiguration configuration,
+    FlutterTestConfiguration configuration,
     Future<void> Function(World) appMainFunction,
   ) : super(configuration, appMainFunction);
 
@@ -39,7 +43,7 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
 }
 
 void executeTestSuite(
-  TestConfiguration configuration,
+  FlutterTestConfiguration configuration,
   Future<void> Function(World) appMainFunction,
 ) {
   _CustomGherkinIntegrationTestRunner(configuration, appMainFunction).run();
@@ -77,7 +81,7 @@ void executeTestSuite(
 
     final featureExecutionFunctionsBuilder = StringBuffer();
     final generator = FeatureFileTestGenerator();
-    final featuresToExecute = new StringBuffer();
+    final featuresToExecute = StringBuffer();
     var id = 0;
 
     for (var featureFile in featureFiles) {
@@ -95,7 +99,7 @@ void executeTestSuite(
       }
     }
 
-    return TEMPLATE
+    return template
         .replaceAll('{{feature_functions}}',
             featureExecutionFunctionsBuilder.toString())
         .replaceAll(
@@ -126,44 +130,42 @@ class FeatureFileTestGenerator {
 }
 
 class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
-  static const String FUNCTION_TEMPLATE = '''
+  static const String functionTemplate = '''
   void testFeature{{feature_number}}() {
     runFeature(
-      '{{feature_name}}:',
-      {{tags}},
-      () {
+      name: '{{feature_name}}:',
+      tags: {{tags}},
+      run: () {
         {{scenarios}}
       },
     );
   }
   ''';
-  static const String SCENARIO_TEMPLATE = '''
+  static const String scenarioTemplate = '''
   runScenario(
     name: '{{scenario_name}}',
     path: '{{path}}',
     tags:{{tags}},
-    steps: [
-      {{steps}}
-    ],
+    steps: [{{steps}},],
     {{onBefore}}
     {{onAfter}}
   );
   ''';
-  static const String STEP_TEMPLATE = '''
-(TestDependencies dependencies, bool hasToSkip) async {
+  static const String stepTemplate = '''
+(TestDependencies dependencies, bool skip,) async {
   return await runStep(
-    '{{step_name}}',
-    {{step_multi_line_strings}},
-    {{step_table}},
-    dependencies,
-    hasToSkip,
+    name: '{{step_name}}',
+    multiLineStrings: {{step_multi_line_strings}},
+    table: {{step_table}},
+    dependencies: dependencies,
+    skip: skip,
   );}
   ''';
-  static const String ON_BEFORE_SCENARIO_RUN = '''
-  onBefore: () async => onBeforeRunFeature('{{feature_name}}', {{feature_tags}},),
+  static const String onBeforeScenarioRun = '''
+  onBefore: () async => onBeforeRunFeature(name:'{{feature_name}}', path:r'{{path}}', tags:{{feature_tags}},),
   ''';
-  static const String ON_AFTER_SCENARIO_RUN = '''
-  onAfter: () async => onAfterRunFeature('{{feature_name}}', '{{path}}'),
+  static const String onAfterScenarioRun = '''
+  onAfter: () async => onAfterRunFeature(name:'{{feature_name}}', path:r'{{path}}', tags:{{feature_tags}},),
   ''';
 
   final StringBuffer _buffer = StringBuffer();
@@ -204,7 +206,7 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
   ) async {
     if (childScenarioCount > 0) {
       _currentFeatureCode = _replaceVariable(
-        FUNCTION_TEMPLATE,
+        functionTemplate,
         'feature_number',
         _id.toString(),
       );
@@ -227,14 +229,14 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
       {required bool isFirst, required bool isLast}) async {
     _flushScenario();
     _currentScenarioCode = _replaceVariable(
-      SCENARIO_TEMPLATE,
+      scenarioTemplate,
       'onBefore',
-      isFirst ? ON_BEFORE_SCENARIO_RUN : '',
+      isFirst ? onBeforeScenarioRun : '',
     );
     _currentScenarioCode = _replaceVariable(
       _currentScenarioCode!,
       'onAfter',
-      isLast ? ON_AFTER_SCENARIO_RUN : '',
+      isLast ? onAfterScenarioRun : '',
     );
     _currentScenarioCode = _replaceVariable(
       _currentScenarioCode!,
@@ -270,7 +272,7 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
     GherkinTable? table,
   ) async {
     var code = _replaceVariable(
-      STEP_TEMPLATE,
+      stepTemplate,
       'step_name',
       _escapeText(name),
     );
@@ -326,5 +328,6 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
     return content.replaceAll('{{$property}}', value);
   }
 
-  String _escapeText(String text) => text.replaceAll("'", "\\'");
+  String _escapeText(String text) =>
+      text.replaceAll("\\", "\\\\").replaceAll("'", "\\'");
 }

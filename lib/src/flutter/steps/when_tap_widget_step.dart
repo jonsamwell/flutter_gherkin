@@ -16,7 +16,7 @@ import 'package:gherkin/gherkin.dart';
 ///   `When I tap "controlKey" field"`
 ///   `When I tap "controlKey" text"`
 ///   `When I tap "controlKey" widget"`
-StepDefinitionGeneric WhenTapWidget() {
+StepDefinitionGeneric whenTapWidget() {
   return when1<String, FlutterWorld>(
     RegExp(
         r'I tap the {string} (?:button|element|label|icon|field|text|widget)$'),
@@ -37,7 +37,7 @@ StepDefinitionGeneric WhenTapWidget() {
   );
 }
 
-StepDefinitionGeneric WhenTapWidgetWithoutScroll() {
+StepDefinitionGeneric whenTapWidgetWithoutScroll() {
   return when1<String, FlutterWorld>(
     RegExp(
         r'I tap the {string} (?:button|element|label|icon|field|text|widget) without scrolling it into view$'),

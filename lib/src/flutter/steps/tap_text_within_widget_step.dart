@@ -7,7 +7,7 @@ import 'package:gherkin/gherkin.dart';
 /// Examples:
 ///
 ///   `Then I tap the label that contains the text "Logout" within the "user_settings_list"`
-StepDefinitionGeneric TapTextWithinWidgetStep() {
+StepDefinitionGeneric tapTextWithinWidgetStep() {
   return given2<String, String, FlutterWorld>(
     RegExp(
         r'I tap the (?:button|element|label|field|text|widget) that contains the text {string} within the {string}'),

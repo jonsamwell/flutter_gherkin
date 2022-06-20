@@ -6,7 +6,7 @@ import 'package:gherkin/gherkin.dart';
 /// Examples:
 ///
 ///   `Then I tap the element of type "MaterialButton" within the "user_settings_list"`
-StepDefinitionGeneric TapWidgetOfTypeWithinStep() {
+StepDefinitionGeneric tapWidgetOfTypeWithinStep() {
   return when2<String, String, FlutterWorld>(
     RegExp(
         r'I tap the (?:button|element|label|icon|field|text|widget) of type {string} within the {string}$'),

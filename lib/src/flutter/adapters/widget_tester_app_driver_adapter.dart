@@ -39,8 +39,9 @@ class WidgetTesterAppDriverAdapter
   Future<void> _implicitWait({
     Duration? duration = const Duration(milliseconds: 100),
     Duration? timeout = const Duration(seconds: 30),
+    bool? force,
   }) async {
-    if (waitImplicitlyAfterAction) {
+    if (waitImplicitlyAfterAction || force == true) {
       try {
         await nativeDriver.pumpAndSettle(
           duration ?? const Duration(milliseconds: 100),
@@ -154,35 +155,16 @@ class WidgetTesterAppDriverAdapter
       duration: pressDuration,
       timeout: timeout,
     );
+
     await _implicitWait(timeout: timeout);
-  }
-
-  @override
-  Future<void> scroll(
-    Finder finder, {
-    double? dx,
-    double? dy,
-    Duration? duration = const Duration(milliseconds: 200),
-    Duration? timeout = const Duration(seconds: 30),
-  }) async {
-    final scrollableFinder = findByDescendant(
-      finder,
-      find.byType(Scrollable),
-      matchRoot: true,
-    );
-    final state = nativeDriver.state(scrollableFinder) as ScrollableState;
-    final position = state.position;
-    position.jumpTo(dy ?? dx ?? 0);
-
-    await nativeDriver.pump();
   }
 
   @override
   Finder findBy(
     dynamic data,
-    FindType type,
+    FindType findType,
   ) {
-    switch (type) {
+    switch (findType) {
       case FindType.key:
         return find.byKey(data is Key ? data : Key(data));
       case FindType.text:
@@ -223,6 +205,31 @@ class WidgetTesterAppDriverAdapter
   }
 
   @override
+  Future<void> scroll(
+    Finder finder, {
+    double? dx,
+    double? dy,
+    Duration? duration = const Duration(milliseconds: 200),
+    Duration? timeout = const Duration(seconds: 30),
+  }) async {
+    final scrollableFinder = findByDescendant(
+      finder,
+      find.byType(Scrollable),
+      matchRoot: true,
+    );
+    final state = nativeDriver.state(scrollableFinder) as ScrollableState;
+    final position = state.position;
+    position.jumpTo(dy ?? dx ?? 0);
+
+    // must force a pump and settle to ensure the scroll is performed
+    await _implicitWait(
+      duration: duration,
+      timeout: timeout,
+      force: true,
+    );
+  }
+
+  @override
   Future<void> scrollUntilVisible(
     Finder item, {
     Finder? scrollable,
@@ -235,6 +242,12 @@ class WidgetTesterAppDriverAdapter
       dy ?? dx ?? 0,
       scrollable: scrollable,
     );
+
+    // must force a pump and settle to ensure the scroll is performed
+    await _implicitWait(
+      timeout: timeout,
+      force: true,
+    );
   }
 
   @override
@@ -244,6 +257,12 @@ class WidgetTesterAppDriverAdapter
   }) async {
     await nativeDriver.ensureVisible(finder);
     await waitForAppToSettle();
+
+    // must force a pump and settle to ensure the scroll is performed
+    await _implicitWait(
+      timeout: timeout,
+      force: true,
+    );
   }
 
   @override

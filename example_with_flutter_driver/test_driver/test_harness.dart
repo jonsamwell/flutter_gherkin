@@ -7,7 +7,7 @@ Future<void> main() {
     features: [RegExp('features/**.feature')],
     targetAppPath: 'test_driver/app.dart',
     targetAppWorkingDirectory: '../',
-    buildFlavor:
+    buildFlavour:
         "staging", // uncomment when using build flavor and check android/ios flavor setup see android file android\app\build.gradle
     targetDeviceId:
         "all", // uncomment to run tests on all connected devices or set specific device target id
