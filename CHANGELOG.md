@@ -1,4 +1,4 @@
-## [3.0.0] - 17/06/2022
+## [3.0.0-rc.10] - 23/06/2022
 
 - Fix #195: Adding missing export for `wait_until_key_exists_step.dart`
 - Fix #226: Allow compatibility with dev and master flutter branches
@@ -8,6 +8,8 @@
 
 * BREAKING CHANGE:
 - `NEW API FOR REPORTERS`: All reporters implement (do not extend) separated interfaces see https://github.com/jonsamwell/dart_gherkin/blob/master/CHANGELOG.md#300---16052022
+
+**Note: this release will soon be promoted the main version**
 
 ## [3.0.0-rc.9] - 18/11/2021
 
