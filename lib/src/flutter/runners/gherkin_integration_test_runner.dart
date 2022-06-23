@@ -224,6 +224,9 @@ abstract class GherkinIntegrationTestRunner {
               await onAfter();
             }
 
+            // need to pump so app can finalise
+            await _pumpAndSettle(tester);
+
             cleanUpScenarioRun(dependencies);
           }
         },
@@ -248,11 +251,7 @@ abstract class GherkinIntegrationTestRunner {
     await appMainFunction(world);
 
     // need to pump so app is initialised
-    await tester.pumpAndSettle(
-      const Duration(milliseconds: 200),
-      EnginePhase.sendSemanticsUpdate,
-      const Duration(milliseconds: 2000),
-    );
+    await _pumpAndSettle(tester);
   }
 
   @protected
@@ -348,12 +347,6 @@ abstract class GherkinIntegrationTestRunner {
     );
 
     return result;
-  }
-
-  bool _isNegativeResult(StepExecutionResult result) {
-    return result == StepExecutionResult.error ||
-        result == StepExecutionResult.fail ||
-        result == StepExecutionResult.timeout;
   }
 
   @protected
@@ -495,5 +488,19 @@ abstract class GherkinIntegrationTestRunner {
             tagExpression,
             tags!.toList(growable: false),
           );
+  }
+
+  bool _isNegativeResult(StepExecutionResult result) {
+    return result == StepExecutionResult.error ||
+        result == StepExecutionResult.fail ||
+        result == StepExecutionResult.timeout;
+  }
+
+  Future<void> _pumpAndSettle(WidgetTester tester) async {
+    await tester.pumpAndSettle(
+      const Duration(milliseconds: 200),
+      EnginePhase.sendSemanticsUpdate,
+      const Duration(milliseconds: 2000),
+    );
   }
 }
