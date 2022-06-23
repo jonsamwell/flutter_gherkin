@@ -13,7 +13,7 @@ import 'steps/when_step_has_timeout.dart';
 import 'world/custom_world.dart';
 
 FlutterTestConfiguration gherkinTestConfiguration = FlutterTestConfiguration(
-  // tagExpression: '@debug',
+  // tagExpression: '@debug',  // can be used to limit the tests that are run
   stepDefinitions: [
     thenIExpectTheTodos,
     whenAnAnimationIsAwaited,
