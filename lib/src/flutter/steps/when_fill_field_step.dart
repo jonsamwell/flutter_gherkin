@@ -7,7 +7,7 @@ import 'package:gherkin/gherkin.dart';
 /// Examples:
 ///   Then I fill the "email" field with "bob@gmail.com"
 ///   Then I fill the "name" field with "Woody Johnson"
-StepDefinitionGeneric WhenFillFieldStep() {
+StepDefinitionGeneric whenFillFieldStep() {
   return given2<String, String, FlutterWorld>(
     'I fill the {string} field with {string}',
     (key, value, context) async {

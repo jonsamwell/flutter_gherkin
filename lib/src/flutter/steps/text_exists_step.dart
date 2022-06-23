@@ -1,5 +1,4 @@
 import 'package:flutter_gherkin/flutter_gherkin.dart';
-import 'package:flutter_gherkin/src/flutter/adapters/app_driver_adapter.dart';
 import 'package:gherkin/gherkin.dart';
 
 import '../parameters/existence_parameter.dart';
@@ -9,8 +8,8 @@ import '../parameters/existence_parameter.dart';
 /// Examples:
 ///
 ///   `Then I expect the text "Logout" to be present`
-///   `But I expect the text "Signup" to be absent`
-StepDefinitionGeneric TextExistsStep() {
+///   `But I expect the text "Sign up" to be absent`
+StepDefinitionGeneric textExistsStep() {
   return then2<String, Existence, FlutterWorld>(
     RegExp(r'I expect the text {string} to be {existence}$'),
     (text, exists, context) async {

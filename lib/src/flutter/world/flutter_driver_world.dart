@@ -47,14 +47,11 @@ class FlutterDriverWorld extends FlutterTypedAdapterWorld<FlutterDriver,
   Future<void> _closeDriver({
     Duration? timeout = const Duration(seconds: 60),
   }) async {
-    // ignore: unnecessary_null_comparison
-    if (rawAppDriver != null) {
-      await rawAppDriver.close().catchError(
-        (e, st) {
-          // Avoid an unhandled error
-          return null;
-        },
-      );
-    }
+    await rawAppDriver.close().catchError(
+      (e, st) {
+        // Avoid an unhandled error
+        return null;
+      },
+    );
   }
 }

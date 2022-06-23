@@ -11,7 +11,7 @@ import 'package:gherkin/gherkin.dart';
 ///
 ///   `Then I expect the widget 'notification' to be present within 10 seconds`
 ///   `Then I expect the button 'save' to be present within 1 second`
-StepDefinitionGeneric ThenExpectWidgetToBePresent() {
+StepDefinitionGeneric thenExpectWidgetToBePresent() {
   return given2<String, int, FlutterWorld>(
     RegExp(
         r'I expect the (?:button|element|label|icon|field|text|widget|dialog|popup) {string} to be present within {int} second(s)$'),

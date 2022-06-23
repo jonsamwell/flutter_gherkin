@@ -1,6 +1,4 @@
 import 'package:flutter_gherkin/flutter_gherkin.dart';
-import 'package:flutter_gherkin/src/flutter/adapters/app_driver_adapter.dart';
-import 'package:flutter_gherkin/src/flutter/world/flutter_world.dart';
 import 'package:gherkin/gherkin.dart';
 
 /// Discovers a widget by its text within the same parent.
@@ -13,7 +11,7 @@ import 'package:gherkin/gherkin.dart';
 /// Examples:
 ///
 ///   `Then I expect a "Row" that contains the text "X" to also contain the text "Y"`
-StepDefinitionGeneric SiblingContainsTextStep() {
+StepDefinitionGeneric siblingContainsTextStep() {
   return given3<String, String, String, FlutterWorld>(
     'I expect a {string} that contains the text {string} to also contain the text {string}',
     (ancestorType, leadingText, valueText, context) async {

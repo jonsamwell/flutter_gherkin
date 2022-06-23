@@ -1,7 +1,6 @@
 import 'package:example_with_integration_test/models/todo_model.dart';
 import 'package:example_with_integration_test/widgets/view_utils_mixin.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:rxdart/rxdart.dart';
 
 class AddTodoComponent extends StatefulWidget {

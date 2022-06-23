@@ -12,7 +12,7 @@ import 'package:gherkin/gherkin.dart';
 ///
 ///   `Then I expect the "controlKey" to be "Hello World"`
 ///   `And I expect the "controlKey" to be "Hello World"`
-StepDefinitionGeneric ThenExpectElementToHaveValue() {
+StepDefinitionGeneric thenExpectElementToHaveValue() {
   return given2<String, String, FlutterWorld>(
     RegExp(r'I expect the {string} to be {string}$'),
     (key, value, context) async {
@@ -22,7 +22,7 @@ StepDefinitionGeneric ThenExpectElementToHaveValue() {
 
         context.expect(text, value);
       } catch (e) {
-        await context.reporter.message('Step error: $e', MessageLevel.error);
+        // await context.reporter('Step error: $e', MessageLevel.error);
         rethrow;
       }
     },

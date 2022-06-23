@@ -12,34 +12,30 @@ import 'steps/when_await_animation.dart';
 import 'steps/when_step_has_timeout.dart';
 import 'world/custom_world.dart';
 
-FlutterTestConfiguration gherkinTestConfiguration =
-    FlutterTestConfiguration.DEFAULT(
-  [
+FlutterTestConfiguration gherkinTestConfiguration = FlutterTestConfiguration(
+  // tagExpression: '@debug',  // can be used to limit the tests that are run
+  stepDefinitions: [
     thenIExpectTheTodos,
     whenAnAnimationIsAwaited,
     whenStepHasTimeout,
     givenTheData
   ],
-)
-      // ..tagExpression = '@debug'
-      ..hooks = [
-        ResetAppHook(),
-      ]
-      ..reporters = [
-        StdoutReporter(MessageLevel.error)
-          ..setWriteLineFn(print)
-          ..setWriteFn(print),
-        ProgressReporter()
-          ..setWriteLineFn(print)
-          ..setWriteFn(print),
-        TestRunSummaryReporter()
-          ..setWriteLineFn(print)
-          ..setWriteFn(print),
-        JsonReporter(
-          writeReport: (_, __) => Future<void>.value(),
-        ),
-      ]
-      ..createWorld = (config) => Future.value(CustomWorld());
+  hooks: [
+    ResetAppHook(),
+  ],
+  reporters: [
+    StdoutReporter(MessageLevel.error)
+      ..setWriteLineFn(print)
+      ..setWriteFn(print),
+    ProgressReporter()
+      ..setWriteLineFn(print)
+      ..setWriteFn(print),
+    TestRunSummaryReporter()
+      ..setWriteLineFn(print)
+      ..setWriteFn(print),
+  ],
+  createWorld: (config) => Future.value(CustomWorld()),
+);
 
 Future<void> Function(World) appInitializationFn = (World world) async {
   // ensure a new injector instance is created each time

@@ -1,16 +1,22 @@
-import 'dart:async';
-import 'dart:ui' as ui show ImageByteFormat;
+import 'dart:io' if (dart.library.html) 'dart:html';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:integration_test/integration_test.dart';
 
 import 'app_driver_adapter.dart';
 
 class WidgetTesterAppDriverAdapter
     extends AppDriverAdapter<WidgetTester, Finder, Widget> {
-  WidgetTesterAppDriverAdapter(WidgetTester rawAdapter) : super(rawAdapter);
+  IntegrationTestWidgetsFlutterBinding binding;
+  bool waitImplicitlyAfterAction;
+
+  WidgetTesterAppDriverAdapter({
+    required WidgetTester rawAdapter,
+    required this.binding,
+    required this.waitImplicitlyAfterAction,
+  }) : super(rawAdapter);
 
   @override
   Future<int> waitForAppToSettle({
@@ -27,6 +33,22 @@ class WidgetTesterAppDriverAdapter
       return pumps;
     } catch (_) {
       return 1;
+    }
+  }
+
+  Future<void> _implicitWait({
+    Duration? duration = const Duration(milliseconds: 100),
+    Duration? timeout = const Duration(seconds: 30),
+    bool? force,
+  }) async {
+    if (waitImplicitlyAfterAction || force == true) {
+      try {
+        await nativeDriver.pumpAndSettle(
+          duration ?? const Duration(milliseconds: 100),
+          EnginePhase.sendSemanticsUpdate,
+          timeout ?? const Duration(seconds: 30),
+        );
+      } catch (_) {}
     }
   }
 
@@ -47,20 +69,15 @@ class WidgetTesterAppDriverAdapter
   }
 
   @override
-  Future<List<int>> screenshot() {
-    var renderObject = nativeDriver.binding.renderViewElement?.renderObject;
-
-    while (renderObject != null && !renderObject.isRepaintBoundary) {
-      renderObject = renderObject.parent as RenderObject;
+  Future<List<int>> screenshot() async {
+    if (!kIsWeb && Platform.isAndroid) {
+      await binding.convertFlutterSurfaceToImage();
+      await binding.pump();
     }
 
-    assert(renderObject != null && !renderObject.debugNeedsPaint);
-    final layer = renderObject!.debugLayer as OffsetLayer;
-
-    return layer
-        .toImage(renderObject.semanticBounds)
-        .then((value) => value.toByteData(format: ui.ImageByteFormat.png))
-        .then((value) => value?.buffer.asUint8List() ?? List<int>.empty());
+    return binding.takeScreenshot(
+      'screenshot_${DateTime.now().millisecondsSinceEpoch}',
+    );
   }
 
   @override
@@ -84,7 +101,7 @@ class WidgetTesterAppDriverAdapter
     Finder finder, {
     Duration? timeout = const Duration(seconds: 30),
   }) async {
-    await waitForAppToSettle(timeout: timeout);
+    await _implicitWait(timeout: timeout);
 
     final instance = await widget(finder);
     if (instance is Text) {
@@ -109,7 +126,7 @@ class WidgetTesterAppDriverAdapter
       finder,
       text,
     );
-    await waitForAppToSettle(
+    await _implicitWait(
       timeout: timeout,
     );
   }
@@ -120,7 +137,7 @@ class WidgetTesterAppDriverAdapter
     Duration? timeout = const Duration(seconds: 30),
   }) async {
     await nativeDriver.tap(finder);
-    await waitForAppToSettle(
+    await _implicitWait(
       timeout: timeout,
     );
   }
@@ -138,35 +155,16 @@ class WidgetTesterAppDriverAdapter
       duration: pressDuration,
       timeout: timeout,
     );
-    await waitForAppToSettle(timeout: timeout);
-  }
 
-  @override
-  Future<void> scroll(
-    Finder finder, {
-    double? dx,
-    double? dy,
-    Duration? duration = const Duration(milliseconds: 200),
-    Duration? timeout = const Duration(seconds: 30),
-  }) async {
-    final scrollableFinder = findByDescendant(
-      finder,
-      find.byType(Scrollable),
-      matchRoot: true,
-    );
-    final state = nativeDriver.state(scrollableFinder) as ScrollableState;
-    final position = state.position;
-    position.jumpTo(dy ?? dx ?? 0);
-
-    await nativeDriver.pump();
+    await _implicitWait(timeout: timeout);
   }
 
   @override
   Finder findBy(
     dynamic data,
-    FindType type,
+    FindType findType,
   ) {
-    switch (type) {
+    switch (findType) {
       case FindType.key:
         return find.byKey(data is Key ? data : Key(data));
       case FindType.text:
@@ -207,6 +205,31 @@ class WidgetTesterAppDriverAdapter
   }
 
   @override
+  Future<void> scroll(
+    Finder finder, {
+    double? dx,
+    double? dy,
+    Duration? duration = const Duration(milliseconds: 200),
+    Duration? timeout = const Duration(seconds: 30),
+  }) async {
+    final scrollableFinder = findByDescendant(
+      finder,
+      find.byType(Scrollable),
+      matchRoot: true,
+    );
+    final state = nativeDriver.state(scrollableFinder) as ScrollableState;
+    final position = state.position;
+    position.jumpTo(dy ?? dx ?? 0);
+
+    // must force a pump and settle to ensure the scroll is performed
+    await _implicitWait(
+      duration: duration,
+      timeout: timeout,
+      force: true,
+    );
+  }
+
+  @override
   Future<void> scrollUntilVisible(
     Finder item, {
     Finder? scrollable,
@@ -219,6 +242,12 @@ class WidgetTesterAppDriverAdapter
       dy ?? dx ?? 0,
       scrollable: scrollable,
     );
+
+    // must force a pump and settle to ensure the scroll is performed
+    await _implicitWait(
+      timeout: timeout,
+      force: true,
+    );
   }
 
   @override
@@ -228,11 +257,17 @@ class WidgetTesterAppDriverAdapter
   }) async {
     await nativeDriver.ensureVisible(finder);
     await waitForAppToSettle();
+
+    // must force a pump and settle to ensure the scroll is performed
+    await _implicitWait(
+      timeout: timeout,
+      force: true,
+    );
   }
 
   @override
   Future<void> pageBack() async {
     await nativeDriver.pageBack();
-    await waitForAppToSettle();
+    await _implicitWait();
   }
 }

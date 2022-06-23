@@ -1,5 +1,4 @@
 import 'package:flutter_gherkin/flutter_gherkin.dart';
-import 'package:flutter_gherkin/src/flutter/adapters/app_driver_adapter.dart';
 import 'package:gherkin/gherkin.dart';
 
 import '../parameters/existence_parameter.dart';
@@ -10,7 +9,7 @@ import '../parameters/existence_parameter.dart';
 ///
 ///   `Then I wait until the element of type "ProgressIndicator" is absent`
 ///   `And I wait until the button of type the "MaterialButton" is present`
-StepDefinitionGeneric WaitUntilTypeExistsStep() {
+StepDefinitionGeneric waitUntilTypeExistsStep() {
   return then2<String, Existence, FlutterWorld>(
     'I wait until the (?:button|element|label|icon|field|text|widget) of type {string} is {existence}',
     (ofType, existence, context) async {

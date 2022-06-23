@@ -7,7 +7,7 @@ import 'package:gherkin/gherkin.dart';
 /// Examples:
 ///
 ///   `Given I open the drawer`
-StepDefinitionGeneric GivenOpenDrawer() {
+StepDefinitionGeneric givenOpenDrawer() {
   return given1<String, FlutterWorld>(
     RegExp(r'I (open|close) the drawer'),
     (action, context) async {

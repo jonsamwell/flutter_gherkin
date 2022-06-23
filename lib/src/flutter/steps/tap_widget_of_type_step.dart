@@ -1,5 +1,4 @@
 import 'package:flutter_gherkin/flutter_gherkin.dart';
-import 'package:flutter_gherkin/src/flutter/adapters/app_driver_adapter.dart';
 import 'package:gherkin/gherkin.dart';
 
 /// Taps a widget of type.
@@ -9,7 +8,7 @@ import 'package:gherkin/gherkin.dart';
 ///   `Then I tap the element of type "MaterialButton"`
 ///   `Then I tap the label of type "ListTile"`
 ///   `Then I tap the field of type "TextField"`
-StepDefinitionGeneric TapWidgetOfTypeStep() {
+StepDefinitionGeneric tapWidgetOfTypeStep() {
   return given1<String, FlutterWorld>(
     RegExp(
         r'I tap the (?:button|element|label|icon|field|text|widget) of type {string}$'),

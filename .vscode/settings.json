@@ -1,13 +1,18 @@
 {
     "cSpell.words": [
-        "Errored",
-        "Serializable",
         "agnostically",
+        "analyzer",
+        "dialog",
+        "Errored",
+        "Flavor",
         "microtask",
         "multiline",
         "pubspec",
+        "rxdart",
         "scrollable",
+        "Serializable",
         "todos",
         "writeln"
-    ]
+    ],
+    "cSpell.language": "en-GB"
 }

@@ -29,6 +29,7 @@ export 'src/flutter/steps/text_exists_within_step.dart';
 export 'src/flutter/steps/wait_until_key_exists_step.dart';
 export 'src/flutter/steps/when_tap_the_back_button_step.dart';
 export 'src/flutter/steps/wait_until_type_exists_step.dart';
+export 'src/flutter/steps/wait_until_key_exists_step.dart';
 
 // Hooks
 export 'src/flutter/hooks/attach_screenshot_on_failed_step_hook.dart';

@@ -1,5 +1,6 @@
+// ignore_for_file: avoid_renaming_method_parameters
+
 import 'package:flutter_gherkin/flutter_gherkin.dart';
-import 'package:flutter_gherkin/src/flutter/world/flutter_world.dart';
 import 'package:gherkin/gherkin.dart';
 
 import '../parameters/swipe_direction_parameter.dart';
@@ -18,7 +19,7 @@ mixin _SwipeHelper
       await world.appDriver.scroll(
         finder,
         dx: offset.toDouble(),
-        duration: Duration(milliseconds: 500),
+        duration: const Duration(milliseconds: 500),
         timeout: timeout,
       );
     } else {
@@ -28,7 +29,7 @@ mixin _SwipeHelper
       await world.appDriver.scroll(
         finder,
         dy: offset.toDouble(),
-        duration: Duration(milliseconds: 500),
+        duration: const Duration(milliseconds: 500),
         timeout: timeout,
       );
     }
@@ -50,7 +51,7 @@ class SwipeOnKeyStep
     int swipeAmount,
     String key,
   ) async {
-    final finder = this.world.appDriver.findBy(key, FindType.key);
+    final finder = world.appDriver.findBy(key, FindType.key);
     await swipeOnFinder(finder, direction, swipeAmount);
   }
 
@@ -73,7 +74,7 @@ class SwipeOnTextStep
     int swipeAmount,
     String text,
   ) async {
-    final finder = this.world.appDriver.findBy(text, FindType.text);
+    final finder = world.appDriver.findBy(text, FindType.text);
     await swipeOnFinder(finder, direction, swipeAmount);
   }
 
