@@ -301,13 +301,14 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
     code = _replaceVariable(
       code,
       'step_multi_line_strings',
-      // '<String>[${multiLineStrings.map((s) => "'${_escapeText(s)}'").join(',')}]',
       '<String>[${multiLineStrings.map((s) => '"""$s"""').join(',')}]',
     );
     code = _replaceVariable(
       code,
       'step_table',
-      table == null ? 'null' : 'GherkinTable.fromJson(\'${table.toJson()}\')',
+      table == null
+          ? 'null'
+          : 'GherkinTable.fromJson(\'${_escapeText(table.toJson())}\')',
     );
 
     _stepBuffer.writeln(code);

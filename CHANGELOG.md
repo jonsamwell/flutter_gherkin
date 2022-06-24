@@ -1,3 +1,6 @@
+## [3.0.0-rc.12] - 24/06/2022
+  - Fix #222 - escape single quotation marks in data tables
+
 ## [3.0.0-rc.11] - 24/06/2022
   - Fix #231 - Removed the use of explicitly calling `pumpAndSettle` in the pre-defined steps in favour of the implicit `pumpAndSettle` calls used in the `WidgetTesterAppDriverAdapter`.
   - Added ability to add a `appLifecyclePumpHandler` to override the default handler that determines how the app is pumped during lifecycle events.  Useful if your app has a long splash screen etc. Parameter is on `executeTestSuite`.
