@@ -47,9 +47,7 @@ class FlutterDriverTestConfiguration extends FlutterTestConfiguration {
         );
 
   /// Provide a configuration object with default settings such as the reports and feature file location
-  /// Additional setting on the configuration object can be set on the returned instance.
-  // ignore: non_constant_identifier_names
-  static FlutterDriverTestConfiguration DEFAULT(
+  static FlutterDriverTestConfiguration standard(
     Iterable<StepDefinitionGeneric<World>> steps, {
     String featurePath = 'features/*.*.feature',
     String targetAppPath = 'test_driver/app.dart',

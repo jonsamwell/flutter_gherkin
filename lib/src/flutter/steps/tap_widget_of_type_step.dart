@@ -19,7 +19,6 @@ StepDefinitionGeneric tapWidgetOfTypeStep() {
           FindType.type,
         ),
       );
-      await context.world.appDriver.waitForAppToSettle();
     },
   );
 }

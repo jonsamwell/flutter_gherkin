@@ -29,10 +29,17 @@ class GherkinSuiteTestGenerator
     extends GeneratorForAnnotation<GherkinTestSuite> {
   static const String template = '''
 class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
-  _CustomGherkinIntegrationTestRunner(
-    FlutterTestConfiguration configuration,
-    Future<void> Function(World) appMainFunction,
-  ) : super(configuration, appMainFunction);
+  _CustomGherkinIntegrationTestRunner({
+    required FlutterTestConfiguration configuration,
+    required StartAppFn appMainFunction,
+    required Timeout scenarioExecutionTimeout,
+    AppLifecyclePumpHandlerFn? appLifecyclePumpHandler,
+  }) : super(
+          configuration: configuration,
+          appMainFunction: appMainFunction,
+          scenarioExecutionTimeout: scenarioExecutionTimeout,
+          appLifecyclePumpHandler: appLifecyclePumpHandler,
+        );
 
   @override
   void onRun() {
@@ -42,11 +49,18 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
   {{feature_functions}}
 }
 
-void executeTestSuite(
-  FlutterTestConfiguration configuration,
-  Future<void> Function(World) appMainFunction,
-) {
-  _CustomGherkinIntegrationTestRunner(configuration, appMainFunction).run();
+void executeTestSuite({
+  required FlutterTestConfiguration configuration,
+  required StartAppFn appMainFunction,
+  Timeout scenarioExecutionTimeout = const Timeout(const Duration(minutes: 10)),
+  AppLifecyclePumpHandlerFn? appLifecyclePumpHandler,
+}) {
+  _CustomGherkinIntegrationTestRunner(
+    configuration: configuration,
+    appMainFunction: appMainFunction,
+    appLifecyclePumpHandler: appLifecyclePumpHandler,
+    scenarioExecutionTimeout: scenarioExecutionTimeout,
+  ).run();
 }
 ''';
   final _reporter = NoOpReporter();
@@ -74,6 +88,8 @@ void executeTestSuite(
         .map((glob) =>
             glob.listSync().map((entity) => File(entity.path)).toList())
         .reduce((value, element) => value..addAll(element));
+    final useAbsolutePaths =
+        annotation.read('useAbsolutePaths').objectValue.toBoolValue();
 
     if (executionOrder == ExecutionOrder.random) {
       featureFiles.shuffle();
@@ -87,8 +103,8 @@ void executeTestSuite(
     for (var featureFile in featureFiles) {
       final code = await generator.generate(
         id++,
-        featureFile.readAsStringSync(),
-        featureFile.absolute.path,
+        await featureFile.readAsString(),
+        useAbsolutePaths ?? true ? featureFile.absolute.path : featureFile.path,
         _languageService,
         _reporter,
       );
@@ -224,9 +240,15 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
   }
 
   @override
-  Future<void> visitScenario(String featureName, Iterable<String> featureTags,
-      String name, Iterable<String> tags, String path,
-      {required bool isFirst, required bool isLast}) async {
+  Future<void> visitScenario(
+    String featureName,
+    Iterable<String> featureTags,
+    String name,
+    Iterable<String> tags,
+    String path, {
+    required bool isFirst,
+    required bool isLast,
+  }) async {
     _flushScenario();
     _currentScenarioCode = _replaceVariable(
       scenarioTemplate,
@@ -315,6 +337,8 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
           'steps',
           _steps.join(','),
         );
+
+        _steps.clear();
       }
 
       _scenarioBuffer.writeln(_currentScenarioCode);

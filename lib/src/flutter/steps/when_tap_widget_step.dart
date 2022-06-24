@@ -21,18 +21,15 @@ StepDefinitionGeneric whenTapWidget() {
     RegExp(
         r'I tap the {string} (?:button|element|label|icon|field|text|widget)$'),
     (key, context) async {
-      await context.world.appDriver.waitForAppToSettle();
       final finder = context.world.appDriver.findBy(key, FindType.key);
 
       await context.world.appDriver.scrollIntoView(
         finder,
       );
-      await context.world.appDriver.waitForAppToSettle();
       await context.world.appDriver.tap(
         finder,
         timeout: context.configuration.timeout,
       );
-      await context.world.appDriver.waitForAppToSettle();
     },
   );
 }
@@ -48,8 +45,6 @@ StepDefinitionGeneric whenTapWidgetWithoutScroll() {
       await context.world.appDriver.tap(
         finder,
       );
-
-      await context.world.appDriver.waitForAppToSettle();
     },
   );
 }

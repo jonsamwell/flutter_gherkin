@@ -40,7 +40,6 @@ StepDefinitionGeneric tapTextWithinWidgetStep() {
         finder,
         timeout: timeout,
       );
-      await context.world.appDriver.waitForAppToSettle();
     },
   );
 }

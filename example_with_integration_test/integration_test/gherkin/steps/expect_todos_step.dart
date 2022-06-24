@@ -9,6 +9,8 @@ final thenIExpectTheTodos = then1<GherkinTable, FlutterWorld>(
     expect(context.configuration.timeout, isNotNull);
     expect(context.configuration.timeout!.inSeconds, 5);
 
+    await context.world.appDriver.waitForAppToSettle();
+
     // get the parent list
     final listTileFinder = context.world.appDriver.findBy(
       ListTile,

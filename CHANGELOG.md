@@ -1,3 +1,10 @@
+## [3.0.0-rc.11] - 24/06/2022
+  - Fix #231 - Removed the use of explicitly calling `pumpAndSettle` in the pre-defined steps in favour of the implicit `pumpAndSettle` calls used in the `WidgetTesterAppDriverAdapter`.
+  - Added ability to add a `appLifecyclePumpHandler` to override the default handler that determines how the app is pumped during lifecycle events.  Useful if your app has a long splash screen etc. Parameter is on `executeTestSuite`.
+  - Added ability to ensure feature paths are relative when generating reports `useAbsolutePaths` on the `GherkinTestSuite` attribute
+
+* BREAKING CHANGE: The parameters on `executeTestSuite` are now keyed to allow for the above changes
+
 ## [3.0.0-rc.10] - 23/06/2022
 
 - Fix #195: Adding missing export for `wait_until_key_exists_step.dart`

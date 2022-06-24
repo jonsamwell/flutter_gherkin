@@ -5,12 +5,21 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:collection/collection.dart';
 
+enum AppLifecyclePhase {
+  initialisation,
+  finalisation,
+}
+
 typedef StepFn = Future<StepResult> Function(
   TestDependencies dependencies,
   bool skip,
 );
 
 typedef StartAppFn = Future<void> Function(World world);
+typedef AppLifecyclePumpHandlerFn = Future<void> Function(
+  AppLifecyclePhase phase,
+  WidgetTester tester,
+);
 
 class TestDependencies {
   final World world;
@@ -27,22 +36,34 @@ abstract class GherkinIntegrationTestRunner {
       TagExpressionEvaluator();
   final FlutterTestConfiguration configuration;
   final StartAppFn appMainFunction;
+  final AppLifecyclePumpHandlerFn? appLifecyclePumpHandler;
   final Timeout scenarioExecutionTimeout;
   final AggregatedReporter _reporter = AggregatedReporter();
-  Hook? _hook;
-  Iterable<ExecutableStep>? _executableSteps;
-  Iterable<CustomParameter>? _customParameters;
 
+  late final Iterable<ExecutableStep>? _executableSteps;
+  late final Iterable<CustomParameter>? _customParameters;
+  late final Hook? _hook;
   late final IntegrationTestWidgetsFlutterBinding _binding;
 
   AggregatedReporter get reporter => _reporter;
   Hook get hook => _hook!;
   LiveTestWidgetsFlutterBindingFramePolicy? get framePolicy => null;
 
-  GherkinIntegrationTestRunner(
-    this.configuration,
-    this.appMainFunction, {
-    this.scenarioExecutionTimeout = const Timeout(Duration(minutes: 10)),
+  /// A Gherkin test runner that uses [WidgetTester] to instrument the app under test.
+  ///
+  /// [configuration] the configuration for the test run.
+  ///
+  /// [appMainFunction] a function to start the app under test.
+  ///
+  /// [appLifecyclePumpHandler] a function to determine how to pump the app during various lifecycle phases,
+  /// if null a default handler is used see [_appLifecyclePhasePumper].
+  ///
+  /// [scenarioExecutionTimeout] the default execution timeout for the whole test run.
+  GherkinIntegrationTestRunner({
+    required this.configuration,
+    required this.appMainFunction,
+    required this.scenarioExecutionTimeout,
+    this.appLifecyclePumpHandler,
   }) {
     configuration.prepare();
     _registerReporters(configuration.reporters);
@@ -225,7 +246,10 @@ abstract class GherkinIntegrationTestRunner {
             }
 
             // need to pump so app can finalise
-            await _pumpAndSettle(tester);
+            await _appLifecyclePhasePumper(
+              AppLifecyclePhase.finalisation,
+              tester,
+            );
 
             cleanUpScenarioRun(dependencies);
           }
@@ -251,7 +275,7 @@ abstract class GherkinIntegrationTestRunner {
     await appMainFunction(world);
 
     // need to pump so app is initialised
-    await _pumpAndSettle(tester);
+    await _appLifecyclePhasePumper(AppLifecyclePhase.initialisation, tester);
   }
 
   @protected
@@ -496,11 +520,14 @@ abstract class GherkinIntegrationTestRunner {
         result == StepExecutionResult.timeout;
   }
 
-  Future<void> _pumpAndSettle(WidgetTester tester) async {
-    await tester.pumpAndSettle(
-      const Duration(milliseconds: 200),
-      EnginePhase.sendSemanticsUpdate,
-      const Duration(milliseconds: 2000),
-    );
+  Future<void> _appLifecyclePhasePumper(
+    AppLifecyclePhase phase,
+    WidgetTester tester,
+  ) async {
+    if (appLifecyclePumpHandler != null) {
+      await appLifecyclePumpHandler!(phase, tester);
+    } else {
+      await tester.pumpAndSettle();
+    }
   }
 }

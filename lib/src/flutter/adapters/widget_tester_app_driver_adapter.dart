@@ -23,33 +23,31 @@ class WidgetTesterAppDriverAdapter
     Duration? duration = const Duration(milliseconds: 100),
     Duration? timeout = const Duration(seconds: 30),
   }) async {
-    try {
-      final pumps = await nativeDriver.pumpAndSettle(
-        duration ?? const Duration(milliseconds: 100),
-        EnginePhase.sendSemanticsUpdate,
-        timeout ?? const Duration(seconds: 30),
-      );
-
-      return pumps;
-    } catch (_) {
-      return 1;
-    }
+    return _implicitWait(
+      duration: duration,
+      timeout: timeout,
+      force: true,
+    );
   }
 
-  Future<void> _implicitWait({
+  Future<int> _implicitWait({
     Duration? duration = const Duration(milliseconds: 100),
     Duration? timeout = const Duration(seconds: 30),
     bool? force,
   }) async {
     if (waitImplicitlyAfterAction || force == true) {
       try {
-        await nativeDriver.pumpAndSettle(
+        return await nativeDriver.pumpAndSettle(
           duration ?? const Duration(milliseconds: 100),
           EnginePhase.sendSemanticsUpdate,
           timeout ?? const Duration(seconds: 30),
         );
-      } catch (_) {}
+      } catch (_) {
+        return 0;
+      }
     }
+
+    return 0;
   }
 
   @override
@@ -256,7 +254,6 @@ class WidgetTesterAppDriverAdapter
     Duration? timeout = const Duration(seconds: 30),
   }) async {
     await nativeDriver.ensureVisible(finder);
-    await waitForAppToSettle();
 
     // must force a pump and settle to ensure the scroll is performed
     await _implicitWait(

@@ -58,53 +58,10 @@ class _HomeViewState extends State<HomeView> with ViewUtilsMixin {
                   if (snapshot.hasData) {
                     final data = snapshot.data!;
                     if (data.isEmpty) {
-                      return Center(
-                        child: Column(
-                          children: [
-                            Icon(
-                              Icons.list,
-                              size: 64,
-                              color: Colors.black26,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(16),
-                              // child: Text(
-                              //   'No todos!',
-                              //   key: const Key('empty'),
-                              //   style: Theme.of(context).textTheme.headline6,
-                              // ),
-                              child: SizedBox(
-                                key: const Key('scrollable cards'),
-                                width: 300,
-                                height: 250,
-                                child: PageView.builder(
-                                  itemCount: 3,
-                                  itemBuilder: (ctx, index) {
-                                    return Container(
-                                      margin: const EdgeInsets.all(10),
-                                      decoration: BoxDecoration(
-                                        color: index == 0
-                                            ? Colors.amber
-                                            : Colors.blueAccent,
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: SizedBox(
-                                        key: Key('Page ${index + 1}'),
-                                        width: 200,
-                                        height: 200,
-                                        child: Center(
-                                          child: Text(
-                                            'Page ${index + 1}',
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                      return const Icon(
+                        Icons.list,
+                        size: 64,
+                        color: Colors.black26,
                       );
                     } else {
                       return ListView.builder(
@@ -170,6 +127,44 @@ class _HomeViewState extends State<HomeView> with ViewUtilsMixin {
                     );
                   }
                 },
+              ),
+              Center(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: SizedBox(
+                        key: const Key('scrollable cards'),
+                        width: 300,
+                        height: 250,
+                        child: PageView.builder(
+                          itemCount: 3,
+                          itemBuilder: (ctx, index) {
+                            return Container(
+                              margin: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: index == 0
+                                    ? Colors.amber
+                                    : Colors.blueAccent,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: SizedBox(
+                                key: Key('Page ${index + 1}'),
+                                width: 200,
+                                height: 200,
+                                child: Center(
+                                  child: Text(
+                                    'Page ${index + 1}',
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

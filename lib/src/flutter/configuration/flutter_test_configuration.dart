@@ -45,13 +45,10 @@ class FlutterTestConfiguration extends TestConfiguration {
   /// Defaults to false
   final bool waitImplicitlyAfterAction;
 
-  /// Provide a configuration object with default settings such as the reports and feature file location
-  /// Additional setting on the configuration object can be set on the returned instance.
+  /// Provide a configuration object with default settings
   static FlutterTestConfiguration standard(
-    Iterable<StepDefinitionGeneric<World>> steps, {
-    String featurePath = 'integration_test/features/*.*.feature',
-    String targetAppPath = 'test_driver/integration_test_driver.dart',
-  }) {
+    Iterable<StepDefinitionGeneric<World>> steps,
+  ) {
     return FlutterTestConfiguration(
       reporters: [
         StdoutReporter(MessageLevel.error),

@@ -12,9 +12,13 @@ class GherkinTestSuite {
   /// The default feature language
   final String featureDefaultLanguage;
 
+  /// True (the default) to use absolute file paths for reporters
+  final bool useAbsolutePaths;
+
   const GherkinTestSuite({
     this.executionOrder = ExecutionOrder.random,
     this.featureDefaultLanguage = 'en',
     this.featurePaths = const <String>['integration_test/features/**.feature'],
+    this.useAbsolutePaths = true,
   });
 }

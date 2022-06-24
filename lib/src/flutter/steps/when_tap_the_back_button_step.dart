@@ -13,7 +13,6 @@ StepDefinitionGeneric whenTapBackButtonWidget() {
     RegExp(r'I tap the back (?:button|element|widget|icon|text)$'),
     (context) async {
       await context.world.appDriver.pageBack();
-      await context.world.appDriver.waitForAppToSettle();
     },
   );
 }
