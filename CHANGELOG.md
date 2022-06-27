@@ -1,3 +1,6 @@
+## [3.0.0-rc.14] - 28/06/2022
+  - Fix #237 - Ensure everything works on the web
+
 ## [3.0.0-rc.13] - 27/06/2022
   - Fix #235 - fix issue taking a screenshot on an Android device
   - Resolved #170: Added example code to ensure json report is save to disk even when the test run fails. Also added script to generate a HTML report from a JSON report

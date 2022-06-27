@@ -1,4 +1,6 @@
-import 'dart:io' if (dart.library.html) 'dart:html';
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter_gherkin/src/flutter/configuration/flutter_driver_test_configuration.dart';
 import 'package:flutter_gherkin/src/flutter/runners/flutter_run_process_handler.dart';
 import 'package:flutter_gherkin/src/flutter/world/flutter_driver_world.dart';
@@ -62,7 +64,7 @@ class FlutterAppRunnerHook extends Hook {
 
   Future<void> _runApp(FlutterDriverTestConfiguration config) async {
     if (config.runningAppProtocolEndpointUri?.isNotEmpty ?? false) {
-      stdout.writeln(
+      _log(
         "Connecting to running Flutter app under test at '${config.runningAppProtocolEndpointUri}', "
         'this might take a few moments',
       );
@@ -80,8 +82,9 @@ class FlutterAppRunnerHook extends Hook {
         ..setBuildMode(config.buildMode)
         ..setDeviceTargetId(config.targetDeviceId);
 
-      stdout.writeln(
-          "Starting Flutter app under test '${config.targetAppPath}', this might take a few moments");
+      _log(
+        "Starting Flutter app under test '${config.targetAppPath}', this might take a few moments",
+      );
       await _flutterRunProcessHandler!.run();
       final observatoryUri = await _flutterRunProcessHandler!
           .waitForObservatoryDebuggerUri(config.flutterBuildTimeout);
@@ -91,7 +94,7 @@ class FlutterAppRunnerHook extends Hook {
 
   Future<void> _terminateApp() async {
     if (_flutterRunProcessHandler != null) {
-      stdout.writeln('Terminating Flutter app under test');
+      _log('Terminating Flutter app under test');
       await _flutterRunProcessHandler!.terminate();
       _flutterRunProcessHandler = null;
     }
@@ -99,11 +102,17 @@ class FlutterAppRunnerHook extends Hook {
 
   Future<void> _restartApp() async {
     if (_flutterRunProcessHandler != null) {
-      stdout.writeln('Restarting Flutter app under test');
+      _log('Restarting Flutter app under test');
       await _flutterRunProcessHandler!.restart();
     }
   }
 
   FlutterDriverTestConfiguration _castConfig(TestConfiguration config) =>
       config as FlutterDriverTestConfiguration;
+
+  void _log(String text) {
+    if (!kIsWeb) {
+      stdout.writeln(text);
+    }
+  }
 }

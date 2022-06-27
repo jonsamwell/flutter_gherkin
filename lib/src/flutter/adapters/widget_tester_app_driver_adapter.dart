@@ -1,11 +1,11 @@
-import 'dart:io' if (dart.library.html) 'dart:html';
+import 'dart:io' show Platform;
+import 'dart:ui' as ui show ImageByteFormat;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'dart:ui' as ui show ImageByteFormat;
 
 import 'app_driver_adapter.dart';
 
@@ -68,7 +68,7 @@ class WidgetTesterAppDriverAdapter
     }
   }
 
-  Future<List<int>> screenshotOnAndroid({String? screenshotName}) {
+  Future<List<int>> screenshotOnAndroid() {
     RenderObject? renderObject = binding.renderViewElement?.renderObject;
     if (renderObject != null) {
       while (!renderObject!.isRepaintBoundary) {
@@ -89,20 +89,25 @@ class WidgetTesterAppDriverAdapter
 
   @override
   Future<List<int>> screenshot({String? screenshotName}) async {
-    if (!kIsWeb && Platform.isAndroid) {
-      return await screenshotOnAndroid(screenshotName: screenshotName);
-      // try {
-      //   // TODO: See https://github.com/flutter/flutter/issues/92381
-      //   // we need to call `revertFlutterImage` once it has been implemented
-      //   await binding.convertFlutterSurfaceToImage();
-      //   await binding.pump();
-      //   // ignore: no_leading_underscores_for_local_identifiers
-      // } catch (_, __) {}
-    }
+    final name =
+        screenshotName ?? 'screenshot_${DateTime.now().millisecondsSinceEpoch}';
+    if (kIsWeb) {
+      return binding.takeScreenshot(name);
+    } else {
+      if (Platform.isAndroid) {
+        // try {
+        //   // TODO: See https://github.com/flutter/flutter/issues/92381
+        //   // we need to call `revertFlutterImage` once it has been implemented
+        //   await binding.convertFlutterSurfaceToImage();
+        //   await binding.pump();
+        //   // ignore: no_leading_underscores_for_local_identifiers
+        // } catch (_, __) {}
 
-    return binding.takeScreenshot(
-      screenshotName ?? 'screenshot_${DateTime.now().millisecondsSinceEpoch}',
-    );
+        return await screenshotOnAndroid();
+      } else {
+        return binding.takeScreenshot(name);
+      }
+    }
   }
 
   @override
