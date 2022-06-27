@@ -1,3 +1,7 @@
+## [3.0.0-rc.13] - 27/06/2022
+  - Fix #235 - fix issue taking a screenshot on an Android device
+  - Resolved #170: Added example code to ensure json report is save to disk even when the test run fails. Also added script to generate a HTML report from a JSON report
+
 ## [3.0.0-rc.12] - 24/06/2022
   - Fix #222 - escape single quotation marks in data tables
 

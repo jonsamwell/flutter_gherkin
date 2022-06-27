@@ -18,7 +18,7 @@ void main() {
     test('common steps definition added', () {
       final config = FlutterDriverTestConfiguration();
       expect(config.stepDefinitions, isNotNull);
-      expect(config.stepDefinitions!.length, 23);
+      expect(config.stepDefinitions!.length, 24);
       expect(config.customStepParameterDefinitions, isNotNull);
       expect(config.customStepParameterDefinitions!.length, 2);
     });
@@ -30,7 +30,7 @@ void main() {
       );
 
       expect(config.stepDefinitions, isNotNull);
-      expect(config.stepDefinitions!.length, 24);
+      expect(config.stepDefinitions!.length, 25);
       expect(
           config.stepDefinitions!.elementAt(0), (x) => x is MockStepDefinition);
       expect(config.customStepParameterDefinitions, isNotNull);

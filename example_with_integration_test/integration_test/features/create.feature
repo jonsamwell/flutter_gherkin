@@ -7,6 +7,7 @@ Feature: Creating todos
     Then I expect the todo list
       | Todo        |
       | Buy spinach |
+    When I take a screenshot called 'Johnson'
 
   Scenario: User can create multiple new todo items
     Given I fill the "todo" field with "Buy carrots"

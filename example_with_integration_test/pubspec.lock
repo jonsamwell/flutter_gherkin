@@ -213,7 +213,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "3.0.0"
+    version: "3.0.0-rc.13"
   flutter_simple_dependency_injection:
     dependency: "direct main"
     description:

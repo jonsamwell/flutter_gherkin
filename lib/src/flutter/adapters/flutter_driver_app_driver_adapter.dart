@@ -43,7 +43,9 @@ class FlutterDriverAppDriverAdapter
   }
 
   @override
-  Future<List<int>> screenshot() {
+  Future<List<int>> screenshot({
+    String? screenshotName,
+  }) {
     return nativeDriver.screenshot();
   }
 

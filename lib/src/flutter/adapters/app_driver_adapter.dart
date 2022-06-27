@@ -57,7 +57,9 @@ abstract class AppDriverAdapter<TNativeAdapter, TFinderType, TWidgetBaseType> {
     ExpectedWidgetResultType expectResultType = ExpectedWidgetResultType.first,
   ]);
 
-  Future<List<int>> screenshot();
+  Future<List<int>> screenshot({
+    String? screenshotName,
+  });
 
   Future<bool> isPresent(
     TFinderType finder, {

@@ -1,6 +1,6 @@
 name: flutter_gherkin
 description: A Gherkin / Cucumber parser and test runner for Dart and Flutter
-version: 3.0.0-rc.12
+version: 3.0.0-rc.13
 homepage: https://github.com/jonsamwell/flutter_gherkin
 
 environment:

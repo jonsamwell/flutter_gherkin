@@ -6,6 +6,8 @@ import 'package:flutter_gherkin/src/flutter/steps/when_long_press_widget_step.da
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gherkin/gherkin.dart';
 
+import '../steps/take_a_screenshot_step.dart';
+
 class FlutterTestConfiguration extends TestConfiguration {
   static final Iterable<CustomParameter<dynamic>> _wellKnownParameters = [
     ExistenceParameter(),
@@ -35,6 +37,7 @@ class FlutterTestConfiguration extends TestConfiguration {
     textExistsWithinStep(),
     waitUntilKeyExistsStep(),
     waitUntilTypeExistsStep(),
+    takeScreenshot(),
   ];
 
   /// Enable semantics in a test by creating a [SemanticsHandle].

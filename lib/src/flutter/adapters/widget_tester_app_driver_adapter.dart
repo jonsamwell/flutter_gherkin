@@ -2,8 +2,10 @@ import 'dart:io' if (dart.library.html) 'dart:html';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'dart:ui' as ui show ImageByteFormat;
 
 import 'app_driver_adapter.dart';
 
@@ -66,15 +68,40 @@ class WidgetTesterAppDriverAdapter
     }
   }
 
+  Future<List<int>> screenshotOnAndroid({String? screenshotName}) {
+    RenderObject? renderObject = binding.renderViewElement?.renderObject;
+    if (renderObject != null) {
+      while (!renderObject!.isRepaintBoundary) {
+        renderObject = renderObject.parent as RenderObject?;
+        assert(renderObject != null);
+      }
+
+      final layer = renderObject.debugLayer as OffsetLayer;
+
+      return layer
+          .toImage(renderObject.paintBounds)
+          .then((value) => value.toByteData(format: ui.ImageByteFormat.png))
+          .then((value) => value!.buffer.asUint8List());
+    }
+
+    throw Exception('Unable to take screenshot on Android device');
+  }
+
   @override
-  Future<List<int>> screenshot() async {
+  Future<List<int>> screenshot({String? screenshotName}) async {
     if (!kIsWeb && Platform.isAndroid) {
-      await binding.convertFlutterSurfaceToImage();
-      await binding.pump();
+      return await screenshotOnAndroid(screenshotName: screenshotName);
+      // try {
+      //   // TODO: See https://github.com/flutter/flutter/issues/92381
+      //   // we need to call `revertFlutterImage` once it has been implemented
+      //   await binding.convertFlutterSurfaceToImage();
+      //   await binding.pump();
+      //   // ignore: no_leading_underscores_for_local_identifiers
+      // } catch (_, __) {}
     }
 
     return binding.takeScreenshot(
-      'screenshot_${DateTime.now().millisecondsSinceEpoch}',
+      screenshotName ?? 'screenshot_${DateTime.now().millisecondsSinceEpoch}',
     );
   }
 

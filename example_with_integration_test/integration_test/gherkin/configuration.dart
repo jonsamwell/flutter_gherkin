@@ -22,6 +22,7 @@ FlutterTestConfiguration gherkinTestConfiguration = FlutterTestConfiguration(
   ],
   hooks: [
     ResetAppHook(),
+    // AttachScreenshotAfterStepHook(),
   ],
   reporters: [
     StdoutReporter(MessageLevel.error)
@@ -33,6 +34,9 @@ FlutterTestConfiguration gherkinTestConfiguration = FlutterTestConfiguration(
     TestRunSummaryReporter()
       ..setWriteLineFn(print)
       ..setWriteFn(print),
+    JsonReporter(
+      writeReport: (_, __) => Future<void>.value(),
+    ),
   ],
   createWorld: (config) => Future.value(CustomWorld()),
 );
