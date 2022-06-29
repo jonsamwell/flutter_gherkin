@@ -38,6 +38,7 @@ abstract class GherkinIntegrationTestRunner {
   final StartAppFn appMainFunction;
   final AppLifecyclePumpHandlerFn? appLifecyclePumpHandler;
   final Timeout scenarioExecutionTimeout;
+  final LiveTestWidgetsFlutterBindingFramePolicy? framePolicy;
   final AggregatedReporter _reporter = AggregatedReporter();
 
   late final Iterable<ExecutableStep>? _executableSteps;
@@ -47,7 +48,6 @@ abstract class GherkinIntegrationTestRunner {
 
   AggregatedReporter get reporter => _reporter;
   Hook get hook => _hook!;
-  LiveTestWidgetsFlutterBindingFramePolicy? get framePolicy => null;
 
   /// A Gherkin test runner that uses [WidgetTester] to instrument the app under test.
   ///
@@ -64,6 +64,7 @@ abstract class GherkinIntegrationTestRunner {
     required this.appMainFunction,
     required this.scenarioExecutionTimeout,
     this.appLifecyclePumpHandler,
+    this.framePolicy,
   }) {
     configuration.prepare();
     _registerReporters(configuration.reporters);
@@ -79,8 +80,7 @@ abstract class GherkinIntegrationTestRunner {
   Future<void> run() async {
     _binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-    _binding.framePolicy =
-        framePolicy ?? LiveTestWidgetsFlutterBindingFramePolicy.benchmarkLive;
+    _binding.framePolicy = framePolicy ?? _binding.framePolicy;
 
     tearDownAll(
       () {

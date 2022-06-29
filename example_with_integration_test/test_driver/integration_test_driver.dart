@@ -64,7 +64,7 @@ Future<void> writeGherkinReports(List<dynamic> reports) async {
     File file = File(
       '${integration_test_driver.testOutputsDirectory}/'
       '$filenamePrefix'
-      'v${i + 1}.json',
+      '-v${i + 1}.json',
     );
 
     await file.writeAsString(json.encode(reportData));

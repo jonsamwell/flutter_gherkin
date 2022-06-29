@@ -12,11 +12,13 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
     required StartAppFn appMainFunction,
     required Timeout scenarioExecutionTimeout,
     AppLifecyclePumpHandlerFn? appLifecyclePumpHandler,
+    LiveTestWidgetsFlutterBindingFramePolicy? framePolicy,
   }) : super(
           configuration: configuration,
           appMainFunction: appMainFunction,
           scenarioExecutionTimeout: scenarioExecutionTimeout,
           appLifecyclePumpHandler: appLifecyclePumpHandler,
+          framePolicy: framePolicy,
         );
 
   @override
@@ -389,11 +391,13 @@ void executeTestSuite({
   required StartAppFn appMainFunction,
   Timeout scenarioExecutionTimeout = const Timeout(Duration(minutes: 10)),
   AppLifecyclePumpHandlerFn? appLifecyclePumpHandler,
+  LiveTestWidgetsFlutterBindingFramePolicy? framePolicy,
 }) {
   _CustomGherkinIntegrationTestRunner(
     configuration: configuration,
     appMainFunction: appMainFunction,
     appLifecyclePumpHandler: appLifecyclePumpHandler,
     scenarioExecutionTimeout: scenarioExecutionTimeout,
+    framePolicy: framePolicy,
   ).run();
 }

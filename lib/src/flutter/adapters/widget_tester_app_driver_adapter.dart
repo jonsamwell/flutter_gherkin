@@ -25,11 +25,13 @@ class WidgetTesterAppDriverAdapter
     Duration? duration = const Duration(milliseconds: 100),
     Duration? timeout = const Duration(seconds: 30),
   }) async {
-    return _implicitWait(
+    final result = await _implicitWait(
       duration: duration,
       timeout: timeout,
       force: true,
     );
+
+    return result;
   }
 
   Future<int> _implicitWait({
@@ -39,11 +41,13 @@ class WidgetTesterAppDriverAdapter
   }) async {
     if (waitImplicitlyAfterAction || force == true) {
       try {
-        return await nativeDriver.pumpAndSettle(
+        final result = await nativeDriver.pumpAndSettle(
           duration ?? const Duration(milliseconds: 100),
           EnginePhase.sendSemanticsUpdate,
           timeout ?? const Duration(seconds: 30),
         );
+
+        return result;
       } catch (_) {
         return 0;
       }
@@ -68,7 +72,7 @@ class WidgetTesterAppDriverAdapter
     }
   }
 
-  Future<List<int>> screenshotOnAndroid() {
+  Future<List<int>> screenshotOnAndroid() async {
     RenderObject? renderObject = binding.renderViewElement?.renderObject;
     if (renderObject != null) {
       while (!renderObject!.isRepaintBoundary) {
@@ -76,9 +80,13 @@ class WidgetTesterAppDriverAdapter
         assert(renderObject != null);
       }
 
+      if (renderObject.debugNeedsPaint) {
+        await Future.delayed(const Duration(milliseconds: 100));
+      }
+
       final layer = renderObject.debugLayer as OffsetLayer;
 
-      return layer
+      return await layer
           .toImage(renderObject.paintBounds)
           .then((value) => value.toByteData(format: ui.ImageByteFormat.png))
           .then((value) => value!.buffer.asUint8List());
@@ -105,7 +113,7 @@ class WidgetTesterAppDriverAdapter
 
         return await screenshotOnAndroid();
       } else {
-        return binding.takeScreenshot(name);
+        return await binding.takeScreenshot(name);
       }
     }
   }

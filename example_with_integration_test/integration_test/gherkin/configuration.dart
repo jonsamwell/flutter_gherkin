@@ -5,6 +5,7 @@ import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:gherkin/gherkin.dart';
 
+import 'hooks/attach_screenshot_after_step_hook.dart';
 import 'hooks/reset_app_hook.dart';
 import 'steps/expect_todos_step.dart';
 import 'steps/multiline_string_with_formatted_json.dart';
@@ -22,7 +23,7 @@ FlutterTestConfiguration gherkinTestConfiguration = FlutterTestConfiguration(
   ],
   hooks: [
     ResetAppHook(),
-    // AttachScreenshotAfterStepHook(),
+    AttachScreenshotAfterStepHook(),
   ],
   reporters: [
     StdoutReporter(MessageLevel.error)

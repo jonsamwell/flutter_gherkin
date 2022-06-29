@@ -1,3 +1,6 @@
+## [3.0.0-rc.15] - 28/06/2022
+  - Exposed `frameBindingPolicy` on the test runner when running tests which can affect how frames are painted and the speed of the test run, I've removed the default value which might be responsible for #231
+
 ## [3.0.0-rc.14] - 28/06/2022
   - Fix #237 - Ensure everything works on the web
 
