@@ -1,3 +1,15 @@
+## [3.0.0-rc.16] - 01/07/2022
+  - Fix #231 - using local coordinate system when taking a screenshot on Android (thanks to @youssef-t for the solution)
+  - Fix #216 - ensure step exceptions and `expect` failure results are added as errors to the json report
+  - Scenarios can now have descriptions which also appear in the json reporter output
+
+NOTE: Due to the above changes generated files will need to be re-generated
+
+```
+flutter pub run build_runner clean
+flutter pub run build_runner build --delete-conflicting-outputs
+```
+
 ## [3.0.0-rc.15] - 28/06/2022
   - Exposed `frameBindingPolicy` on the test runner when running tests which can affect how frames are painted and the speed of the test run, I've removed the default value which might be responsible for #231
 

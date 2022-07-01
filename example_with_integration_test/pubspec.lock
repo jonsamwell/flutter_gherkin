@@ -213,7 +213,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "3.0.0-rc.14"
+    version: "3.0.0-rc.16"
   flutter_simple_dependency_injection:
     dependency: "direct main"
     description:
@@ -249,7 +249,7 @@ packages:
       name: gherkin
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.0+1"
+    version: "3.1.0"
   glob:
     dependency: transitive
     description:

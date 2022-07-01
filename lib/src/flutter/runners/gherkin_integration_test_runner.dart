@@ -89,7 +89,7 @@ abstract class GherkinIntegrationTestRunner {
     );
 
     _safeInvokeFuture(() async => await hook.onBeforeRun(configuration));
-    _safeInvokeFuture(() async => await reporter.test.onStarted.maybeCall());
+    _safeInvokeFuture(() async => await reporter.test.onStarted.invoke());
 
     onRun();
   }
@@ -97,7 +97,7 @@ abstract class GherkinIntegrationTestRunner {
   void onRun();
 
   void onRunComplete() {
-    _safeInvokeFuture(() async => await reporter.test.onFinished.maybeCall());
+    _safeInvokeFuture(() async => await reporter.test.onFinished.invoke());
     _safeInvokeFuture(() async => await hook.onAfterRun(configuration));
     setTestResultData(_binding);
     _safeInvokeFuture(() async => await reporter.dispose());
@@ -126,16 +126,18 @@ abstract class GherkinIntegrationTestRunner {
   Future<void> onBeforeRunFeature({
     required String name,
     required String path,
+    String? description,
     Iterable<String>? tags,
   }) async {
     final debugInformation = RunnableDebugInformation(path, 0, name);
     final featureTags =
         (tags ?? const Iterable<Tag>.empty()).map((t) => Tag(t.toString(), 0));
-    await reporter.feature.onStarted.maybeCall(
+    await reporter.feature.onStarted.invoke(
       FeatureMessage(
         name: name,
+        description: description,
         context: debugInformation,
-        tags: featureTags.toList(),
+        tags: featureTags.toList(growable: false),
       ),
     );
   }
@@ -144,12 +146,14 @@ abstract class GherkinIntegrationTestRunner {
   Future<void> onAfterRunFeature({
     required String name,
     required String path,
+    String? description,
     required List<String>? tags,
   }) async {
     final debugInformation = RunnableDebugInformation(path, 0, name);
-    await reporter.feature.onFinished.maybeCall(
+    await reporter.feature.onFinished.invoke(
       FeatureMessage(
         name: name,
+        description: description,
         context: debugInformation,
         tags: (tags ?? const Iterable<String>.empty())
             .map(
@@ -166,6 +170,7 @@ abstract class GherkinIntegrationTestRunner {
     required Iterable<String>? tags,
     required List<StepFn> steps,
     required String path,
+    String? description,
     Future<void> Function()? onBefore,
     Future<void> Function()? onAfter,
   }) {
@@ -205,9 +210,10 @@ abstract class GherkinIntegrationTestRunner {
               scenarioTags,
             );
 
-            await reporter.scenario.onStarted.maybeCall(
+            await reporter.scenario.onStarted.invoke(
               ScenarioMessage(
                 name: name,
+                description: description,
                 context: debugInformation,
                 tags: scenarioTags.toList(),
               ),
@@ -226,9 +232,10 @@ abstract class GherkinIntegrationTestRunner {
               }
             }
           } finally {
-            await reporter.scenario.onFinished.maybeCall(
+            await reporter.scenario.onFinished.invoke(
               ScenarioMessage(
                 name: name,
+                description: description,
                 context: debugInformation,
                 hasPassed: !failed,
               ),
@@ -357,13 +364,15 @@ abstract class GherkinIntegrationTestRunner {
           configuration.defaultTimeout,
           parameters,
         );
-        if (!_isNegativeResult(result.result)) {
+        if (!_isNegativeResult(result.result) ||
+            configuration.stepMaxRetries == 0) {
           break;
         } else {
           await Future.delayed(configuration.retryDelay);
         }
       }
     }
+
     await _onAfterStepRun(
       name,
       result!,
@@ -466,7 +475,7 @@ abstract class GherkinIntegrationTestRunner {
       result,
     );
 
-    await reporter.step.onFinished.maybeCall(
+    await reporter.step.onFinished.invoke(
       StepMessage(
         name: step,
         context: RunnableDebugInformation('', 0, step),
@@ -485,7 +494,7 @@ abstract class GherkinIntegrationTestRunner {
     GherkinTable? table,
   }) async {
     await hook.onBeforeStep(world, step);
-    await reporter.step.onStarted.maybeCall(
+    await reporter.step.onStarted.invoke(
       StepMessage(
         name: step,
         context: RunnableDebugInformation('', 0, step),

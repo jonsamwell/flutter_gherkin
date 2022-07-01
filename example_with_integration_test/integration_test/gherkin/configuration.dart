@@ -5,8 +5,8 @@ import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:gherkin/gherkin.dart';
 
-import 'hooks/attach_screenshot_after_step_hook.dart';
 import 'hooks/reset_app_hook.dart';
+import 'steps/expect_failure.dart';
 import 'steps/expect_todos_step.dart';
 import 'steps/multiline_string_with_formatted_json.dart';
 import 'steps/when_await_animation.dart';
@@ -14,16 +14,18 @@ import 'steps/when_step_has_timeout.dart';
 import 'world/custom_world.dart';
 
 FlutterTestConfiguration gherkinTestConfiguration = FlutterTestConfiguration(
-  // tagExpression: '@debug',  // can be used to limit the tests that are run
+  // tagExpression: '@debug', // can be used to limit the tests that are run
   stepDefinitions: [
     thenIExpectTheTodos,
     whenAnAnimationIsAwaited,
     whenStepHasTimeout,
-    givenTheData
+    givenTheData,
+    thenIExpectFailure,
   ],
   hooks: [
     ResetAppHook(),
-    AttachScreenshotAfterStepHook(),
+    AttachScreenshotOnFailedStepHook(),
+    // AttachScreenshotAfterStepHook(),
   ],
   reporters: [
     StdoutReporter(MessageLevel.error)

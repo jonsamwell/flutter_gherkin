@@ -164,6 +164,7 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
   static const String scenarioTemplate = '''
   runScenario(
     name: '{{scenario_name}}',
+    description: {{scenario_description}},
     path: '{{path}}',
     tags:{{tags}},
     steps: [{{steps}},],
@@ -182,10 +183,10 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
   );}
   ''';
   static const String onBeforeScenarioRun = '''
-  onBefore: () async => onBeforeRunFeature(name:'{{feature_name}}', path:r'{{path}}', tags:{{feature_tags}},),
+  onBefore: () async => onBeforeRunFeature(name:'{{feature_name}}', path:r'{{path}}', description: {{feature_description}}, tags:{{feature_tags}},),
   ''';
   static const String onAfterScenarioRun = '''
-  onAfter: () async => onAfterRunFeature(name:'{{feature_name}}', path:r'{{path}}', tags:{{feature_tags}},),
+  onAfter: () async => onAfterRunFeature(name:'{{feature_name}}', path:r'{{path}}', description: {{feature_description}}, tags:{{feature_tags}},),
   ''';
 
   final StringBuffer _buffer = StringBuffer();
@@ -246,8 +247,10 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
   @override
   Future<void> visitScenario(
     String featureName,
+    String? featureDescription,
     Iterable<String> featureTags,
     String name,
+    String? description,
     Iterable<String> tags,
     String path, {
     required bool isFirst,
@@ -271,6 +274,11 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
     );
     _currentScenarioCode = _replaceVariable(
       _currentScenarioCode!,
+      'feature_description',
+      _escapeText(featureDescription == null ? null : '"$featureDescription"'),
+    );
+    _currentScenarioCode = _replaceVariable(
+      _currentScenarioCode!,
       'path',
       _escapeText(path),
     );
@@ -283,6 +291,11 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
       _currentScenarioCode!,
       'scenario_name',
       _escapeText(name),
+    );
+    _currentScenarioCode = _replaceVariable(
+      _currentScenarioCode!,
+      'scenario_description',
+      _escapeText(description == null ? null : '"$description"'),
     );
     _currentScenarioCode = _replaceVariable(
       _currentScenarioCode!,
@@ -353,10 +366,10 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
     _stepBuffer.clear();
   }
 
-  String _replaceVariable(String content, String property, String value) {
-    return content.replaceAll('{{$property}}', value);
+  String _replaceVariable(String content, String property, String? value) {
+    return content.replaceAll('{{$property}}', value ?? 'null');
   }
 
-  String _escapeText(String text) =>
-      text.replaceAll("\\", "\\\\").replaceAll("'", "\\'");
+  String? _escapeText(String? text) =>
+      text?.replaceAll("\\", "\\\\").replaceAll("'", "\\'");
 }
