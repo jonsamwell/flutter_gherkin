@@ -183,10 +183,10 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
   );}
   ''';
   static const String onBeforeScenarioRun = '''
-  onBefore: () async => onBeforeRunFeature(name:'{{feature_name}}', path:r'{{path}}', description: {{feature_description}}, tags:{{feature_tags}},),
+  onBefore: () async => onBeforeRunFeature(name:'{{feature_name}}', path:'{{path}}', description: {{feature_description}}, tags:{{feature_tags}},),
   ''';
   static const String onAfterScenarioRun = '''
-  onAfter: () async => onAfterRunFeature(name:'{{feature_name}}', path:r'{{path}}', description: {{feature_description}}, tags:{{feature_tags}},),
+  onAfter: () async => onAfterRunFeature(name:'{{feature_name}}', path:'{{path}}', description: {{feature_description}}, tags:{{feature_tags}},),
   ''';
 
   final StringBuffer _buffer = StringBuffer();
