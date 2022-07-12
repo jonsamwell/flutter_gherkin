@@ -62,6 +62,26 @@ class FlutterTestConfiguration extends TestConfiguration {
     );
   }
 
+  /// Provide a configuration object with default settings for web
+  static FlutterTestConfiguration standardWeb(
+    Iterable<StepDefinitionGeneric<World>> steps,
+  ) {
+    return FlutterTestConfiguration(
+      reporters: [
+        StdoutReporter(MessageLevel.error)
+          ..setWriteLineFn(print)
+          ..setWriteFn(print),
+        ProgressReporter()
+          ..setWriteLineFn(print)
+          ..setWriteFn(print),
+        TestRunSummaryReporter()
+          ..setWriteLineFn(print)
+          ..setWriteFn(print),
+      ],
+      stepDefinitions: steps,
+    );
+  }
+
   FlutterTestConfiguration({
     super.features = const <Pattern>[],
     super.featureDefaultLanguage = 'en',
