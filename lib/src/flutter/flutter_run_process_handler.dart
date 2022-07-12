@@ -134,10 +134,6 @@ class FlutterRunProcessHandler extends ProcessHandler {
       arguments.add('--verbose');
     }
 
-    if (_keepAppRunning) {
-      arguments.add('--keep-app-running');
-    }
-
     if (_logFlutterProcessOutput) {
       stdout.writeln(
         'Invoking from working directory `${_workingDirectory ?? './'}` command: `flutter ${arguments.join(' ')}`',
@@ -173,7 +169,11 @@ class FlutterRunProcessHandler extends ProcessHandler {
     var exitCode = -1;
     _ensureRunningProcess();
     if (_runningProcess != null) {
-      _runningProcess!.stdin.write('q');
+      if (_keepAppRunning) {
+        _runningProcess!.stdin.write('d');
+      } else {
+        _runningProcess!.stdin.write('q');
+      }
       _openSubscriptions.forEach((s) => s.cancel());
       _openSubscriptions.clear();
       exitCode = await _runningProcess!.exitCode;
