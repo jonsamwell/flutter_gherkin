@@ -29,6 +29,11 @@ import 'package:gherkin/gherkin.dart';
 import 'steps/then_expect_widget_to_be_present_step.dart';
 import 'steps/when_long_press_widget_step.dart';
 
+enum FlutterAction {
+  run,
+  attach,
+}
+
 class FlutterTestConfiguration extends TestConfiguration {
   String? _observatoryDebuggerUri;
 
@@ -57,6 +62,10 @@ class FlutterTestConfiguration extends TestConfiguration {
       ..restartAppBetweenScenarios = true
       ..stopAfterTestFailed = true;
   }
+
+  //option for run new app or attach to an existing app
+  //defaults is run
+  FlutterAction action = FlutterAction.run;
 
   /// restarts the application under test between each scenario.
   /// Defaults to true to avoid the application being in an invalid state
