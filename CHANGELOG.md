@@ -1,3 +1,10 @@
+## [3.0.0-rc.17] - 25/07/2022
+  - Fix #257 - fixed issue when generating a step with a '$' sign in
+  - Fix #256 - Ensure all exceptions generated when running a step are logged
+  - Fix #253 - Ensure features with descriptions that span more than one line are parsed correctly
+  - Fix #252 - Ensure all async code is awaited
+  - When taking a screenshot on the web use the render element rather than relying on native code that does not work
+
 ## [3.0.0-rc.16] - 01/07/2022
   - Fix #231 - using local coordinate system when taking a screenshot on Android (thanks to @youssef-t for the solution)
   - Fix #216 - ensure step exceptions and `expect` failure results are added as errors to the json report

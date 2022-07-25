@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter_gherkin/flutter_gherkin_with_driver.dart';
 import 'package:flutter_gherkin/src/flutter/parameters/existence_parameter.dart';
 import 'package:flutter_gherkin/src/flutter/parameters/swipe_direction_parameter.dart';

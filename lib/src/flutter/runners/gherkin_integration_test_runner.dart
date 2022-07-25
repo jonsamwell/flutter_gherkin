@@ -83,24 +83,24 @@ abstract class GherkinIntegrationTestRunner {
     _binding.framePolicy = framePolicy ?? _binding.framePolicy;
 
     tearDownAll(
-      () {
-        onRunComplete();
+      () async {
+        await onRunComplete();
       },
     );
 
-    _safeInvokeFuture(() async => await hook.onBeforeRun(configuration));
-    _safeInvokeFuture(() async => await reporter.test.onStarted.invoke());
+    await hook.onBeforeRun(configuration);
+    await reporter.test.onStarted.invoke();
 
     onRun();
   }
 
   void onRun();
 
-  void onRunComplete() {
-    _safeInvokeFuture(() async => await reporter.test.onFinished.invoke());
-    _safeInvokeFuture(() async => await hook.onAfterRun(configuration));
+  Future<void> onRunComplete() async {
+    await reporter.test.onFinished.invoke();
+    await hook.onAfterRun(configuration);
     setTestResultData(_binding);
-    _safeInvokeFuture(() async => await reporter.dispose());
+    () async => await reporter.dispose();
   }
 
   void setTestResultData(IntegrationTestWidgetsFlutterBinding binding) {
@@ -226,9 +226,11 @@ abstract class GherkinIntegrationTestRunner {
                   failed = true;
                   hasToSkip = true;
                 }
-              } catch (e) {
+              } catch (err, st) {
                 failed = true;
                 hasToSkip = true;
+
+                await reporter.onException(err, st);
               }
             }
           } finally {
@@ -258,18 +260,16 @@ abstract class GherkinIntegrationTestRunner {
               tester,
             );
 
-            cleanUpScenarioRun(dependencies);
+            await cleanUpScenarioRun(dependencies);
           }
         },
         timeout: scenarioExecutionTimeout,
         semanticsEnabled: configuration.semanticsEnabled,
       );
     } else {
-      _safeInvokeFuture(
-        () async => reporter.message(
-          'Ignoring scenario `$name` as tag expression `${configuration.tagExpression}` not satisfied',
-          MessageLevel.info,
-        ),
+      reporter.message(
+        'Ignoring scenario `$name` as tag expression `${configuration.tagExpression}` not satisfied',
+        MessageLevel.info,
       );
     }
   }
@@ -325,52 +325,62 @@ abstract class GherkinIntegrationTestRunner {
     required TestDependencies dependencies,
     required bool skip,
   }) async {
-    final executable = _executableSteps!.firstWhereOrNull(
-      (s) => s.expression.isMatch(name),
-    );
-
-    if (executable == null) {
-      final message = 'Step definition not found for text: `$name`';
-      throw GherkinStepNotDefinedException(message);
-    }
-
-    var parameters = _getStepParameters(
-      step: name,
-      multiLineStrings: multiLineStrings,
-      table: table,
-      code: executable,
-    );
-
-    await _onBeforeStepRun(
-      world: dependencies.world,
-      step: name,
-      table: table,
-      multiLineStrings: multiLineStrings,
-    );
-
     StepResult? result;
 
-    if (skip) {
-      result = StepResult(
-        0,
-        StepExecutionResult.skipped,
-        resultReason: 'Previous step(s) failed',
+    try {
+      final executable = _executableSteps!.firstWhereOrNull(
+        (s) => s.expression.isMatch(name),
       );
-    } else {
-      for (int i = 0; i < configuration.stepMaxRetries + 1; i++) {
-        result = await executable.step.run(
-          dependencies.world,
-          reporter,
-          configuration.defaultTimeout,
-          parameters,
+
+      if (executable == null) {
+        final message = 'Step definition not found for text: `$name`';
+        throw GherkinStepNotDefinedException(message);
+      }
+
+      var parameters = _getStepParameters(
+        step: name,
+        multiLineStrings: multiLineStrings,
+        table: table,
+        code: executable,
+      );
+
+      await _onBeforeStepRun(
+        world: dependencies.world,
+        step: name,
+        table: table,
+        multiLineStrings: multiLineStrings,
+      );
+
+      if (skip) {
+        result = StepResult(
+          0,
+          StepExecutionResult.skipped,
+          resultReason: 'Previous step(s) failed',
         );
-        if (!_isNegativeResult(result.result) ||
-            configuration.stepMaxRetries == 0) {
-          break;
-        } else {
-          await Future.delayed(configuration.retryDelay);
+      } else {
+        for (int i = 0; i < configuration.stepMaxRetries + 1; i++) {
+          result = await executable.step.run(
+            dependencies.world,
+            reporter,
+            configuration.defaultTimeout,
+            parameters,
+          );
+
+          if (!_isNegativeResult(result.result) ||
+              configuration.stepMaxRetries == 0) {
+            break;
+          } else {
+            await Future.delayed(configuration.retryDelay);
+          }
         }
       }
+    } catch (err, st) {
+      result = ErroredStepResult(
+        0,
+        StepExecutionResult.error,
+        err,
+        st,
+      );
     }
 
     await _onAfterStepRun(
@@ -383,13 +393,9 @@ abstract class GherkinIntegrationTestRunner {
   }
 
   @protected
-  void cleanUpScenarioRun(TestDependencies dependencies) {
-    _safeInvokeFuture(
-      () async => dependencies.attachmentManager.dispose(),
-    );
-    _safeInvokeFuture(
-      () async => dependencies.world.dispose(),
-    );
+  Future<void> cleanUpScenarioRun(TestDependencies dependencies) async {
+    dependencies.attachmentManager.dispose();
+    dependencies.world.dispose();
   }
 
   void _registerReporters(Iterable<Reporter>? reporters) {
@@ -503,12 +509,6 @@ abstract class GherkinIntegrationTestRunner {
             multiLineStrings.isNotEmpty ? multiLineStrings.first : null,
       ),
     );
-  }
-
-  void _safeInvokeFuture(Future<void> Function() fn) async {
-    try {
-      await fn().catchError((_, __) {});
-    } catch (_) {}
   }
 
   bool _evaluateTagFilterExpression(

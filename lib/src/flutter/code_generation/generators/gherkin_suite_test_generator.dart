@@ -183,10 +183,18 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
   );}
   ''';
   static const String onBeforeScenarioRun = '''
-  onBefore: () async => onBeforeRunFeature(name:'{{feature_name}}', path:'{{path}}', description: {{feature_description}}, tags:{{feature_tags}},),
+  onBefore: () async => onBeforeRunFeature(
+    name:'{{feature_name}}', 
+    path:'{{path}}', 
+    description: {{feature_description}}, 
+    tags:{{feature_tags}},),
   ''';
   static const String onAfterScenarioRun = '''
-  onAfter: () async => onAfterRunFeature(name:'{{feature_name}}', path:'{{path}}', description: {{feature_description}}, tags:{{feature_tags}},),
+  onAfter: () async => onAfterRunFeature(
+    name:'{{feature_name}}', 
+    path:'{{path}}', 
+    description: {{feature_description}}, 
+    tags:{{feature_tags}},),
   ''';
 
   final StringBuffer _buffer = StringBuffer();
@@ -275,7 +283,9 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
     _currentScenarioCode = _replaceVariable(
       _currentScenarioCode!,
       'feature_description',
-      _escapeText(featureDescription == null ? null : '"$featureDescription"'),
+      _escapeText(
+        featureDescription == null ? null : '"""$featureDescription"""',
+      ),
     );
     _currentScenarioCode = _replaceVariable(
       _currentScenarioCode!,
@@ -370,6 +380,8 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
     return content.replaceAll('{{$property}}', value ?? 'null');
   }
 
-  String? _escapeText(String? text) =>
-      text?.replaceAll("\\", "\\\\").replaceAll("'", "\\'");
+  String? _escapeText(String? text) => text
+      ?.replaceAll("\\", "\\\\")
+      .replaceAll("'", "\\'")
+      .replaceAll(r"$", r"\$");
 }

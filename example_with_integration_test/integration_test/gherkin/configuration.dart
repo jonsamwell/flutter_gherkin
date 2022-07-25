@@ -8,18 +8,20 @@ import 'package:gherkin/gherkin.dart';
 import 'hooks/reset_app_hook.dart';
 import 'steps/expect_failure.dart';
 import 'steps/expect_todos_step.dart';
+import 'steps/given_text.dart';
 import 'steps/multiline_string_with_formatted_json.dart';
 import 'steps/when_await_animation.dart';
 import 'steps/when_step_has_timeout.dart';
 import 'world/custom_world.dart';
 
 FlutterTestConfiguration gherkinTestConfiguration = FlutterTestConfiguration(
-  // tagExpression: '@debug', // can be used to limit the tests that are run
+  tagExpression: '@debug2', // can be used to limit the tests that are run
   stepDefinitions: [
     thenIExpectTheTodos,
     whenAnAnimationIsAwaited,
     whenStepHasTimeout,
     givenTheData,
+    givenTheText,
     thenIExpectFailure,
   ],
   hooks: [

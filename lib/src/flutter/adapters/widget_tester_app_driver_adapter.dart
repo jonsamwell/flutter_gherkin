@@ -72,7 +72,7 @@ class WidgetTesterAppDriverAdapter
     }
   }
 
-  Future<List<int>> screenshotOnAndroid() async {
+  Future<List<int>> takeScreenshotUsingRenderElement() async {
     RenderObject? renderObject = binding.renderViewElement?.renderObject;
     if (renderObject != null) {
       while (!renderObject!.isRepaintBoundary) {
@@ -99,22 +99,18 @@ class WidgetTesterAppDriverAdapter
   Future<List<int>> screenshot({String? screenshotName}) async {
     final name =
         screenshotName ?? 'screenshot_${DateTime.now().millisecondsSinceEpoch}';
-    if (kIsWeb) {
-      return binding.takeScreenshot(name);
-    } else {
-      if (Platform.isAndroid) {
-        // try {
-        //   // TODO: See https://github.com/flutter/flutter/issues/92381
-        //   // we need to call `revertFlutterImage` once it has been implemented
-        //   await binding.convertFlutterSurfaceToImage();
-        //   await binding.pump();
-        //   // ignore: no_leading_underscores_for_local_identifiers
-        // } catch (_, __) {}
+    if (kIsWeb || Platform.isAndroid) {
+      // try {
+      //   // TODO: See https://github.com/flutter/flutter/issues/92381
+      //   // we need to call `revertFlutterImage` once it has been implemented
+      //   await binding.convertFlutterSurfaceToImage();
+      //   await binding.pump();
+      //   // ignore: no_leading_underscores_for_local_identifiers
+      // } catch (_, __) {}
 
-        return await screenshotOnAndroid();
-      } else {
-        return await binding.takeScreenshot(name);
-      }
+      return await takeScreenshotUsingRenderElement();
+    } else {
+      return await binding.takeScreenshot(name);
     }
   }
 

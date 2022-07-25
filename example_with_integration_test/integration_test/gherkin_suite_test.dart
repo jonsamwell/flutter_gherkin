@@ -13,5 +13,14 @@ void main() {
   executeTestSuite(
     appMainFunction: appInitializationFn,
     configuration: gherkinTestConfiguration,
+    // if you have lots of test you might need to increase the default timeout
+    // scenarioExecutionTimeout: Timeout(const Duration(minutes: 30)),
+    // if your app has lots of endless animations you might need to
+    // provide your own app lifecycle pump handler that doesn't pump
+    // at certain lifecycle stages
+    // appLifecyclePumpHandler: (appPhase, widgetTester) async => {},
+    // you can increase the performance of your tests at the cost of
+    // not drawing some frames but it might lead to unexpected consequences
+    // framePolicy: LiveTestWidgetsFlutterBindingFramePolicy.benchmarkLive,
   );
 }

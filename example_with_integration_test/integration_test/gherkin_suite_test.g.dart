@@ -27,6 +27,7 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
     testFeature1();
     testFeature2();
     testFeature3();
+    testFeature4();
   }
 
   void testFeature0() {
@@ -91,7 +92,7 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
           ],
           onBefore: () async => onBeforeRunFeature(
             name: 'Creating todos',
-            path: r'.\\integration_test\\features\\create.feature',
+            path: '.\\integration_test\\features\\create.feature',
             description: null,
             tags: <String>['@tag'],
           ),
@@ -101,7 +102,7 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
           name: 'User can create multiple new todo items',
           description: null,
           path: '.\\integration_test\\features\\create.feature',
-          tags: <String>['@tag'],
+          tags: <String>['@tag', '@debug2'],
           steps: [
             (
               TestDependencies dependencies,
@@ -241,7 +242,7 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
           ],
           onAfter: () async => onAfterRunFeature(
             name: 'Creating todos',
-            path: r'.\\integration_test\\features\\create.feature',
+            path: '.\\integration_test\\features\\create.feature',
             description: null,
             tags: <String>['@tag'],
           ),
@@ -302,13 +303,13 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
           ],
           onBefore: () async => onBeforeRunFeature(
             name: 'Checking data',
-            path: r'.\\integration_test\\features\\check.feature',
+            path: '.\\integration_test\\features\\check.feature',
             description: null,
             tags: <String>['@tag'],
           ),
           onAfter: () async => onAfterRunFeature(
             name: 'Checking data',
-            path: r'.\\integration_test\\features\\check.feature',
+            path: '.\\integration_test\\features\\check.feature',
             description: null,
             tags: <String>['@tag'],
           ),
@@ -326,7 +327,7 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
           name: 'User can swipe cards left and right',
           description: null,
           path: '.\\integration_test\\features\\swiping.feature',
-          tags: <String>['@tag', '@debug'],
+          tags: <String>['@tag'],
           steps: [
             (
               TestDependencies dependencies,
@@ -381,13 +382,13 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
           ],
           onBefore: () async => onBeforeRunFeature(
             name: 'Swiping',
-            path: r'.\\integration_test\\features\\swiping.feature',
+            path: '.\\integration_test\\features\\swiping.feature',
             description: null,
             tags: <String>['@tag'],
           ),
           onAfter: () async => onAfterRunFeature(
             name: 'Swiping',
-            path: r'.\\integration_test\\features\\swiping.feature',
+            path: '.\\integration_test\\features\\swiping.feature',
             description: null,
             tags: <String>['@tag'],
           ),
@@ -398,13 +399,13 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
 
   void testFeature3() {
     runFeature(
-      name: 'Expect failure:',
+      name: 'Parsing:',
       tags: <String>['@debug'],
       run: () {
         runScenario(
-          name: 'Exception should be added to json report',
+          name: 'Parsing a',
           description: null,
-          path: '.\\integration_test\\features\\failure.feature',
+          path: '.\\integration_test\\features\\parsing.feature',
           tags: <String>['@debug'],
           steps: [
             (
@@ -412,31 +413,7 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
               bool skip,
             ) async {
               return await runStep(
-                name: 'Given I expect the todo list',
-                multiLineStrings: <String>[],
-                table: GherkinTable.fromJson('[{"Todo":"Buy blueberries"}]'),
-                dependencies: dependencies,
-                skip: skip,
-              );
-            },
-            (
-              TestDependencies dependencies,
-              bool skip,
-            ) async {
-              return await runStep(
-                name: 'When I tap the "add" button',
-                multiLineStrings: <String>[],
-                table: null,
-                dependencies: dependencies,
-                skip: skip,
-              );
-            },
-            (
-              TestDependencies dependencies,
-              bool skip,
-            ) async {
-              return await runStep(
-                name: 'And I fill the "todo" field with "Buy hannah\'s apples"',
+                name: 'Given the text "^[A-Z]{3}\\\\d{5}\\\$"',
                 multiLineStrings: <String>[],
                 table: null,
                 dependencies: dependencies,
@@ -445,11 +422,59 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
             },
           ],
           onBefore: () async => onBeforeRunFeature(
-            name: 'Expect failure',
-            path: r'.\\integration_test\\features\\failure.feature',
-            description:
-                "Ensure that when a test fails the exception or test failure is reported",
+            name: 'Parsing',
+            path: '.\\integration_test\\features\\parsing.feature',
+            description: """Complex description:
+- Line "one".
+- Line two, more text
+- Line three""",
             tags: <String>['@debug'],
+          ),
+          onAfter: () async => onAfterRunFeature(
+            name: 'Parsing',
+            path: '.\\integration_test\\features\\parsing.feature',
+            description: """Complex description:
+- Line "one".
+- Line two, more text
+- Line three""",
+            tags: <String>['@debug'],
+          ),
+        );
+      },
+    );
+  }
+
+  void testFeature4() {
+    runFeature(
+      name: 'Expect failures:',
+      tags: <String>[],
+      run: () {
+        runScenario(
+          name: 'Exception should be added to json report',
+          description: null,
+          path: '.\\integration_test\\features\\failure.feature',
+          tags: <String>['@failure-expected'],
+          steps: [
+            (
+              TestDependencies dependencies,
+              bool skip,
+            ) async {
+              return await runStep(
+                name:
+                    'When I tap the "button is not here but exception should be logged in report" button',
+                multiLineStrings: <String>[],
+                table: null,
+                dependencies: dependencies,
+                skip: skip,
+              );
+            },
+          ],
+          onBefore: () async => onBeforeRunFeature(
+            name: 'Expect failures',
+            path: '.\\integration_test\\features\\failure.feature',
+            description:
+                """Ensure that when a test fails the exception or test failure is reported""",
+            tags: <String>[],
           ),
         );
 
@@ -457,7 +482,7 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
           name: 'Failed expect() should be added to json report',
           description: "Description for this scenario!",
           path: '.\\integration_test\\features\\failure.feature',
-          tags: <String>['@debug'],
+          tags: <String>['@failure-expected'],
           steps: [
             (
               TestDependencies dependencies,
@@ -497,11 +522,11 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
             },
           ],
           onAfter: () async => onAfterRunFeature(
-            name: 'Expect failure',
-            path: r'.\\integration_test\\features\\failure.feature',
+            name: 'Expect failures',
+            path: '.\\integration_test\\features\\failure.feature',
             description:
-                "Ensure that when a test fails the exception or test failure is reported",
-            tags: <String>['@debug'],
+                """Ensure that when a test fails the exception or test failure is reported""",
+            tags: <String>[],
           ),
         );
       },
