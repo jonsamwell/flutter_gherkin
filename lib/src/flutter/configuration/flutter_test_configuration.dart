@@ -96,6 +96,8 @@ class FlutterTestConfiguration extends TestConfiguration {
     super.hooks,
     super.reporters = const [],
     super.createWorld,
+    super.stepMaxRetries = 0,
+    super.retryDelay = const Duration(seconds: 2),
     this.semanticsEnabled = true,
     this.waitImplicitlyAfterAction = false,
     Iterable<CustomParameter<dynamic>>? customStepParameterDefinitions,
