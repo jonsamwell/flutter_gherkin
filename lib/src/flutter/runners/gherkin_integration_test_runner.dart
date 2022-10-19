@@ -80,6 +80,8 @@ abstract class GherkinIntegrationTestRunner {
   Future<void> run() async {
     _binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
+    _binding.testTextInput.register();
+
     _binding.framePolicy = framePolicy ?? _binding.framePolicy;
 
     tearDownAll(
