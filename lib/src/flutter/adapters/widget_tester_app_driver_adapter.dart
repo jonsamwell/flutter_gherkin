@@ -251,7 +251,7 @@ class WidgetTesterAppDriverAdapter
       find.byType(Scrollable),
       matchRoot: true,
     );
-    final state = nativeDriver.state(scrollableFinder) as ScrollableState;
+    final state = nativeDriver.firstState(scrollableFinder) as ScrollableState;
     final position = state.position;
     position.jumpTo(dy ?? dx ?? 0);
 
