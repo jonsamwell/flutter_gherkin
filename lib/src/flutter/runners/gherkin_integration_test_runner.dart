@@ -261,6 +261,7 @@ abstract class GherkinIntegrationTestRunner {
             );
 
             await cleanUpScenarioRun(dependencies);
+            expect(failed, false);
           }
         },
         timeout: scenarioExecutionTimeout,
