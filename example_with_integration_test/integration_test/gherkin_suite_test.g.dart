@@ -38,7 +38,7 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
         runScenario(
           name: 'User can create single todo item',
           description: null,
-          path: '.\\integration_test\\features\\create.feature',
+          path: './integration_test/features/create.feature',
           tags: <String>['@tag'],
           steps: [
             (
@@ -92,7 +92,7 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
           ],
           onBefore: () async => onBeforeRunFeature(
             name: 'Creating todos',
-            path: '.\\integration_test\\features\\create.feature',
+            path: './integration_test/features/create.feature',
             description: null,
             tags: <String>['@tag'],
           ),
@@ -101,8 +101,8 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
         runScenario(
           name: 'User can create multiple new todo items',
           description: null,
-          path: '.\\integration_test\\features\\create.feature',
-          tags: <String>['@tag', '@debug2'],
+          path: './integration_test/features/create.feature',
+          tags: <String>['@tag'],
           steps: [
             (
               TestDependencies dependencies,
@@ -242,7 +242,7 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
           ],
           onAfter: () async => onAfterRunFeature(
             name: 'Creating todos',
-            path: '.\\integration_test\\features\\create.feature',
+            path: './integration_test/features/create.feature',
             description: null,
             tags: <String>['@tag'],
           ),
@@ -253,80 +253,13 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
 
   void testFeature1() {
     runFeature(
-      name: 'Checking data:',
-      tags: <String>['@tag'],
-      run: () {
-        runScenario(
-          name: 'User can have data',
-          description: null,
-          path: '.\\integration_test\\features\\check.feature',
-          tags: <String>['@tag', '@tag1'],
-          steps: [
-            (
-              TestDependencies dependencies,
-              bool skip,
-            ) async {
-              return await runStep(
-                name: 'Given I have item with data',
-                multiLineStrings: <String>[
-                  """{
-  "glossary": {
-    "title": "example glossary",
-    "GlossDiv": {
-      "title": "S",
-      "GlossList": {
-        "GlossEntry": {
-          "ID": "SGML",
-          "SortAs": "SGML",
-          "GlossTerm": "Standard Generalized Markup Language",
-          "Acronym": "SGML",
-          "Abbrev": "ISO 8879:1986",
-          "GlossDef": {
-            "para": "A meta-markup language, used to create markup languages such as DocBook.",
-            "GlossSeeAlso": [
-              "GML",
-              "XML"
-            ]
-          },
-          "GlossSee": "markup"
-        }
-      }
-    }
-  }
-}"""
-                ],
-                table: null,
-                dependencies: dependencies,
-                skip: skip,
-              );
-            },
-          ],
-          onBefore: () async => onBeforeRunFeature(
-            name: 'Checking data',
-            path: '.\\integration_test\\features\\check.feature',
-            description: null,
-            tags: <String>['@tag'],
-          ),
-          onAfter: () async => onAfterRunFeature(
-            name: 'Checking data',
-            path: '.\\integration_test\\features\\check.feature',
-            description: null,
-            tags: <String>['@tag'],
-          ),
-        );
-      },
-    );
-  }
-
-  void testFeature2() {
-    runFeature(
       name: 'Swiping:',
       tags: <String>['@tag'],
       run: () {
         runScenario(
           name: 'User can swipe cards left and right',
           description: null,
-          path: '.\\integration_test\\features\\swiping.feature',
+          path: './integration_test/features/swiping.feature',
           tags: <String>['@tag'],
           steps: [
             (
@@ -382,13 +315,80 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
           ],
           onBefore: () async => onBeforeRunFeature(
             name: 'Swiping',
-            path: '.\\integration_test\\features\\swiping.feature',
+            path: './integration_test/features/swiping.feature',
             description: null,
             tags: <String>['@tag'],
           ),
           onAfter: () async => onAfterRunFeature(
             name: 'Swiping',
-            path: '.\\integration_test\\features\\swiping.feature',
+            path: './integration_test/features/swiping.feature',
+            description: null,
+            tags: <String>['@tag'],
+          ),
+        );
+      },
+    );
+  }
+
+  void testFeature2() {
+    runFeature(
+      name: 'Checking data:',
+      tags: <String>['@tag'],
+      run: () {
+        runScenario(
+          name: 'User can have data',
+          description: null,
+          path: './integration_test/features/check.feature',
+          tags: <String>['@tag', '@tag1'],
+          steps: [
+            (
+              TestDependencies dependencies,
+              bool skip,
+            ) async {
+              return await runStep(
+                name: 'Given I have item with data',
+                multiLineStrings: <String>[
+                  """{
+  "glossary": {
+    "title": "example glossary",
+    "GlossDiv": {
+      "title": "S",
+      "GlossList": {
+        "GlossEntry": {
+          "ID": "SGML",
+          "SortAs": "SGML",
+          "GlossTerm": "Standard Generalized Markup Language",
+          "Acronym": "SGML",
+          "Abbrev": "ISO 8879:1986",
+          "GlossDef": {
+            "para": "A meta-markup language, used to create markup languages such as DocBook.",
+            "GlossSeeAlso": [
+              "GML",
+              "XML"
+            ]
+          },
+          "GlossSee": "markup"
+        }
+      }
+    }
+  }
+}"""
+                ],
+                table: null,
+                dependencies: dependencies,
+                skip: skip,
+              );
+            },
+          ],
+          onBefore: () async => onBeforeRunFeature(
+            name: 'Checking data',
+            path: './integration_test/features/check.feature',
+            description: null,
+            tags: <String>['@tag'],
+          ),
+          onAfter: () async => onAfterRunFeature(
+            name: 'Checking data',
+            path: './integration_test/features/check.feature',
             description: null,
             tags: <String>['@tag'],
           ),
@@ -399,60 +399,13 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
 
   void testFeature3() {
     runFeature(
-      name: 'Parsing:',
-      tags: <String>['@debug'],
-      run: () {
-        runScenario(
-          name: 'Parsing a',
-          description: null,
-          path: '.\\integration_test\\features\\parsing.feature',
-          tags: <String>['@debug'],
-          steps: [
-            (
-              TestDependencies dependencies,
-              bool skip,
-            ) async {
-              return await runStep(
-                name: 'Given the text "^[A-Z]{3}\\\\d{5}\\\$"',
-                multiLineStrings: <String>[],
-                table: null,
-                dependencies: dependencies,
-                skip: skip,
-              );
-            },
-          ],
-          onBefore: () async => onBeforeRunFeature(
-            name: 'Parsing',
-            path: '.\\integration_test\\features\\parsing.feature',
-            description: """Complex description:
-- Line "one".
-- Line two, more text
-- Line three""",
-            tags: <String>['@debug'],
-          ),
-          onAfter: () async => onAfterRunFeature(
-            name: 'Parsing',
-            path: '.\\integration_test\\features\\parsing.feature',
-            description: """Complex description:
-- Line "one".
-- Line two, more text
-- Line three""",
-            tags: <String>['@debug'],
-          ),
-        );
-      },
-    );
-  }
-
-  void testFeature4() {
-    runFeature(
       name: 'Expect failures:',
       tags: <String>[],
       run: () {
         runScenario(
           name: 'Exception should be added to json report',
           description: null,
-          path: '.\\integration_test\\features\\failure.feature',
+          path: './integration_test/features/failure.feature',
           tags: <String>['@failure-expected'],
           steps: [
             (
@@ -471,7 +424,7 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
           ],
           onBefore: () async => onBeforeRunFeature(
             name: 'Expect failures',
-            path: '.\\integration_test\\features\\failure.feature',
+            path: './integration_test/features/failure.feature',
             description:
                 """Ensure that when a test fails the exception or test failure is reported""",
             tags: <String>[],
@@ -481,7 +434,7 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
         runScenario(
           name: 'Failed expect() should be added to json report',
           description: "Description for this scenario!",
-          path: '.\\integration_test\\features\\failure.feature',
+          path: './integration_test/features/failure.feature',
           tags: <String>['@failure-expected'],
           steps: [
             (
@@ -523,10 +476,57 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
           ],
           onAfter: () async => onAfterRunFeature(
             name: 'Expect failures',
-            path: '.\\integration_test\\features\\failure.feature',
+            path: './integration_test/features/failure.feature',
             description:
                 """Ensure that when a test fails the exception or test failure is reported""",
             tags: <String>[],
+          ),
+        );
+      },
+    );
+  }
+
+  void testFeature4() {
+    runFeature(
+      name: 'Parsing:',
+      tags: <String>['@debug'],
+      run: () {
+        runScenario(
+          name: 'Parsing a',
+          description: null,
+          path: './integration_test/features/parsing.feature',
+          tags: <String>['@debug'],
+          steps: [
+            (
+              TestDependencies dependencies,
+              bool skip,
+            ) async {
+              return await runStep(
+                name: 'Given the text "^[A-Z]{3}\\\\d{5}\\\$"',
+                multiLineStrings: <String>[],
+                table: null,
+                dependencies: dependencies,
+                skip: skip,
+              );
+            },
+          ],
+          onBefore: () async => onBeforeRunFeature(
+            name: 'Parsing',
+            path: './integration_test/features/parsing.feature',
+            description: """Complex description:
+- Line "one".
+- Line two, more text
+- Line three""",
+            tags: <String>['@debug'],
+          ),
+          onAfter: () async => onAfterRunFeature(
+            name: 'Parsing',
+            path: './integration_test/features/parsing.feature',
+            description: """Complex description:
+- Line "one".
+- Line two, more text
+- Line three""",
+            tags: <String>['@debug'],
           ),
         );
       },
@@ -537,7 +537,7 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
 void executeTestSuite({
   required FlutterTestConfiguration configuration,
   required StartAppFn appMainFunction,
-  Timeout scenarioExecutionTimeout = const Timeout(Duration(minutes: 10)),
+  Timeout scenarioExecutionTimeout = const Timeout(const Duration(minutes: 10)),
   AppLifecyclePumpHandlerFn? appLifecyclePumpHandler,
   LiveTestWidgetsFlutterBindingFramePolicy? framePolicy,
 }) {

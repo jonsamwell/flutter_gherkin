@@ -8,6 +8,7 @@ part 'gherkin_suite_test.g.dart';
 
 @GherkinTestSuite(
   useAbsolutePaths: false,
+  executionOrder: ExecutionOrder.sequential
 )
 void main() {
   executeTestSuite(
