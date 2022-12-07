@@ -89,9 +89,7 @@ part 'gherkin_suite_test.g.dart';
     featurePaths: <String>['integration_test/features/**.feature'],
     executionOrder: ExecutionOrder.sequential)
 Future<void> main() async {
-  if (Config().restoreDatabase) {
-    await MakeSnapshotCommand().action(null);
-  }
+  
   var configuration = FlutterTestConfiguration(
     reporters: [
       TestRunSummaryReporter(),
