@@ -48,7 +48,9 @@ targets:
       # Allows the code generator to target files outside of the lib folder
       - integration_test/**.dart
 ```
-3. Add the following file (and folder) `\test_driver\integration_test_driver.dart`.  This file is the entry point to run your tests.  See `https://flutter.dev/docs/testing/integration-tests` for more information.
+3. Add the following file (and folder) `\test_driver\integration_test_driver.dart`.  This file is the entry point to run your tests.
+If you want ot use the flutter test command approach, you will not need this file (and be unused when it is created).
+See `https://flutter.dev/docs/testing/integration-tests` for more information.
 ```dart
 import 'package:integration_test/integration_test_driver.dart' as integration_test_driver;
 
@@ -83,25 +85,23 @@ import 'package:example_with_integration_test/main.dart' as app;
 
 part 'gherkin_suite_test.g.dart';
 
-@GherkinTestSuite()
-void main() {
-  executeTestSuite(
-    FlutterTestConfiguration.DEFAULT([])
-      ..reporters = [
-        StdoutReporter(MessageLevel.error)
-          ..setWriteLineFn(print)
-          ..setWriteFn(print),
-        ProgressReporter()
-          ..setWriteLineFn(print)
-          ..setWriteFn(print),
-        TestRunSummaryReporter()
-          ..setWriteLineFn(print)
-          ..setWriteFn(print),
-        JsonReporter(
-          writeReport: (_, __) => Future<void>.value(),
-        ),
-      ],
-    (World world) => app.main(),
+@GherkinTestSuite(
+    featurePaths: <String>['integration_test/features/**.feature'],
+    executionOrder: ExecutionOrder.sequential)
+Future<void> main() async {
+  
+  var configuration = FlutterTestConfiguration(
+    reporters: [
+      TestRunSummaryReporter(),
+      JsonReporter(
+        writeReport: (_, __) => Future<void>.value(),
+      ),
+    ],
+  );
+
+  await executeTestSuite(
+      configuration: configuration,
+      appMainFunction: (World world) async => app.main(),
   );
 }
 ```
@@ -114,6 +114,14 @@ flutter pub run build_runner build
 ```
 flutter drive --driver=test_driver/integration_test_driver.dart --target=integration_test/gherkin_suite_test.dart
 ```
+
+If you do not want to use the flutter drive command, but the flutter test command you need to change some aspects.
+It is REQUIRED that in `integration_test\gherkin_suite_test.dart` the executeTestSuite is awaited.
+And then you can run your test command:
+```
+flutter test integration_test/gherkin_suite_test.dart
+```
+
 10. You can debug the tests by adding a breakpoint to line 12 in `integration_test\gherkin_suite_test.dart` and adding the below to your `.vscode\launch.json` file:
 ```json
 {
