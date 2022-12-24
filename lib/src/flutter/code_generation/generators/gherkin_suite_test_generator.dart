@@ -57,8 +57,8 @@ Future<void> executeTestSuite({
   Timeout scenarioExecutionTimeout = const Timeout(const Duration(minutes: 10)),
   AppLifecyclePumpHandlerFn? appLifecyclePumpHandler,
   LiveTestWidgetsFlutterBindingFramePolicy? framePolicy,
-}) async {
-  return _CustomGherkinIntegrationTestRunner(
+}) =>
+    _CustomGherkinIntegrationTestRunner(
     configuration: configuration,
     appMainFunction: appMainFunction,
     appLifecyclePumpHandler: appLifecyclePumpHandler,
