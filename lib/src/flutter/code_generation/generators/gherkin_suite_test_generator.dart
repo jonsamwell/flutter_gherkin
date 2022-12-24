@@ -51,7 +51,7 @@ class _CustomGherkinIntegrationTestRunner extends GherkinIntegrationTestRunner {
   {{feature_functions}}
 }
 
-Future executeTestSuite({
+Future<void> executeTestSuite({
   required FlutterTestConfiguration configuration,
   required StartAppFn appMainFunction,
   Timeout scenarioExecutionTimeout = const Timeout(const Duration(minutes: 10)),
