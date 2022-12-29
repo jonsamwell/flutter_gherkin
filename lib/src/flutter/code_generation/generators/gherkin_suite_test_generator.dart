@@ -59,13 +59,12 @@ Future<void> executeTestSuite({
   LiveTestWidgetsFlutterBindingFramePolicy? framePolicy,
 }) =>
     _CustomGherkinIntegrationTestRunner(
-    configuration: configuration,
-    appMainFunction: appMainFunction,
-    appLifecyclePumpHandler: appLifecyclePumpHandler,
-    scenarioExecutionTimeout: scenarioExecutionTimeout,
-    framePolicy: framePolicy,
-  ).run();
-}
+      configuration: configuration,
+      appMainFunction: appMainFunction,
+      appLifecyclePumpHandler: appLifecyclePumpHandler,
+      scenarioExecutionTimeout: scenarioExecutionTimeout,
+      framePolicy: framePolicy,
+    ).run();
 ''';
   final _reporter = NoOpReporter();
   final _languageService = LanguageService();
