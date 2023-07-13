@@ -65,7 +65,7 @@ Future<void> executeTestSuite({
     scenarioExecutionTimeout: scenarioExecutionTimeout,
     framePolicy: framePolicy,
   ).run();
-}
+
 ''';
   final _reporter = NoOpReporter();
   final _languageService = LanguageService();
