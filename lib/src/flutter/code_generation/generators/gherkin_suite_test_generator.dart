@@ -173,7 +173,7 @@ class FeatureFileTestGeneratorVisitor extends FeatureFileVisitor {
   ''';
   static const String stepTemplate = '''
 (TestDependencies dependencies, bool skip,) async {
-  return await runStep(
+  return runStep(
     name: '{{step_name}}',
     multiLineStrings: {{step_multi_line_strings}},
     table: {{step_table}},
