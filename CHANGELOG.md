@@ -1,3 +1,6 @@
+## [2.1.0] - 28/05/2023
+* Fix - Can't run automation test with Flutter 3.10.x
+
 ## [2.0.0] - 25/05/2021
  * null-safety migration, thanks to @tshedor
 
