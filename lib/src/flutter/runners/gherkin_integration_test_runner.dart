@@ -47,6 +47,7 @@ abstract class GherkinIntegrationTestRunner {
   late final IntegrationTestWidgetsFlutterBinding _binding;
 
   AggregatedReporter get reporter => _reporter;
+
   Hook get hook => _hook!;
 
   /// A Gherkin test runner that uses [WidgetTester] to instrument the app under test.
@@ -178,10 +179,10 @@ abstract class GherkinIntegrationTestRunner {
       testWidgets(
         name,
         (WidgetTester tester) async {
+          bool failed = true;
           if (onBefore != null) {
             await onBefore();
           }
-          bool failed = false;
 
           final debugInformation = RunnableDebugInformation(path, 0, name);
           final scenarioTags = (tags ?? const Iterable<Tag>.empty()).map(
@@ -193,6 +194,15 @@ abstract class GherkinIntegrationTestRunner {
           );
 
           try {
+            await reporter.scenario.onStarted.invoke(
+              ScenarioMessage(
+                name: name,
+                description: description,
+                context: debugInformation,
+                tags: scenarioTags.toList(),
+              ),
+            );
+
             await hook.onBeforeScenario(
               configuration,
               name,
@@ -210,29 +220,22 @@ abstract class GherkinIntegrationTestRunner {
               scenarioTags,
             );
 
-            await reporter.scenario.onStarted.invoke(
-              ScenarioMessage(
-                name: name,
-                description: description,
-                context: debugInformation,
-                tags: scenarioTags.toList(),
-              ),
-            );
             var hasToSkip = false;
             for (int i = 0; i < steps.length; i++) {
               try {
                 final result = await steps[i](dependencies, hasToSkip);
                 if (_isNegativeResult(result.result)) {
-                  failed = true;
                   hasToSkip = true;
                 }
               } catch (err, st) {
-                failed = true;
                 hasToSkip = true;
-
                 await reporter.onException(err, st);
               }
             }
+            failed = hasToSkip;
+          } catch (err, st) {
+            failed = true;
+            await reporter.onException(err, st);
           } finally {
             await reporter.scenario.onFinished.invoke(
               ScenarioMessage(
