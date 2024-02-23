@@ -20,7 +20,7 @@ StepDefinitionGeneric whenLongPressWidget() {
   return when1<String, FlutterWorld>(
     RegExp(
         r'I long press the {string} (?:button|element|label|icon|field|text|widget)$'),
-    (key, context) async {
+        (key, context) async {
       final finder = context.world.appDriver.findBy(key, FindType.key);
 
       await context.world.appDriver.scrollIntoView(finder);
@@ -35,7 +35,7 @@ StepDefinitionGeneric whenLongPressWidgetWithoutScroll() {
   return when1<String, FlutterWorld>(
     RegExp(
         r'I long press the {string} (?:button|element|label|icon|field|text|widget) without scrolling it into view$'),
-    (key, context) async {
+        (key, context) async {
       final finder = context.world.appDriver.findBy(key, FindType.key);
 
       await context.world.appDriver.longPress(
@@ -50,7 +50,7 @@ StepDefinitionGeneric whenLongPressWidgetForDuration() {
   return when2<String, int, FlutterWorld>(
     RegExp(
         r'I long press the {string} (?:button|element|label|icon|field|text|widget) for {int} milliseconds$'),
-    (key, milliseconds, context) async {
+        (key, milliseconds, context) async {
       final finder = context.world.appDriver.findBy(key, FindType.key);
 
       await context.world.appDriver.scrollIntoView(

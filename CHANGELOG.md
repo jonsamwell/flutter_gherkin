@@ -1,14 +1,14 @@
 ## [3.0.0-rc.17] - 25/07/2022
-  - Fix #257 - fixed issue when generating a step with a '$' sign in
-  - Fix #256 - Ensure all exceptions generated when running a step are logged
-  - Fix #253 - Ensure features with descriptions that span more than one line are parsed correctly
-  - Fix #252 - Ensure all async code is awaited
-  - When taking a screenshot on the web use the render element rather than relying on native code that does not work
+- Fix #257 - fixed issue when generating a step with a '$' sign in
+- Fix #256 - Ensure all exceptions generated when running a step are logged
+- Fix #253 - Ensure features with descriptions that span more than one line are parsed correctly
+- Fix #252 - Ensure all async code is awaited
+- When taking a screenshot on the web use the render element rather than relying on native code that does not work
 
 ## [3.0.0-rc.16] - 01/07/2022
-  - Fix #231 - using local coordinate system when taking a screenshot on Android (thanks to @youssef-t for the solution)
-  - Fix #216 - ensure step exceptions and `expect` failure results are added as errors to the json report
-  - Scenarios can now have descriptions which also appear in the json reporter output
+- Fix #231 - using local coordinate system when taking a screenshot on Android (thanks to @youssef-t for the solution)
+- Fix #216 - ensure step exceptions and `expect` failure results are added as errors to the json report
+- Scenarios can now have descriptions which also appear in the json reporter output
 
 NOTE: Due to the above changes generated files will need to be re-generated
 
@@ -18,22 +18,22 @@ flutter pub run build_runner build --delete-conflicting-outputs
 ```
 
 ## [3.0.0-rc.15] - 28/06/2022
-  - Exposed `frameBindingPolicy` on the test runner when running tests which can affect how frames are painted and the speed of the test run, I've removed the default value which might be responsible for #231
+- Exposed `frameBindingPolicy` on the test runner when running tests which can affect how frames are painted and the speed of the test run, I've removed the default value which might be responsible for #231
 
 ## [3.0.0-rc.14] - 28/06/2022
-  - Fix #237 - Ensure everything works on the web
+- Fix #237 - Ensure everything works on the web
 
 ## [3.0.0-rc.13] - 27/06/2022
-  - Fix #235 - fix issue taking a screenshot on an Android device
-  - Resolved #170: Added example code to ensure json report is save to disk even when the test run fails. Also added script to generate a HTML report from a JSON report
+- Fix #235 - fix issue taking a screenshot on an Android device
+- Resolved #170: Added example code to ensure json report is save to disk even when the test run fails. Also added script to generate a HTML report from a JSON report
 
 ## [3.0.0-rc.12] - 24/06/2022
-  - Fix #222 - escape single quotation marks in data tables
+- Fix #222 - escape single quotation marks in data tables
 
 ## [3.0.0-rc.11] - 24/06/2022
-  - Fix #231 - Removed the use of explicitly calling `pumpAndSettle` in the pre-defined steps in favour of the implicit `pumpAndSettle` calls used in the `WidgetTesterAppDriverAdapter`.
-  - Added ability to add a `appLifecyclePumpHandler` to override the default handler that determines how the app is pumped during lifecycle events.  Useful if your app has a long splash screen etc. Parameter is on `executeTestSuite`.
-  - Added ability to ensure feature paths are relative when generating reports `useAbsolutePaths` on the `GherkinTestSuite` attribute
+- Fix #231 - Removed the use of explicitly calling `pumpAndSettle` in the pre-defined steps in favour of the implicit `pumpAndSettle` calls used in the `WidgetTesterAppDriverAdapter`.
+- Added ability to add a `appLifecyclePumpHandler` to override the default handler that determines how the app is pumped during lifecycle events.  Useful if your app has a long splash screen etc. Parameter is on `executeTestSuite`.
+- Added ability to ensure feature paths are relative when generating reports `useAbsolutePaths` on the `GherkinTestSuite` attribute
 
 * BREAKING CHANGE: The parameters on `executeTestSuite` are now keyed to allow for the above changes
 
@@ -74,7 +74,7 @@ flutter pub run build_runner build --delete-conflicting-outputs
 
 ## [3.0.0-rc.5] - 22/06/2021
 
-- Ensure scenario support files (world etc) as always disposed ensure when test throws error 
+- Ensure scenario support files (world etc) as always disposed ensure when test throws error
 
 ## [3.0.0-rc.4] - 21/06/2021
 
@@ -93,7 +93,7 @@ flutter pub run build_runner build --delete-conflicting-outputs
 
 ## [3.0.0-rc.1] - 25/05/2021
 
-  HUGE update so that the library now works and favours the flutter integration_test package over flutter_driver.  Unfortunately, this will be breaking change to existing users but it has many benefits such as a huge speed and stability improvements.
+HUGE update so that the library now works and favours the flutter integration_test package over flutter_driver.  Unfortunately, this will be breaking change to existing users but it has many benefits such as a huge speed and stability improvements.
 
 # BREAKING CHANGES
 
@@ -109,9 +109,9 @@ The change to use the `integration_test` package is a fundamentally different ap
 ### Steps to get going
 
 1. Add the following `dev_dependencies` to your app's `pubspec.yaml` file
-  - integration_test
-  - build_runner
-  - flutter_gherkin
+- integration_test
+- build_runner
+- flutter_gherkin
 2. Add the following `build.yaml` to the root of your project. This file allows the dart code generator to target files outside of your application's `lib` folder
 ```yaml
 targets:
@@ -212,15 +212,15 @@ flutter pub run build_runner build
 ```
 
 ## [2.0.0] - 25/05/2021
- * null-safety migration, thanks to @tshedor
+* null-safety migration, thanks to @tshedor
 
 ## [1.2.0] - 02/05/2021
 
 * Upgraded to the null-safety version of dart_gherkin, as such there are some breaking changes to be aware of (see https://github.com/jonsamwell/dart_gherkin/blob/master/CHANGELOG.md for the full list):
-  - BREAKING CHANGE: Table has been renamed to GherkinTable to avoid naming clashes
-  - BREAKING CHANGE: exitAfterTestRun configuration option has been removed as it depends on importing dart:io which is not available under certain environments (dartjs for example).
-  - BREAKING CHANGE: Reporter->onException() exception parameter is now an object rather than an exception
-  - POSSIBLE BREAKING CHANGE: Feature file discovery has been refactored to abstract it from the external Glob dependency. It now support the three native dart Patterns (String, RegExp & Glob). There is potential here for your patterns to not work anymore due as the default IoFeatureFileAccessor assumes the current directory is the working directory to search from. For the most part this simple regex is probably enough to get you going.
+    - BREAKING CHANGE: Table has been renamed to GherkinTable to avoid naming clashes
+    - BREAKING CHANGE: exitAfterTestRun configuration option has been removed as it depends on importing dart:io which is not available under certain environments (dartjs for example).
+    - BREAKING CHANGE: Reporter->onException() exception parameter is now an object rather than an exception
+    - POSSIBLE BREAKING CHANGE: Feature file discovery has been refactored to abstract it from the external Glob dependency. It now support the three native dart Patterns (String, RegExp & Glob). There is potential here for your patterns to not work anymore due as the default IoFeatureFileAccessor assumes the current directory is the working directory to search from. For the most part this simple regex is probably enough to get you going.
 
   ```
   RegExp('features/*.*.feature')
@@ -252,7 +252,7 @@ When I long press "controlKey" icon for 1500 milliseconds
 
 ## [1.1.8+7] - 11/08/2020
 
-* Added well know steps and a driver helper method to long press a widget 
+* Added well know steps and a driver helper method to long press a widget
 
 ``` 
 When I long press "controlKey" button

@@ -10,7 +10,7 @@ import 'package:gherkin/gherkin.dart';
 StepDefinitionGeneric givenOpenDrawer() {
   return given1<String, FlutterWorld>(
     RegExp(r'I (open|close) the drawer'),
-    (action, context) async {
+        (action, context) async {
       final drawerFinder = context.world.appDriver.findBy(
         'Drawer',
         FindType.type,

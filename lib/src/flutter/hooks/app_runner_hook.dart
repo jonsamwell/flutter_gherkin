@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter_gherkin/src/flutter/configuration/flutter_driver_test_configuration.dart';
 import 'package:flutter_gherkin/src/flutter/runners/flutter_run_process_handler.dart';
 import 'package:flutter_gherkin/src/flutter/world/flutter_driver_world.dart';
 import 'package:gherkin/gherkin.dart';
 
+const bool kIsWeb = bool.fromEnvironment('dart.library.js_util');
 /// A hook that manages running the target flutter application
 /// that is under test
 class FlutterAppRunnerHook extends Hook {
@@ -26,10 +26,10 @@ class FlutterAppRunnerHook extends Hook {
 
   @override
   Future<void> onBeforeScenario(
-    TestConfiguration config,
-    String scenario,
-    Iterable<Tag> tags,
-  ) async {
+      TestConfiguration config,
+      String scenario,
+      Iterable<Tag> tags,
+      ) async {
     final flutterConfig = _castConfig(config);
     if (_flutterRunProcessHandler == null) {
       await _runApp(flutterConfig);
@@ -38,11 +38,11 @@ class FlutterAppRunnerHook extends Hook {
 
   @override
   Future<void> onAfterScenario(
-    TestConfiguration config,
-    String scenario,
-    Iterable<Tag> tags, {
-    bool? passed,
-  }) async {
+      TestConfiguration config,
+      String scenario,
+      Iterable<Tag> tags, {
+        bool? passed,
+      }) async {
     final flutterConfig = _castConfig(config);
     haveRunFirstScenario = true;
     if (_flutterRunProcessHandler != null &&
@@ -53,21 +53,20 @@ class FlutterAppRunnerHook extends Hook {
 
   @override
   Future<void> onAfterScenarioWorldCreated(
-    World world,
-    String scenario,
-    Iterable<Tag> tags,
-  ) async {
-    if (world is FlutterDriverWorld) {
+      World world,
+      String scenario,
+      Iterable<Tag> tags,
+      ) async {
+    if (world is FlutterDriverWorld && _flutterRunProcessHandler != null) {
       world.setFlutterProcessHandler(_flutterRunProcessHandler!);
     }
   }
 
   Future<void> _runApp(FlutterDriverTestConfiguration config) async {
-    if (config.runningAppProtocolEndpointUri?.isNotEmpty ?? false) {
-      _log(
-        "Connecting to running Flutter app under test at '${config.runningAppProtocolEndpointUri}', "
-        'this might take a few moments',
-      );
+    if (config.runningAppProtocolEndpointUri != null &&
+        config.runningAppProtocolEndpointUri!.isNotEmpty) {
+      stdout.writeln(
+          "Connecting to running Flutter app under test at '${config.runningAppProtocolEndpointUri}', this might take a few moments");
       config.setObservatoryDebuggerUri(config.runningAppProtocolEndpointUri!);
     } else {
       _flutterRunProcessHandler = FlutterRunProcessHandler()
@@ -75,12 +74,16 @@ class FlutterAppRunnerHook extends Hook {
         ..setVerboseFlutterLogs(config.verboseFlutterProcessLogs)
         ..setApplicationTargetFile(config.targetAppPath)
         ..setDriverConnectionDelay(config.flutterDriverReconnectionDelay)
-        ..setWorkingDirectory(config.targetAppWorkingDirectory)
         ..setBuildRequired(haveRunFirstScenario ? false : config.build)
         ..setKeepAppRunning(config.keepAppRunningAfterTests)
-        ..setBuildFlavour(config.buildFlavour)
+        ..setBuildFlavor(config.buildFlavor)
         ..setBuildMode(config.buildMode)
-        ..setDeviceTargetId(config.targetDeviceId);
+        ..setDeviceTargetId(config.targetDeviceId)
+        ..setDartDefineArgs(config.dartDefineArgs);
+      if (config.targetAppWorkingDirectory != null) {
+        _flutterRunProcessHandler = _flutterRunProcessHandler!
+          ..setWorkingDirectory(config.targetAppWorkingDirectory!);
+      }
 
       _log(
         "Starting Flutter app under test '${config.targetAppPath}', this might take a few moments",

@@ -1,4 +1,5 @@
-import 'package:flutter_gherkin/flutter_gherkin.dart';
+import 'package:flutter_gherkin/src/flutter/world/flutter_world.dart';
+import 'package:flutter_gherkin/src/flutter/adapters/app_driver_adapter.dart';
 import 'package:gherkin/gherkin.dart';
 
 /// Discovers a widget by its text within the same parent.
@@ -14,7 +15,7 @@ import 'package:gherkin/gherkin.dart';
 StepDefinitionGeneric siblingContainsTextStep() {
   return given3<String, String, String, FlutterWorld>(
     'I expect a {string} that contains the text {string} to also contain the text {string}',
-    (ancestorType, leadingText, valueText, context) async {
+        (ancestorType, leadingText, valueText, context) async {
       final ancestor = await context.world.appDriver.findByAncestor(
         context.world.appDriver.findBy(leadingText, FindType.text),
         context.world.appDriver.findBy(ancestorType, FindType.type),

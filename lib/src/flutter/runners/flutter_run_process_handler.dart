@@ -9,7 +9,7 @@ class FlutterRunProcessHandler extends ProcessHandler {
   // `An Observatory debugger and profiler on AOSP on IA Emulator is available at: http://127.0.0.1:51322/BI_fyYaeoCE=/`
   // `Observatory URL on device: http://127.0.0.1:37849/t2xp9hvaxNs=/`
   static final RegExp _observatoryDebuggerUriRegex = RegExp(
-    r'observatory .*[:] (http[s]?:.*\/).*',
+    r'.*[:] (http[s]?:.*\/).*',
     caseSensitive: false,
     multiLine: false,
   );
@@ -48,7 +48,8 @@ class FlutterRunProcessHandler extends ProcessHandler {
   BuildMode _buildMode = BuildMode.debug;
   String? _workingDirectory;
   String? _appTarget;
-  String? _buildFlavour;
+  String? _buildFlavor;
+  List<String>? _dartDefineArgs;
   String? _deviceTargetId;
   Duration _driverConnectionDelay = const Duration(seconds: 2);
   String? currentObservatoryUri;
@@ -69,8 +70,8 @@ class FlutterRunProcessHandler extends ProcessHandler {
     _workingDirectory = workingDirectory;
   }
 
-  void setBuildFlavour(String? buildFlavour) {
-    _buildFlavour = buildFlavour;
+  void setBuildFlavor(String? buildFlavor) {
+    _buildFlavor = buildFlavor;
   }
 
   void setBuildMode(BuildMode buildMode) {
@@ -79,6 +80,10 @@ class FlutterRunProcessHandler extends ProcessHandler {
 
   void setDeviceTargetId(String? deviceTargetId) {
     _deviceTargetId = deviceTargetId;
+  }
+
+  void setDartDefineArgs(List<String>? dartDefineArgs) {
+    _dartDefineArgs = dartDefineArgs;
   }
 
   void setBuildRequired(bool build) {
@@ -107,8 +112,14 @@ class FlutterRunProcessHandler extends ProcessHandler {
       arguments.add('--no-build');
     }
 
-    if (_buildFlavour != null && _buildFlavour!.isNotEmpty) {
-      arguments.add('--flavor=$_buildFlavour');
+    if (_buildFlavor != null && _buildFlavor!.isNotEmpty) {
+      arguments.add('--flavor=$_buildFlavor');
+    }
+
+    if (_dartDefineArgs != null && _dartDefineArgs!.isNotEmpty) {
+      for (var element in _dartDefineArgs!) {
+        arguments.add('--dart-define=$element');
+      }
     }
 
     if (_deviceTargetId != null && _deviceTargetId!.isNotEmpty) {
@@ -117,6 +128,10 @@ class FlutterRunProcessHandler extends ProcessHandler {
 
     if (_verboseFlutterLogs) {
       arguments.add('--verbose');
+    }
+
+    if (_keepAppRunning) {
+      arguments.add('--keep-app-running');
     }
 
     if (_logFlutterProcessOutput) {
@@ -183,7 +198,7 @@ class FlutterRunProcessHandler extends ProcessHandler {
     await _waitForStdOutMessage(
       _restartedApplicationSuccessRegex,
       'Timeout waiting for app restart',
-      timeout,
+      timeout ?? const Duration(seconds: 90),
     );
 
     // it seems we need a small delay here otherwise the flutter driver fails to
@@ -206,15 +221,15 @@ class FlutterRunProcessHandler extends ProcessHandler {
   }
 
   Future<String> _waitForStdOutMessage(
-    RegExp matcher,
-    String timeoutMessage, [
-    Duration? timeout = const Duration(seconds: 90),
-  ]) {
+      RegExp matcher,
+      String timeoutMessage, [
+        Duration timeout = const Duration(seconds: 90),
+      ]) {
     _ensureRunningProcess();
     final completer = Completer<String>();
     StreamSubscription? sub;
-    sub = _processStdoutStream!.timeout(
-      timeout ?? const Duration(seconds: 90),
+    sub = _processStdoutStream?.timeout(
+      timeout,
       onTimeout: (_) {
         sub?.cancel();
         if (!completer.isCompleted) {
@@ -222,22 +237,22 @@ class FlutterRunProcessHandler extends ProcessHandler {
         }
       },
     ).listen(
-      (logLine) {
+          (logLine) {
         if (_logFlutterProcessOutput) {
           stdout.write(logLine);
         }
         if (matcher.hasMatch(logLine)) {
           sub?.cancel();
           if (!completer.isCompleted) {
-            completer.complete(matcher.firstMatch(logLine)!.group(1));
+            completer.complete(matcher.firstMatch(logLine)?.group(1));
           }
         } else if (_noConnectedDeviceRegex.hasMatch(logLine)) {
           sub?.cancel();
           if (!completer.isCompleted) {
             stderr.writeln(
               '${StdoutReporter.kFailColor}'
-              'No connected devices found to run app on and tests against'
-              '${StdoutReporter.kResetColor}',
+                  'No connected devices found to run app on and tests against'
+                  '${StdoutReporter.kResetColor}',
             );
           }
         } else if (_moreThanOneDeviceConnectedDeviceRegex.hasMatch(logLine)) {

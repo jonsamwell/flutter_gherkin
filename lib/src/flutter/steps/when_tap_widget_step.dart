@@ -20,7 +20,7 @@ StepDefinitionGeneric whenTapWidget() {
   return when1<String, FlutterWorld>(
     RegExp(
         r'I tap the {string} (?:button|element|label|icon|field|text|widget)$'),
-    (key, context) async {
+        (key, context) async {
       final finder = context.world.appDriver.findBy(key, FindType.key);
 
       await context.world.appDriver.scrollIntoView(
@@ -38,9 +38,9 @@ StepDefinitionGeneric whenTapWidgetWithoutScroll() {
   return when1<String, FlutterWorld>(
     RegExp(
         r'I tap the {string} (?:button|element|label|icon|field|text|widget) without scrolling it into view$'),
-    (key, context) async {
+        (key, context) async {
       final finder =
-          context.world.appDriver.findByDescendant(key, FindType.key);
+      context.world.appDriver.findByDescendant(key, FindType.key);
 
       await context.world.appDriver.tap(
         finder,

@@ -10,7 +10,7 @@ import 'package:gherkin/gherkin.dart';
 StepDefinitionGeneric whenFillFieldStep() {
   return given2<String, String, FlutterWorld>(
     'I fill the {string} field with {string}',
-    (key, value, context) async {
+        (key, value, context) async {
       final finder = context.world.appDriver.findBy(key, FindType.key);
       await context.world.appDriver.scrollIntoView(finder);
       await context.world.appDriver.enterText(

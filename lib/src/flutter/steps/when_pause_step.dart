@@ -1,4 +1,4 @@
-import 'package:flutter_gherkin/flutter_gherkin.dart';
+import 'package:flutter_gherkin/src/flutter/world/flutter_world.dart';
 import 'package:gherkin/gherkin.dart';
 
 /// Pauses the execution for the provided number of seconds.
@@ -11,12 +11,12 @@ import 'package:gherkin/gherkin.dart';
 StepDefinitionGeneric whenPauseStep() {
   return when1<int, FlutterWorld>(
     'I (?:pause|wait) for {int} second(?:s)?',
-    (wait, context) async {
+        (wait, context) async {
       await Future.delayed(Duration(seconds: wait));
       await context.world.appDriver.waitForAppToSettle();
     },
     configuration: StepDefinitionConfiguration()
-      // add a large timeout here, I think 15 is more than enough
+    // add a large timeout here, I think 15 is more than enough
       ..timeout = const Duration(minutes: 15),
   );
 }

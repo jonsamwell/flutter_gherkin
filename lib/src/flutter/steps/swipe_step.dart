@@ -1,20 +1,21 @@
 // ignore_for_file: avoid_renaming_method_parameters
 
-import 'package:flutter_gherkin/flutter_gherkin.dart';
+import 'package:flutter_gherkin/src/flutter/world/flutter_world.dart';
+import 'package:flutter_gherkin/src/flutter/adapters/app_driver_adapter.dart';
 import 'package:gherkin/gherkin.dart';
 
 import '../parameters/swipe_direction_parameter.dart';
 
 mixin _SwipeHelper
-    on When3WithWorld<SwipeDirection, int, String, FlutterWorld> {
+on When3WithWorld<SwipeDirection, int, String, FlutterWorld> {
   Future<void> swipeOnFinder(
-    dynamic finder,
-    SwipeDirection direction,
-    int swipeAmount,
-  ) async {
+      dynamic finder,
+      SwipeDirection direction,
+      int swipeAmount,
+      ) async {
     if (direction == SwipeDirection.left || direction == SwipeDirection.right) {
       final offset =
-          direction == SwipeDirection.right ? swipeAmount : (swipeAmount * -1);
+      direction == SwipeDirection.right ? swipeAmount : (swipeAmount * -1);
 
       await world.appDriver.scroll(
         finder,
@@ -24,7 +25,7 @@ mixin _SwipeHelper
       );
     } else {
       final offset =
-          direction == SwipeDirection.up ? swipeAmount : (swipeAmount * -1);
+      direction == SwipeDirection.up ? swipeAmount : (swipeAmount * -1);
 
       await world.appDriver.scroll(
         finder,
@@ -47,10 +48,10 @@ class SwipeOnKeyStep
     with _SwipeHelper {
   @override
   Future<void> executeStep(
-    SwipeDirection direction,
-    int swipeAmount,
-    String key,
-  ) async {
+      SwipeDirection direction,
+      int swipeAmount,
+      String key,
+      ) async {
     final finder = world.appDriver.findBy(key, FindType.key);
     await swipeOnFinder(finder, direction, swipeAmount);
   }
@@ -70,10 +71,10 @@ class SwipeOnTextStep
     with _SwipeHelper {
   @override
   Future<void> executeStep(
-    SwipeDirection direction,
-    int swipeAmount,
-    String text,
-  ) async {
+      SwipeDirection direction,
+      int swipeAmount,
+      String text,
+      ) async {
     final finder = world.appDriver.findBy(text, FindType.text);
     await swipeOnFinder(finder, direction, swipeAmount);
   }

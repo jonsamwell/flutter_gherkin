@@ -24,7 +24,7 @@ void main() {
     });
 
     test('common step definition added to existing steps', () {
-      final config = FlutterTestConfiguration(
+      final config = FlutterDriverTestConfiguration(
         stepDefinitions: [MockStepDefinition()],
         customStepParameterDefinitions: [MockParameter()],
       );
@@ -36,7 +36,7 @@ void main() {
       expect(config.customStepParameterDefinitions, isNotNull);
       expect(config.customStepParameterDefinitions!.length, 3);
       expect(config.customStepParameterDefinitions!.elementAt(0),
-          (x) => x is MockParameter);
+              (x) => x is MockParameter);
     });
   });
 }

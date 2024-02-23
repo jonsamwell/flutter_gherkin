@@ -6,10 +6,10 @@ import '../world/flutter_world.dart';
 class AttachScreenshotOnFailedStepHook extends Hook {
   @override
   Future<void> onAfterStep(
-    World world,
-    String step,
-    StepResult stepResult,
-  ) async {
+      World world,
+      String step,
+      StepResult stepResult,
+      ) async {
     if (stepResult.result == StepExecutionResult.fail ||
         stepResult.result == StepExecutionResult.error ||
         stepResult.result == StepExecutionResult.timeout) {

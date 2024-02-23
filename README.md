@@ -8,7 +8,7 @@ A fully featured Gherkin parser and test runner.  Works with Flutter and Dart 2.
 
 This implementation of the Gherkin tries to follow as closely as possible other implementations of Gherkin and specifically [Cucumber](https://docs.cucumber.io/cucumber/) in it's various forms.
 
-Available as a Dart package https://pub.dartlang.org/packages/flutter_gherkin
+Available as a Dart package https://pub.dev/packages/gherkin
 
 ```dart
   # Comment
@@ -34,9 +34,9 @@ NOTE: This library now favours using the `integration_test` package and code gen
 ### Steps to get going
 
 1. Add the following `dev_dependencies` to your app's `pubspec.yaml` file
-  - integration_test
-  - build_runner
-  - flutter_gherkin
+- integration_test
+- build_runner
+- flutter_gherkin
 2. Add the following `build.yaml` to the root of your project. This file allows the dart code generator to target files outside of your application's `lib` folder
 ```yaml
 targets:
@@ -49,8 +49,8 @@ targets:
       - integration_test/**.dart
 ```
 3. Add the following file (and folder) `\test_driver\integration_test_driver.dart`.  This file is the entry point to run your tests.
-If you want ot use the flutter test command approach, you will not need this file (and be unused when it is created).
-See `https://flutter.dev/docs/testing/integration-tests` for more information.
+   If you want ot use the flutter test command approach, you will not need this file (and be unused when it is created).
+   See `https://flutter.dev/docs/testing/integration-tests` for more information.
 ```dart
 import 'package:integration_test/integration_test_driver.dart' as integration_test_driver;
 
@@ -151,63 +151,63 @@ This package will soon have a major release to support null-safety and then anot
 <!-- TOC -->
 
 * [Getting Started](#getting-started)
-  + [Configuration](#configuration)
-    - [features](#features)
-    - [tagExpression](#tagexpression)
-    - [order](#order)
-    - [stepDefinitions](#stepdefinitions)
-    - [defaultLanguage](#defaultLanguage)
-    - [customStepParameterDefinitions](#customstepparameterdefinitions)
-    - [hooks](#hooks)
-    - [reporters](#reporters)
-    - [createWorld](#createworld)
-  + [Flutter specific configuration options](#flutter-specific-configuration-options)
-    - [restartAppBetweenScenarios](#restartappbetweenscenarios)
-    - [build](#build)
-    - [buildFlavor](#buildFlavor)
-    - [buildMode](#buildMode)
-    - [dartDefineArgs](#dartDefineArgs)
-    - [flutterBuildTimeout](#flutterBuildTimeout)
-    - [logFlutterProcessOutput](#logFlutterProcessOutput)
-    - [targetDeviceId](#targetDeviceId)
-    - [targetAppPath](#targetapppath)
-    - [runningAppProtocolEndpointUri](#runningAppProtocolEndpointUri)
-    - [onBeforeFlutterDriverConnect](#onBeforeFlutterDriverConnect)
-    - [onAfterFlutterDriverConnect](#onAfterFlutterDriverConnect)
-    - [flutterDriverMaxConnectionAttempts](#flutterDriverMaxConnectionAttempts)
-    - [flutterDriverReconnectionDelay](#flutterDriverReconnectionDelay)
+    + [Configuration](#configuration)
+        - [features](#features)
+        - [tagExpression](#tagexpression)
+        - [order](#order)
+        - [stepDefinitions](#stepdefinitions)
+        - [defaultLanguage](#defaultLanguage)
+        - [customStepParameterDefinitions](#customstepparameterdefinitions)
+        - [hooks](#hooks)
+        - [reporters](#reporters)
+        - [createWorld](#createworld)
+    + [Flutter specific configuration options](#flutter-specific-configuration-options)
+        - [restartAppBetweenScenarios](#restartappbetweenscenarios)
+        - [build](#build)
+        - [buildFlavor](#buildFlavor)
+        - [buildMode](#buildMode)
+        - [dartDefineArgs](#dartDefineArgs)
+        - [flutterBuildTimeout](#flutterBuildTimeout)
+        - [logFlutterProcessOutput](#logFlutterProcessOutput)
+        - [targetDeviceId](#targetDeviceId)
+        - [targetAppPath](#targetapppath)
+        - [runningAppProtocolEndpointUri](#runningAppProtocolEndpointUri)
+        - [onBeforeFlutterDriverConnect](#onBeforeFlutterDriverConnect)
+        - [onAfterFlutterDriverConnect](#onAfterFlutterDriverConnect)
+        - [flutterDriverMaxConnectionAttempts](#flutterDriverMaxConnectionAttempts)
+        - [flutterDriverReconnectionDelay](#flutterDriverReconnectionDelay)
 * [Features Files](#features-files)
-  + [Steps Definitions](#steps-definitions)
-    - [Given](#given)
-    - [Then](#then)
-    - [Expects Assertions](#expects-assertions)
-    - [Step Timeout](#step-timeout)
-    - [Multiline Strings](#multiline-strings)
-    - [Data tables](#data-tables)
-    - [Well known step parameters](#well-known-step-parameters)
-    - [Pluralization](#pluralization)
-    - [Custom Parameters](#custom-parameters)
-    - [World Context (per test scenario shared state)](#world-context-per-test-scenario-shared-state)
-    - [Assertions](#assertions)
-  + [Tags](#tags)
-  + [Languages](#languages)
+    + [Steps Definitions](#steps-definitions)
+        - [Given](#given)
+        - [Then](#then)
+        - [Expects Assertions](#expects-assertions)
+        - [Step Timeout](#step-timeout)
+        - [Multiline Strings](#multiline-strings)
+        - [Data tables](#data-tables)
+        - [Well known step parameters](#well-known-step-parameters)
+        - [Pluralization](#pluralization)
+        - [Custom Parameters](#custom-parameters)
+        - [World Context (per test scenario shared state)](#world-context-per-test-scenario-shared-state)
+        - [Assertions](#assertions)
+    + [Tags](#tags)
+    + [Languages](#languages)
 * [Hooks](#hooks)
 * [Attachments](#attachments)
-  + [Screenshot on step failure](#screenshot)
+    + [Screenshot on step failure](#screenshot)
 * [Reporting](#reporting)
 * [Flutter](#flutter)
-  + [Restarting the app before each test](#restarting-the-app-before-each-test)
-    - [Flutter World](#flutter-world)
-  + [Pre-defined Steps](#pre-defined-steps)
-    - [Flutter Driver Utilities](#flutter-driver-utilities)
-  + [Debugging](#debugging)
-    - [Debugging the app under test](#debugging-the-app-under-test)
+    + [Restarting the app before each test](#restarting-the-app-before-each-test)
+        - [Flutter World](#flutter-world)
+    + [Pre-defined Steps](#pre-defined-steps)
+        - [Flutter Driver Utilities](#flutter-driver-utilities)
+    + [Debugging](#debugging)
+        - [Debugging the app under test](#debugging-the-app-under-test)
 
 <!-- /TOC -->
 
 ## Getting Started
 
-See <https://docs.cucumber.io/gherkin/> for information on the Gherkin syntax and Behaviour Driven Development (BDD).  
+See <https://docs.cucumber.io/gherkin/> for information on the Gherkin syntax and Behaviour Driven Development (BDD).
 
 See [example readme](example/README.md) for a quick start guide to running the example features and app.
 
@@ -871,13 +871,13 @@ Tags are a great way of organizing your features and marking them with filterabl
 
 You can filter the scenarios by providing a tag expression to your configuration file.  Tag expression are simple infix expressions such as:
 
- `@smoke`
- `@smoke and @perf`
- `@billing or @onboarding`
- `@smoke and not @ignore`
+`@smoke`
+`@smoke and @perf`
+`@billing or @onboarding`
+`@smoke and not @ignore`
 You can even us brackets to ensure the order of precedence
 
- `@smoke and not (@ignore or @todo)`
+`@smoke and not (@ignore or @todo)`
 You can use the usual boolean statement "and", "or", "not"
 
 Also see <https://docs.cucumber.io/cucumber/api/#tags>
@@ -1023,7 +1023,7 @@ You can create your own custom reporter by inheriting from the base `Reporter` c
 * `onException`
 * `message`
 * `dispose`
-Once you have created your custom reporter don't forget to add it to the `reporters` configuration file property.
+  Once you have created your custom reporter don't forget to add it to the `reporters` configuration file property.
 
 *Note*: PR's of new reporters are *always* welcome.
 
@@ -1178,15 +1178,15 @@ final config = FlutterTestConfiguration.DEFAULT(
 }
 ```
 
-Start a new terminal and navigate to the `test_driver` directory. 
+Start a new terminal and navigate to the `test_driver` directory.
 
 Notice the `app_test.dart` expects a parameter. This is to ease the changing uri which will occur each time the app under test is started.  If you use the `R` command, the `uri` does not change.
 
 You can copy the `uri` from the terminal window of the app under test.
 
-Run the command `dart app_test.dart <uri>`. As an example, the app under test has this line: 
-   `Connecting to service protocol: http://127.0.0.1:61658/RtsPT2zp_qs=/` 
-so you would copy `http://127.0.0.1:61658/RtsPT2zp_qs=/` and paste it as such: 
+Run the command `dart app_test.dart <uri>`. As an example, the app under test has this line:
+`Connecting to service protocol: http://127.0.0.1:61658/RtsPT2zp_qs=/`
+so you would copy `http://127.0.0.1:61658/RtsPT2zp_qs=/` and paste it as such:
 
 `dart app_test.dart http://127.0.0.1:59862/luEyFXvK9Qc=/`.
 

@@ -29,11 +29,11 @@ class FlutterDriverReporter extends Reporter
 
   @override
   ReportActionHandler<TestMessage> get test => ReportActionHandler(
-        onStarted: ([_]) async {
-          defaultCallback = driverLog;
-          driverLog = _driverLogMessageHandler;
-        },
-      );
+    onStarted: ([_]) async {
+      defaultCallback = driverLog;
+      driverLog = _driverLogMessageHandler;
+    },
+  );
 
   @override
   Future<void> dispose() async {

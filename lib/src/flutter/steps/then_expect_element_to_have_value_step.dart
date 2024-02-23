@@ -15,7 +15,7 @@ import 'package:gherkin/gherkin.dart';
 StepDefinitionGeneric thenExpectElementToHaveValue() {
   return given2<String, String, FlutterWorld>(
     RegExp(r'I expect the {string} to be {string}$'),
-    (key, value, context) async {
+        (key, value, context) async {
       try {
         final finder = context.world.appDriver.findBy(key, FindType.key);
         final text = await context.world.appDriver.getText(finder);
