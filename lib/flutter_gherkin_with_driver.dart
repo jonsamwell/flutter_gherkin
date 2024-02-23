@@ -3,7 +3,6 @@ library flutter_gherkin;
 // Flutter specific implementations
 export 'src/flutter/configuration/build_mode.dart';
 export 'src/flutter/world/flutter_world.dart';
-export 'src/flutter/configuration/flutter_test_configuration.dart';
 export 'src/flutter/adapters/app_driver_adapter.dart';
 
 // Well known steps

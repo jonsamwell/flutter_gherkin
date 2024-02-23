@@ -1,3 +1,7 @@
+## [3.0.0-rc.18] - 25/07/2024
+- Merged master branch changes
+- Updated example_with_flutter_driver, so that it's working again
+
 ## [3.0.0-rc.17] - 25/07/2022
 - Fix #257 - fixed issue when generating a step with a '$' sign in
 - Fix #256 - Ensure all exceptions generated when running a step are logged
@@ -198,8 +202,8 @@ flutter drive --driver=test_driver/integration_test_driver.dart --target=integra
   "request": "launch",
   "type": "dart",
   "args": [
-    "--target=integration_test/gherkin_suite_test.dart",
-  ],
+    "--target=integration_test/gherkin_suite_test.dart"
+  ]
 }
 ```
 11. Custom world need to extend `FlutterWorld` note `FlutterDriverWorld`.

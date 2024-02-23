@@ -3,10 +3,46 @@ import 'dart:io';
 import 'package:flutter_gherkin/flutter_gherkin_with_driver.dart';
 import 'package:flutter_gherkin/src/flutter/hooks/app_runner_hook.dart';
 import 'package:flutter_driver/flutter_driver.dart';
+import 'package:flutter_gherkin/src/flutter/parameters/existence_parameter.dart';
+import 'package:flutter_gherkin/src/flutter/parameters/swipe_direction_parameter.dart';
+import 'package:flutter_gherkin/src/flutter/steps/then_expect_widget_to_be_present_step.dart';
+import 'package:flutter_gherkin/src/flutter/steps/when_long_press_widget_step.dart';
+import 'package:flutter_gherkin/src/flutter/steps/take_a_screenshot_step.dart';
 import 'package:gherkin/gherkin.dart';
 
-class FlutterDriverTestConfiguration extends FlutterTestConfiguration {
+class FlutterDriverTestConfiguration extends TestConfiguration {
   String? _observatoryDebuggerUri;
+
+  static final Iterable<CustomParameter<dynamic>> _wellKnownParameters = [
+    ExistenceParameter(),
+    SwipeDirectionParameter(),
+  ];
+  static final _wellKnownStepDefinitions = [
+    SwipeOnKeyStep(),
+    SwipeOnTextStep(),
+    thenExpectElementToHaveValue(),
+    whenTapBackButtonWidget(),
+    whenTapWidget(),
+    whenTapWidgetWithoutScroll(),
+    whenLongPressWidget(),
+    whenLongPressWidgetWithoutScroll(),
+    whenLongPressWidgetForDuration(),
+    givenOpenDrawer(),
+    whenPauseStep(),
+    whenFillFieldStep(),
+    thenExpectWidgetToBePresent(),
+    restartAppStep(),
+    siblingContainsTextStep(),
+    tapTextWithinWidgetStep(),
+    tapWidgetOfTypeStep(),
+    tapWidgetOfTypeWithinStep(),
+    tapWidgetWithTextStep(),
+    textExistsStep(),
+    textExistsWithinStep(),
+    waitUntilKeyExistsStep(),
+    waitUntilTypeExistsStep(),
+    takeScreenshot(),
+  ];
 
   FlutterDriverTestConfiguration({
     String? featurePath = 'features/*.*.feature',
@@ -21,13 +57,12 @@ class FlutterDriverTestConfiguration extends FlutterTestConfiguration {
     super.hooks,
     super.reporters = const [],
     super.createWorld,
-    super.waitImplicitlyAfterAction = true,
-    super.customStepParameterDefinitions,
-    super.stepDefinitions,
+    // super.waitImplicitlyAfterAction = true,
     this.targetAppPath = 'test_driver/app.dart',
     this.targetAppWorkingDirectory,
-    this.buildFlavour,
+    this.buildFlavor,
     this.targetDeviceId,
+    this.dartDefineArgs,
     this.runningAppProtocolEndpointUri,
     this.onBeforeFlutterDriverConnect,
     this.onAfterFlutterDriverConnect,
@@ -40,10 +75,18 @@ class FlutterDriverTestConfiguration extends FlutterTestConfiguration {
     this.flutterBuildTimeout = const Duration(seconds: 90),
     this.flutterDriverReconnectionDelay = const Duration(seconds: 2),
     this.flutterDriverMaxConnectionAttempts = 3,
+    Iterable<CustomParameter<dynamic>>? customStepParameterDefinitions,
+    Iterable<StepDefinitionGeneric<World>>? stepDefinitions,
   }) :
         // assert(featurePath != null && features != null),
         super(
           features: features ?? [RegExp(featurePath!)],
+        customStepParameterDefinitions: List.from(
+          customStepParameterDefinitions ?? const Iterable.empty(),
+        )..addAll(_wellKnownParameters),
+        stepDefinitions: List.from(
+          stepDefinitions ?? const Iterable.empty(),
+        )..addAll(_wellKnownStepDefinitions),
         );
 
   /// Provide a configuration object with default settings such as the reports and feature file location
@@ -87,9 +130,9 @@ class FlutterDriverTestConfiguration extends FlutterTestConfiguration {
   /// Handy if your app is separated from your tests as flutter needs to be able to find a pubspec file
   final String? targetAppWorkingDirectory;
 
-  /// The build flavour to run the tests against (optional)
+  /// The build flavor to run the tests against (optional)
   /// Defaults to null
-  final String? buildFlavour;
+  final String? buildFlavor;
 
   /// The default build mode used for running tests is --debug.
   /// We are exposing the option to run the tests also in --profile mode
@@ -102,6 +145,10 @@ class FlutterDriverTestConfiguration extends FlutterTestConfiguration {
   /// The target device id to run the tests against when multiple devices detected
   /// Defaults to null
   final String? targetDeviceId;
+
+  /// `--dart-define` args to pass into the build parameters. Include the name and value
+  /// for each. For example, `--dart-define=MY_VAR="true"` becomes `['MY_VAR="true"']`
+  final List<String>? dartDefineArgs;
 
   /// Will keep the Flutter application running when done testing
   /// Defaults to false
@@ -146,6 +193,7 @@ class FlutterDriverTestConfiguration extends FlutterTestConfiguration {
       onAfterFlutterDriverConnect;
 
   void setObservatoryDebuggerUri(String uri) => _observatoryDebuggerUri = uri;
+  String? get observatoryDebuggerUri => _observatoryDebuggerUri;
 
   Future<FlutterDriver> createFlutterDriver([String? dartVmServiceUrl]) async {
     final completer = Completer<FlutterDriver>();
@@ -200,7 +248,7 @@ class FlutterDriverTestConfiguration extends FlutterTestConfiguration {
     final providedCreateWorld = createWorld;
 
     return FlutterDriverTestConfiguration(
-      buildFlavour: buildFlavour,
+      buildFlavor: buildFlavor,
       customStepParameterDefinitions: customStepParameterDefinitions,
       defaultTimeout: defaultTimeout,
       featureDefaultLanguage: featureDefaultLanguage,
@@ -223,6 +271,10 @@ class FlutterDriverTestConfiguration extends FlutterTestConfiguration {
         FlutterWorld? world;
         if (providedCreateWorld != null) {
           world = await providedCreateWorld(config) as FlutterWorld;
+        }
+        final flutterConfig = config as FlutterDriverTestConfiguration;
+        if (flutterConfig.observatoryDebuggerUri != null) {
+          setObservatoryDebuggerUri(flutterConfig.observatoryDebuggerUri!);
         }
 
         return await createFlutterWorld(config, world);

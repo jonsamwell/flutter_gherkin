@@ -19,7 +19,7 @@ Map<String, dynamic> _$TodoToJson(Todo instance) => <String, dynamic>{
       'created': instance.created.toIso8601String(),
       'updated': instance.updated.toIso8601String(),
       'action': instance.action,
-      'status': _$TodoStatusEnumMap[instance.status],
+      'status': _$TodoStatusEnumMap[instance.status]!,
     };
 
 const _$TodoStatusEnumMap = {
