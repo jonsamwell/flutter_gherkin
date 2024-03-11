@@ -91,6 +91,10 @@ class FlutterTestConfiguration extends TestConfiguration {
   /// for each. For example, `--dart-define=MY_VAR="true"` becomes `['MY_VAR="true"']`
   List<String> dartDefineArgs = [];
 
+  /// Additional run args while executing `flutter run`
+  /// For example, `--no-sound-null-safety` becomes `['--no-sound-null-safety']`
+  List<String> additionalRunArgs = [];
+
   /// Will keep the Flutter application running when done testing
   /// Defaults to false
   bool keepAppRunningAfterTests = false;
