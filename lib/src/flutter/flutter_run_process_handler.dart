@@ -54,6 +54,7 @@ class FlutterRunProcessHandler extends ProcessHandler {
   String? _appTarget;
   String? _buildFlavor;
   List<String>? _dartDefineArgs;
+  List<String>? _additionalRunArgs;
   String? _deviceTargetId;
   Duration _driverConnectionDelay = const Duration(seconds: 2);
   String? currentObservatoryUri;
@@ -88,6 +89,10 @@ class FlutterRunProcessHandler extends ProcessHandler {
 
   void setDartDefineArgs(List<String> dartDefineArgs) {
     _dartDefineArgs = dartDefineArgs;
+  }
+
+  void setAdditionalRunArgs(List<String> additionalRunArgs) {
+    _additionalRunArgs = additionalRunArgs;
   }
 
   void setBuildRequired(bool build) {
@@ -136,6 +141,12 @@ class FlutterRunProcessHandler extends ProcessHandler {
 
     if (_keepAppRunning) {
       arguments.add('--keep-app-running');
+    }
+
+    if (_additionalRunArgs != null && _additionalRunArgs!.isNotEmpty) {
+      _additionalRunArgs!.forEach((element) {
+        arguments.add(element);
+      });
     }
 
     if (_logFlutterProcessOutput) {
