@@ -184,7 +184,8 @@ class FlutterRunProcessHandler extends ProcessHandler {
     var exitCode = -1;
     _ensureRunningProcess();
     if (_runningProcess != null) {
-      _runningProcess!.stdin.write('q');
+      // _runningProcess!.stdin.write('q');
+      exit(0);
       _openSubscriptions.forEach((s) => s.cancel());
       _openSubscriptions.clear();
       exitCode = await _runningProcess!.exitCode;
